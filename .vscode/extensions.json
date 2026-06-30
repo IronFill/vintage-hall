@@ -1,4 +1,25 @@
 {
-  "recommendations": ["astro-build.astro-vscode"],
+  "recommendations": [
+    "astro-build.astro-vscode",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-typescript-next",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "burkeholland.simple-react-snippets",
+    "naumovs.color-highlight",
+    "pkief.material-icon-theme",
+    "eamodio.gitlens",
+    "GitHub.vscode-pull-request-github",
+    "yzhang.markdown-all-in-one",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-russian",
+    "usernamehw.errorlens",
+    "WallabyJs.quokka-vscode",
+    "ms-vscode-remote.remote-ssh",
+    "ms-azuretools.vscode-docker",
+    "hediet.vscode-drawio"
+  ],
   "unwantedRecommendations": []
 }
