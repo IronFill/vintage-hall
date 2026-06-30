@@ -1219,7 +1219,7 @@
 
   /* BACK BUTTON */
   .back-btn{
-    position:fixed; top:80px; left:20px; z-index:49;
+    position:fixed; top:114px; left:36px; z-index:49;
     width:40px; height:40px; border-radius:50%;
     background:var(--bg-card); border:1px solid var(--line);
     color:var(--ivory); display:flex; align-items:center; justify-content:center;
@@ -1228,7 +1228,7 @@
   }
   .back-btn:hover{border-color:var(--brass); background:var(--accent-tint); transform:translateX(-2px);}
   .back-btn svg{width:18px; height:18px;}
-  @media (max-width:560px){.back-btn{top:70px; left:12px; width:36px; height:36px;}}
+  @media (max-width:760px){.back-btn{top:82px; left:16px; width:38px; height:38px;}}
 
   /* MODAL CLOSE BUTTON (top-right on lot detail & other modals) */
   .modal-close-x{
