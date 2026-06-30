@@ -20,6 +20,7 @@ declare module './app' {
   renderFavoritesTab(): string;
   renderSellersTab(): string;
   renderMyCollection(): string;
+  renderSavedSearchesTab(): string;
   renderCabinetModal(tab: string): void;
   setRole(role: DashboardRole): void;
   commissionBoxHtml(price: number): string;
@@ -182,10 +183,30 @@ export const cabinetMethods = {
 
     return summary + rows;
   },
+  /** "Збережені пошуки" cabinet tab — saved via the bell button next to the search input
+      (CatalogSection.astro). Shows real lot counts, not a fabricated notification badge. */
+  renderSavedSearchesTab(this: App): string {
+    if (this.savedSearches.length === 0) return `<p style="font-size:0.8125rem; color:var(--sage); padding:20px 0;">${this.t('empty_saved_searches')}</p>`;
+    return this.savedSearches.map(s => {
+      const currentCount = this.matchSavedSearchCount(s.category, s.query);
+      const newCount = Math.max(0, currentCount - s.matchCountAtSave);
+      const countLabel = newCount > 0
+        ? `<span class="mono" style="color:var(--oxblood);">+${newCount} ${this.t('label_new_matches')}</span>`
+        : `<span class="mono" style="color:var(--sage);">${currentCount}</span>`;
+      return `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); font-size:0.8125rem; cursor:pointer;" data-action="apply-saved-search" data-search-id="${s.id}">
+          <span>${s.label}</span>
+          <span style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+            ${countLabel}
+            <button class="cart-remove" data-action="remove-saved-search" data-search-id="${s.id}">${this.t('cart_remove')}</button>
+          </span>
+        </div>`;
+    }).join('');
+  },
   renderCabinetModal(this: App, tab: string): void {
     let body = '';
     const sellerTabs = ['my_lots', 'create'];
-    const buyerTabs = ['my_bids', 'won_lots', 'purchases', 'favorites', 'sellers', 'collection'];
+    const buyerTabs = ['my_bids', 'won_lots', 'purchases', 'favorites', 'sellers', 'collection', 'saved_searches'];
     if (this.dashboardRole === 'seller' && !sellerTabs.includes(tab) && tab !== 'wallet') tab = 'my_lots';
     if (this.dashboardRole === 'buyer' && !buyerTabs.includes(tab) && tab !== 'wallet') tab = 'my_bids';
 
@@ -280,6 +301,8 @@ export const cabinetMethods = {
       body = this.renderSellersTab();
     } else if (tab === 'collection') {
       body = this.renderMyCollection();
+    } else if (tab === 'saved_searches') {
+      body = this.renderSavedSearchesTab();
     } else if (tab === 'wallet') {
       body = this.renderWallet();
     } else {
@@ -319,6 +342,7 @@ export const cabinetMethods = {
          <button class="tab ${tab === 'favorites' ? 'active' : ''}" data-action="cabinet-tab" data-tab="favorites">${this.t('tab_my_favorites')}</button>
          <button class="tab ${tab === 'collection' ? 'active' : ''}" data-action="cabinet-tab" data-tab="collection">${this.t('tab_my_collection')}</button>
          <button class="tab ${tab === 'sellers' ? 'active' : ''}" data-action="cabinet-tab" data-tab="sellers">${this.t('tab_my_sellers')}</button>
+         <button class="tab ${tab === 'saved_searches' ? 'active' : ''}" data-action="cabinet-tab" data-tab="saved_searches">${this.t('tab_saved_searches')}</button>
          <button class="tab ${tab === 'wallet' ? 'active' : ''}" data-action="cabinet-tab" data-tab="wallet">${this.t('tab_wallet')}</button>`;
 
     // Create-lot form needs real room for the two-column media/fields layout — every other tab

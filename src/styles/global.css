@@ -367,6 +367,13 @@
   .search-box svg{width:16px; height:16px; color:var(--sage); flex-shrink:0;}
   .search-box input{flex:1; background:none; border:none; color:var(--ivory); font-family:'Karla',sans-serif; font-size:0.96875rem; padding:11px 0;}
   .search-box input:focus{outline:none;}
+  .save-search-btn{
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    width:28px; height:28px; border-radius:50%; border:none; background:none;
+    color:var(--sage); cursor:pointer; transition:color .2s, background .2s;
+  }
+  .save-search-btn svg{width:16px; height:16px;}
+  .save-search-btn:hover{color:var(--brass-light); background:var(--accent-tint);}
   /* Live suggestions dropdown under the catalog search box (/catalog page) */
   .search-suggestions{
     position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:30;
@@ -468,6 +475,13 @@
     transition: border-color .2s, background .2s;
   }
   .lot-add:hover{border-color:var(--brass); background:var(--accent-tint);}
+  .buy-now-chip{
+    display:inline-flex; align-items:center; gap:4px; margin-top:8px;
+    border:1px solid var(--brass); border-opacity:0.4; background:var(--accent-tint);
+    color:var(--brass-light); font-size:0.71875rem; font-family:'JetBrains Mono', monospace;
+    padding:5px 10px; border-radius:20px; cursor:pointer; transition:background .2s, border-color .2s;
+  }
+  .buy-now-chip:hover{background:var(--accent-tint-strong); border-color:var(--brass-light);}
 
   /* ABOUT */
   .about{

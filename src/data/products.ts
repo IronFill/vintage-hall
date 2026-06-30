@@ -28,7 +28,7 @@ export const SEEDED_PRODUCTS: Product[] = [
       { author: 'Ihor M.', rating: 4, text: 'Гарна річ, трохи довше їхала доставка, але все ціле і відповідає опису.', date: '2026-04-02' },
     ] },
   { id: 2, photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pocket_watch_with_chain.jpg?width=600', icon: 'watch', category: 'decor', seller: 'Vintage Hall', saleType: 'auction',
-    startPrice: 5000, currentBid: 5600, bidStep: 200, bidsCount: 3, endTime: '2026-06-28T21:00:00Z', watchingNow: 23, bidsLastHour: 2,
+    startPrice: 5000, currentBid: 5600, bidStep: 200, bidsCount: 3, endTime: '2026-06-28T21:00:00Z', watchingNow: 23, bidsLastHour: 2, buyNowPrice: 8500,
     conditionGrade: 'Добрий, механізм робочий', dimensions: '5 × 4 см', weight: '85 г', origin: 'Швейцарія', rarity: 'rare', badge: 'expert', certified: true,
     investmentRating: 4, priceGrowthPct: 28, priceGrowthYears: 5, expertId: 'bondar',
     priceHistory: [{ year: 2021, price: 3800 }, { year: 2023, price: 4600 }, { year: 2025, price: 5200 }],
@@ -49,7 +49,7 @@ export const SEEDED_PRODUCTS: Product[] = [
   { id: 6, photo: 'https://picsum.photos/seed/jewelry-box/600/450', price: 1900, icon: 'box', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'Дуже добрий', dimensions: '18 × 12 × 8 см', weight: '650 г', origin: 'Україна', rarity: 'common', certified: false },
   { id: 7, photo: 'https://picsum.photos/seed/ruble-nicholas/600/450', icon: 'coin', category: 'numismatics', seller: 'Numizmat_99', saleType: 'auction',
-    startPrice: 3000, currentBid: 3750, bidStep: 150, bidsCount: 5, endTime: '2026-06-30T18:00:00Z', watchingNow: 41, bidsLastHour: 3,
+    startPrice: 3000, currentBid: 3750, bidStep: 150, bidsCount: 5, endTime: '2026-06-30T18:00:00Z', watchingNow: 41, bidsLastHour: 3, buyNowPrice: 5500,
     conditionGrade: 'XF', dimensions: 'Ø 33.6 мм', weight: '20 г', origin: 'Російська імперія', rarity: 'rare', badge: 'expert', certified: true,
     investmentRating: 5, priceGrowthPct: 42, priceGrowthYears: 5, expertId: 'kovalenko',
     priceHistory: [{ year: 2022, price: 2650 }, { year: 2023, price: 3000 }, { year: 2024, price: 3400 }, { year: 2026, price: 3750 }],
@@ -67,7 +67,7 @@ export const SEEDED_PRODUCTS: Product[] = [
   { id: 8, photo: 'https://picsum.photos/seed/ussr-ruble/600/450', price: 850, icon: 'coin', category: 'numismatics', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'UNC', dimensions: 'Ø 31 мм', weight: '12.8 г', origin: 'СРСР', rarity: 'common', certified: false },
   { id: 9, photo: 'https://picsum.photos/seed/poltina-coin/600/450', icon: 'coin', category: 'numismatics', seller: 'Numizmat_99', saleType: 'auction',
-    startPrice: 1200, currentBid: 1400, bidStep: 100, bidsCount: 2, endTime: '2026-07-02T12:00:00Z', watchingNow: 14, bidsLastHour: 1,
+    startPrice: 1200, currentBid: 1400, bidStep: 100, bidsCount: 2, endTime: '2026-07-02T12:00:00Z', watchingNow: 14, bidsLastHour: 1, buyNowPrice: 2200,
     conditionGrade: 'VF', dimensions: 'Ø 26.7 мм', weight: '10 г', origin: 'СРСР', rarity: 'rare', certified: true,
     bidHistory: [
       { user: 'Marta', bid: 1400, time: '2026-06-27T15:00:00Z' },
@@ -110,7 +110,7 @@ export const SEEDED_PRODUCTS: Product[] = [
       { author: 'Olha P.', rating: 4, text: 'Чудова робота, але доставка велогабаритного полотна коштувала дорожче, ніж очікувала. Сама картина — без претензій.', date: '2025-11-30' },
     ] },
   { id: 14, photo: 'https://picsum.photos/seed/militaria-badge/600/450', icon: 'medal', category: 'militaria', seller: 'OldWorld_Kyiv', saleType: 'auction',
-    startPrice: 1800, currentBid: 1950, bidStep: 100, bidsCount: 1, endTime: '2026-07-04T15:00:00Z', watchingNow: 9, bidsLastHour: 1,
+    startPrice: 1800, currentBid: 1950, bidStep: 100, bidsCount: 1, endTime: '2026-07-04T15:00:00Z', watchingNow: 9, bidsLastHour: 1, buyNowPrice: 2900,
     conditionGrade: 'Добрий, потертості емалі', dimensions: '4.5 × 3 см', weight: '18 г', origin: 'Австро-Угорщина', rarity: 'rare', certified: false,
     bidHistory: [
       { user: 'Roman_T', bid: 1950, time: '2026-06-27T20:00:00Z' }

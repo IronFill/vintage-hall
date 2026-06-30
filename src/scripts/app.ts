@@ -1,6 +1,6 @@
 import type {
   Lang, Theme, CatalogFilter, SortMode, Product, CartItem, PurchaseRecord, ProductText, IconKey,
-  SaleType, DashboardRole, Category, Rarity, Badge
+  SaleType, DashboardRole, Category, Rarity, Badge, SavedSearch
 } from '../types';
 import { UI } from '../data/i18n';
 import {
@@ -27,6 +27,8 @@ export class VintageHallApp {
   readonly maxCompare = 4;
   /** Sellers the current user follows (#"подписчики продавца" feedback) — persisted to localStorage. */
   followedSellers = new Set<string>();
+  /** Saved search queries the user wants to revisit / be "notified" about — persisted to localStorage. */
+  savedSearches: SavedSearch[] = [];
   /** Tracks which lot's detail modal is currently open, if any — lets actions taken inside it
       (like following the seller) re-render the same modal in place. */
   currentLotDetailId: number | null = null;
@@ -149,6 +151,8 @@ export class VintageHallApp {
     set('modeShopLabel', this.t('mode_shop'));
     set('modeAuctionLabel', this.t('mode_auction'));
     document.getElementById('searchInput')?.setAttribute('placeholder', this.t('search_ph'));
+    document.getElementById('saveSearchBtn')?.setAttribute('aria-label', this.t('btn_save_search'));
+    document.getElementById('saveSearchBtn')?.setAttribute('title', this.t('btn_save_search'));
 
     document.querySelectorAll<HTMLButtonElement>('#sidebarTabs .tab').forEach(tab => {
       const key = tab.dataset.key as keyof typeof UI['uk'] | undefined;
@@ -411,6 +415,10 @@ export class VintageHallApp {
   // ---------- bootstrap ----------
 
   init(): void {
+    // Captured before renderCatalog() below — it rewrites the URL via history.replaceState
+    // (syncFiltersToUrl) and would strip ?lot= before this could be read otherwise.
+    const lotParam = new URLSearchParams(window.location.search).get('lot');
+
     this.loadPreferences();
     this.applyTheme();
     this.applyStaticTexts();
@@ -435,7 +443,6 @@ export class VintageHallApp {
     });
 
     // Deep link from the static SEO page at /lot/[id] (?lot=ID) — opens the full interactive lot card.
-    const lotParam = new URLSearchParams(window.location.search).get('lot');
     if (lotParam) {
       const lotId = parseInt(lotParam, 10);
       if (this.products.some(p => p.id === lotId)) {
@@ -453,6 +460,7 @@ export class VintageHallApp {
       const savedRole = localStorage.getItem('vh_role');
       const savedCart = localStorage.getItem('vh_cart');
       const savedFollowed = localStorage.getItem('vh_followed_sellers');
+      const savedSearches = localStorage.getItem('vh_saved_searches');
       if (savedTheme === 'dark' || savedTheme === 'light') this.currentTheme = savedTheme;
       if (savedLang === 'uk' || savedLang === 'en' || savedLang === 'pl' || savedLang === 'ru') this.currentLang = savedLang;
       if (savedUser) this.currentUser = savedUser;
@@ -464,6 +472,9 @@ export class VintageHallApp {
       }
       if (savedFollowed) {
         this.followedSellers = new Set(JSON.parse(savedFollowed) as string[]);
+      }
+      if (savedSearches) {
+        this.savedSearches = JSON.parse(savedSearches) as SavedSearch[];
       }
     } catch {
       // localStorage unavailable (e.g. private browsing) — fall back to defaults silently
@@ -684,6 +695,10 @@ export class VintageHallApp {
         case 'add-to-cart': e.stopPropagation(); this.addToCart(id!); break;
         case 'vip-request': e.stopPropagation(); this.openVipRequest(id!); break;
         case 'place-bid': e.stopPropagation(); this.placeBid(id!); break;
+        case 'buy-now': e.stopPropagation(); this.buyNowAuction(id!); break;
+        case 'save-search': this.saveCurrentSearch(); break;
+        case 'apply-saved-search': this.applySavedSearch(target.dataset.searchId ?? ''); break;
+        case 'remove-saved-search': e.stopPropagation(); this.removeSavedSearch(target.dataset.searchId ?? ''); break;
         case 'set-autobid': this.setAutobid(id!); break;
         case 'add-to-cart-and-close': this.addToCart(id!); this.closeCheckout(); break;
         case 'open-vip-from-detail': this.closeCheckout(); this.openVipRequest(id!); break;

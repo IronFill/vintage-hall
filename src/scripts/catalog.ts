@@ -2,7 +2,7 @@ import type { VintageHallApp as App } from './app';
 import { $ } from './dom-utils';
 import { MATERIAL_BY_ICON, ICON_PATHS, SELLERS, RECENT_SALES } from '../data/products';
 import { UI } from '../data/i18n';
-import type { Product, CatalogFilter, Badge, Rarity, SortMode } from '../types';
+import type { Product, CatalogFilter, Badge, Rarity, SortMode, Category } from '../types';
 
 /** Formats milliseconds left until an auction's end as "Дд ГГ:ХХ:СС" (or just HH:MM:SS under a day). */
 function formatTimeLeft(ms: number): string {
@@ -41,6 +41,11 @@ declare module './app' {
   renderActivityStrip(): void;
   renderRecentSalesFeed(): void;
   renderLiveAuctions(): void;
+  matchSavedSearchCount(category: CatalogFilter, query: string): number;
+  saveCurrentSearch(): void;
+  applySavedSearch(id: string): void;
+  removeSavedSearch(id: string): void;
+  saveSavedSearches(): void;
   }
 }
 
@@ -259,6 +264,9 @@ export const catalogMethods = {
            ${p.bidsLastHour ? `<span>+${p.bidsLastHour} ${this.t('label_bids_last_hour')}</span>` : ''}
          </div>` : '';
 
+    const buyNowChip = (p.saleType === 'auction' && p.buyNowPrice && (!p.endTime || new Date(p.endTime).getTime() > Date.now()))
+      ? `<button class="buy-now-chip" data-action="buy-now" data-id="${p.id}">⚡ ${this.t('btn_buy_now')} · ${p.buyNowPrice.toLocaleString('ru-RU')} ₴</button>` : '';
+
     const dot = this.rarityDot(p);
     const rarityDotHtml = dot ? `<span class="rarity-dot" style="background:${dot.color};" title="${dot.label}"></span>` : '';
 
@@ -287,6 +295,7 @@ export const catalogMethods = {
           <div class="lot-desc">${tr.desc}</div>
           ${specsLine}
           <div class="lot-foot">${footer}</div>
+          ${buyNowChip}
           ${auctionEmotion}
           ${p.saleType === 'auction' ? `<div class="lot-watch mono">${this.t('label_bids_count')}: ${p.bidsCount ?? 0} · <span class="timer" data-timer-id="${p.id}" data-end="${p.endTime ?? ''}"></span></div>` : `
           <div class="lot-watch mono">
@@ -490,5 +499,76 @@ export const catalogMethods = {
         </div>`;
     }).join('');
     this.tickTimers();
+  },
+
+  // ---------- saved searches (alerts) ----------
+
+  /** Counts lots matching a given category+query right now — used both to seed a saved search's
+      baseline and to compute "N new since you saved this" later, instead of inventing a number. */
+  matchSavedSearchCount(this: App, category: CatalogFilter, query: string): number {
+    let list = this.products.slice();
+    if (category === 'favorites') list = list.filter(p => this.favorites.has(p.id));
+    else if (category !== 'all') list = list.filter(p => p.category === category);
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter(p => {
+        const tr = this.getProductText(p);
+        return `${tr.name} ${tr.era} ${tr.desc}`.toLowerCase().includes(q);
+      });
+    }
+    return list.length;
+  },
+  /** Saves the catalog's current search query + category as a revisitable, "notify me" search —
+      bell button next to the search input (CatalogSection.astro). */
+  saveCurrentSearch(this: App): void {
+    if (!this.searchQuery && this.activeCat === 'all') {
+      this.showToast(this.t('search_save_empty_msg'));
+      return;
+    }
+    if (this.savedSearches.some(s => s.query === this.searchQuery && s.category === this.activeCat)) {
+      this.showToast(this.t('search_already_saved'));
+      return;
+    }
+    const categoryLabel = (this.activeCat === 'all' || this.activeCat === 'favorites') ? this.t('tab_all') : this.catLabel(this.activeCat as Category);
+    const label = this.searchQuery
+      ? (this.activeCat !== 'all' ? `«${this.searchQuery}» · ${categoryLabel}` : `«${this.searchQuery}»`)
+      : categoryLabel;
+    this.savedSearches.unshift({
+      id: `s${Date.now()}${Math.floor(Math.random() * 1000)}`,
+      label, query: this.searchQuery, category: this.activeCat,
+      createdAt: new Date().toISOString(),
+      matchCountAtSave: this.matchSavedSearchCount(this.activeCat, this.searchQuery),
+    });
+    this.saveSavedSearches();
+    this.showToast(this.t('search_saved_toast'));
+  },
+  /** Re-applies a saved search to whichever page is open, navigating to /catalog first if the
+      current page has no catalog grid to filter (mirrors goToCategory's scroll-into-view). */
+  applySavedSearch(this: App, id: string): void {
+    const s = this.savedSearches.find(x => x.id === id);
+    if (!s) return;
+    this.closeCheckout();
+    if (!document.getElementById('catalogGrid')) {
+      const params = new URLSearchParams();
+      if (s.query) params.set('q', s.query);
+      if (s.category !== 'all') params.set('category', s.category);
+      window.location.href = `/catalog${params.toString() ? `?${params.toString()}` : ''}`;
+      return;
+    }
+    this.searchQuery = s.query;
+    this.activeCat = s.category;
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+    if (searchInput) searchInput.value = s.query;
+    document.querySelectorAll<HTMLElement>('#sidebarTabs .tab').forEach(el => el.classList.toggle('active', el.dataset.cat === s.category));
+    this.renderCatalog();
+    document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  },
+  removeSavedSearch(this: App, id: string): void {
+    this.savedSearches = this.savedSearches.filter(s => s.id !== id);
+    this.saveSavedSearches();
+    this.openCabinet('saved_searches');
+  },
+  saveSavedSearches(this: App): void {
+    try { localStorage.setItem('vh_saved_searches', JSON.stringify(this.savedSearches)); } catch { /* ignore */ }
   },
 };

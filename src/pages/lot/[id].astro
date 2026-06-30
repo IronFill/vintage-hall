@@ -119,6 +119,11 @@ const description = tr?.desc ?? 'Антикварний лот на Vintage Hall
         <a class="btn btn-primary btn-block" href={`/?lot=${p.id}#catalog`}>
           {p.saleType === 'auction' ? 'Зробити ставку →' : p.saleType === 'request' ? 'Залишити запит →' : 'Купити лот →'}
         </a>
+        {p.saleType === 'auction' && p.buyNowPrice && (!p.endTime || new Date(p.endTime).getTime() > Date.now()) && (
+          <a class="btn btn-ghost btn-block" style="margin-top:10px;" href={`/?lot=${p.id}#catalog`}>
+            ⚡ Купити зараз за {p.buyNowPrice.toLocaleString('ru-RU')} ₴
+          </a>
+        )}
         <p style="font-size:0.75rem; color:var(--sage); margin-top:10px;">
           Ставки, чат із продавцем і кошик доступні на повній сторінці каталогу.
         </p>

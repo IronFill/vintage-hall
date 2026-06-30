@@ -8,6 +8,7 @@ import type { Lang } from '../types';
 declare module './app' {
   interface VintageHallApp {
   placeBid(id: number): void;
+  buyNowAuction(id: number): void;
   openLotDetail(id: number): void;
   openLightbox(id: number, idx: number): void;
   renderLightbox(): void;
@@ -44,7 +45,45 @@ export const lotDetailMethods = {
     p.bidsCount = (p.bidsCount ?? 0) + 1;
     p.bidHistory = [{ user: this.currentUser, bid: newBid, time: new Date().toISOString() }, ...(p.bidHistory ?? [])];
 
-    this.showToast(`${this.t('bid_placed_as')} <span class="mono">${newBid.toLocaleString('ru-RU')} ₴</span>`);
+    // Anti-sniping: a bid placed inside the last 5 minutes pushes the close time out by 5 more
+    // minutes, so a last-second bid can't win outright — mirrors how real auction houses (and
+    // Violity) prevent snipe-bidding from deciding an item nobody else had a chance to counter.
+    const ANTI_SNIPE_WINDOW_MS = 5 * 60 * 1000;
+    let extended = false;
+    if (p.endTime) {
+      const remaining = new Date(p.endTime).getTime() - Date.now();
+      if (remaining > 0 && remaining < ANTI_SNIPE_WINDOW_MS) {
+        p.endTime = new Date(Date.now() + ANTI_SNIPE_WINDOW_MS).toISOString();
+        extended = true;
+      }
+    }
+
+    this.showToast(extended
+      ? `${this.t('bid_placed_as')} <span class="mono">${newBid.toLocaleString('ru-RU')} ₴</span><br><span style="font-size:0.75rem; color:var(--brass-light);">${this.t('auction_extended_msg')}</span>`
+      : `${this.t('bid_placed_as')} <span class="mono">${newBid.toLocaleString('ru-RU')} ₴</span>`);
+    this.renderCatalog();
+    if ($('checkoutModal').classList.contains('active')) this.openLotDetail(id);
+  },
+  /** "Купити зараз" — instant-purchase price on an auction listing. Closes the auction immediately
+      in the buyer's favour by recording a winning bid and backdating endTime, which makes it surface
+      correctly in "Виграні лоти" (renderWonLots) without any separate purchase-tracking code. */
+  buyNowAuction(this: App, id: number): void {
+    if (!this.currentUser) {
+      alert(this.t('bid_login_required'));
+      this.openLogin('my_bids');
+      return;
+    }
+    const p = this.products.find(x => x.id === id);
+    if (!p || p.saleType !== 'auction' || !p.buyNowPrice) return;
+    if (p.endTime && new Date(p.endTime).getTime() <= Date.now()) return;
+
+    const price = p.buyNowPrice;
+    p.currentBid = price;
+    p.bidsCount = (p.bidsCount ?? 0) + 1;
+    p.bidHistory = [{ user: this.currentUser, bid: price, time: new Date().toISOString() }, ...(p.bidHistory ?? [])];
+    p.endTime = new Date(Date.now() - 1000).toISOString();
+
+    this.showToast(`${this.t('buy_now_success')} <span class="mono">${price.toLocaleString('ru-RU')} ₴</span>`);
     this.renderCatalog();
     if ($('checkoutModal').classList.contains('active')) this.openLotDetail(id);
   },
@@ -68,6 +107,9 @@ export const lotDetailMethods = {
       const minNext = (p.currentBid ?? p.startPrice ?? 0) + (p.bidStep ?? 100);
       priceBlock = `<div class="lot-price mono" style="font-size:1.25rem;">${(p.currentBid ?? p.startPrice ?? 0).toLocaleString('ru-RU')} ₴</div>`;
       actionBtn = `<button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:14px;" data-action="place-bid" data-id="${id}" ${ended ? 'disabled' : ''}>${this.t('btn_place_bid')}</button>`;
+      if (!ended && p.buyNowPrice) {
+        actionBtn += `<button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:8px;" data-action="buy-now" data-id="${id}">⚡ ${this.t('btn_buy_now')} · <span class="mono">${p.buyNowPrice.toLocaleString('ru-RU')} ₴</span></button>`;
+      }
       extraRows = `
         <tr><td>${this.t('label_start_price')}</td><td>${(p.startPrice ?? 0).toLocaleString('ru-RU')} ₴</td></tr>
         <tr><td>${this.t('label_min_next_bid')}</td><td class="mono">${minNext.toLocaleString('ru-RU')} ₴</td></tr>

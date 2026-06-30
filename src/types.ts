@@ -93,6 +93,9 @@ export interface Product {
   /** How many people are looking at this lot right now — auction urgency cue. */
   watchingNow?: number;
   bidsLastHour?: number;
+  /** Optional instant-purchase price for an auction listing ("Купити зараз") — ends the auction
+      immediately in the buyer's favour, same mechanic as eBay/Violity's Buy It Now. */
+  buyNowPrice?: number;
 
   /** Richer card/detail data, addressing the "thin card" feedback. */
   conditionGrade?: string;
@@ -452,6 +455,22 @@ export interface UiStrings {
   chat_input_aria: string;
   chat_send_aria: string;
   chat_auto_reply: string;
+
+  // Buy Now (blitz price) on auctions
+  btn_buy_now: string;
+  buy_now_success: string;
+
+  // Anti-sniping auto-extension
+  auction_extended_msg: string;
+
+  // Saved searches / alerts
+  tab_saved_searches: string;
+  btn_save_search: string;
+  search_saved_toast: string;
+  search_already_saved: string;
+  search_save_empty_msg: string;
+  empty_saved_searches: string;
+  label_new_matches: string;
 }
 
 export type Translations = Record<Lang, UiStrings>;
@@ -499,4 +518,17 @@ export interface QuickMessage {
   author: string;
   text: string;
   date: string;
+}
+
+/** A persisted search (query + category) the user can revisit or be "notified" about — simulated
+    new-match count is computed deterministically, since there's no backend to track real history. */
+export interface SavedSearch {
+  id: string;
+  label: string;
+  query: string;
+  category: CatalogFilter;
+  createdAt: string;
+  /** How many lots matched at save time — compared against the live count to show a real
+      "N new since you saved this" figure instead of an invented notification number. */
+  matchCountAtSave: number;
 }

@@ -85,7 +85,13 @@ export const UI: Translations = {
     chat_title: "Підтримка Vintage Hall", chat_close_label: "Закрити чат",
     chat_welcome: "Вітаємо! Чим можемо допомогти? Напишіть ваше питання — ми відповімо якнайшвидше.",
     chat_input_placeholder: "Ваше повідомлення...", chat_input_aria: "Повідомлення в чат підтримки",
-    chat_send_aria: "Надіслати повідомлення", chat_auto_reply: "Дякуємо за повідомлення! Наш менеджер відповість протягом кількох хвилин."
+    chat_send_aria: "Надіслати повідомлення", chat_auto_reply: "Дякуємо за повідомлення! Наш менеджер відповість протягом кількох хвилин.",
+    btn_buy_now: "Купити зараз", buy_now_success: "Лот придбано за блиц-ціною!",
+    auction_extended_msg: "Торги продовжено на 5 хв — захист від ставки в останню секунду.",
+    tab_saved_searches: "Збережені пошуки", btn_save_search: "Зберегти пошук і отримувати сповіщення",
+    search_saved_toast: "Пошук збережено! Повідомимо, коли з'являться нові лоти.",
+    search_already_saved: "Цей пошук уже збережено.", search_save_empty_msg: "Спочатку введіть запит або оберіть категорію.",
+    empty_saved_searches: "У вас поки немає збережених пошуків.", label_new_matches: "нових лотів"
   },
   en: {
     tagline: "Antiques auction house", nav_catalog: "Catalog", nav_about: "About", nav_contacts: "Contacts", nav_news: "News", nav_forum: "Forum", cart_btn: "Cart",
@@ -171,7 +177,13 @@ export const UI: Translations = {
     chat_title: "Vintage Hall Support", chat_close_label: "Close chat",
     chat_welcome: "Welcome! How can we help? Send us your question and we'll reply shortly.",
     chat_input_placeholder: "Your message...", chat_input_aria: "Message to support chat",
-    chat_send_aria: "Send message", chat_auto_reply: "Thank you! Our team will reply within a few minutes."
+    chat_send_aria: "Send message", chat_auto_reply: "Thank you! Our team will reply within a few minutes.",
+    btn_buy_now: "Buy now", buy_now_success: "Lot purchased at the Buy Now price!",
+    auction_extended_msg: "Auction extended by 5 min — anti-sniping protection.",
+    tab_saved_searches: "Saved searches", btn_save_search: "Save this search and get notified",
+    search_saved_toast: "Search saved! We'll notify you when new lots appear.",
+    search_already_saved: "This search is already saved.", search_save_empty_msg: "Enter a query or pick a category first.",
+    empty_saved_searches: "You don't have any saved searches yet.", label_new_matches: "new lots"
   },
   pl: {
     tagline: "Dom aukcyjny antyków", nav_catalog: "Katalog", nav_about: "O nas", nav_contacts: "Kontakt", nav_news: "Aktualności", nav_forum: "Forum", cart_btn: "Koszyk",
@@ -257,7 +269,13 @@ export const UI: Translations = {
     chat_title: "Wsparcie Vintage Hall", chat_close_label: "Zamknij czat",
     chat_welcome: "Witamy! W czym możemy pomóc? Napisz swoje pytanie — odpowiemy najszybciej jak to możliwe.",
     chat_input_placeholder: "Twoja wiadomość...", chat_input_aria: "Wiadomość na czacie wsparcia",
-    chat_send_aria: "Wyślij wiadomość", chat_auto_reply: "Dziękujemy za wiadomość! Nasz menedżer odpowie w ciągu kilku minut."
+    chat_send_aria: "Wyślij wiadomość", chat_auto_reply: "Dziękujemy za wiadomość! Nasz menedżer odpowie w ciągu kilku minut.",
+    btn_buy_now: "Kup teraz", buy_now_success: "Przedmiot kupiony w cenie „Kup teraz”!",
+    auction_extended_msg: "Aukcja przedłużona o 5 min — ochrona przed snajpingiem.",
+    tab_saved_searches: "Zapisane wyszukiwania", btn_save_search: "Zapisz wyszukiwanie i otrzymuj powiadomienia",
+    search_saved_toast: "Wyszukiwanie zapisane! Powiadomimy o nowych ofertach.",
+    search_already_saved: "To wyszukiwanie jest już zapisane.", search_save_empty_msg: "Najpierw wpisz zapytanie lub wybierz kategorię.",
+    empty_saved_searches: "Nie masz jeszcze zapisanych wyszukiwań.", label_new_matches: "nowych ofert"
   },
   ru: {
     tagline: "Аукционный дом антиквариата", nav_catalog: "Каталог", nav_about: "О нас", nav_contacts: "Контакты", nav_news: "Новости", nav_forum: "Форум", cart_btn: "Корзина",
@@ -343,6 +361,12 @@ export const UI: Translations = {
     chat_title: "Поддержка Vintage Hall", chat_close_label: "Закрыть чат",
     chat_welcome: "Приветствуем! Чем можем помочь? Напишите ваш вопрос — мы ответим как можно скорее.",
     chat_input_placeholder: "Ваше сообщение...", chat_input_aria: "Сообщение в чат поддержки",
-    chat_send_aria: "Отправить сообщение", chat_auto_reply: "Спасибо за сообщение! Наш менеджер ответит в течение нескольких минут."
+    chat_send_aria: "Отправить сообщение", chat_auto_reply: "Спасибо за сообщение! Наш менеджер ответит в течение нескольких минут.",
+    btn_buy_now: "Купить сейчас", buy_now_success: "Лот приобретён по блиц-цене!",
+    auction_extended_msg: "Торги продлены на 5 мин — защита от ставки в последнюю секунду.",
+    tab_saved_searches: "Сохранённые поиски", btn_save_search: "Сохранить поиск и получать уведомления",
+    search_saved_toast: "Поиск сохранён! Сообщим, когда появятся новые лоты.",
+    search_already_saved: "Этот поиск уже сохранён.", search_save_empty_msg: "Сначала введите запрос или выберите категорию.",
+    empty_saved_searches: "У вас пока нет сохранённых поисков.", label_new_matches: "новых лотов"
   }
 };
