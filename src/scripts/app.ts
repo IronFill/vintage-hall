@@ -80,7 +80,7 @@ export class VintageHallApp {
     const set = (id: string, text: string) => { const el = document.getElementById(id); if (el) el.textContent = text; };
     const setHTML = (id: string, html: string) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
 
-    set('tagline', this.t('tagline'));
+    set('topbarTagline', this.t('tagline'));
     set('navCatalog', this.t('nav_catalog'));
     set('navNews', this.t('nav_news'));
     set('navForum', this.t('nav_forum'));
@@ -90,7 +90,7 @@ export class VintageHallApp {
     set('accountBtnLabel', this.t('nav_account'));
     set('addLotBtnLabel', this.t('add_lot_btn'));
     set('heroEyebrow', this.t('hero_eyebrow'));
-    set('heroH1', this.t('hero_h1_new'));
+    setHTML('heroH1', this.t('hero_h1_new'));
     set('heroP', this.t('hero_sub_new'));
     set('btnViewAuctions', this.t('btn_view_auctions'));
     set('heroSellBtn', this.t('btn_sell_item'));

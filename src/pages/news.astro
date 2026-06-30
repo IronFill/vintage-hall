@@ -51,6 +51,7 @@ import Overlays from '../components/Overlays.astro';
       card.classList.add('news-modal');
       const bodyParagraphs = a.body[lang].split('\n\n').map((para) => `<p>${para}</p>`).join('');
       card.innerHTML = `
+        <button class="modal-close-x" id="closeArticleBtnX" aria-label="${closeLabels[lang]}">&times;</button>
         <div class="news-modal-layout">
           <img src="${a.imageUrl}" alt="">
           <div>
@@ -68,6 +69,7 @@ import Overlays from '../components/Overlays.astro';
       `;
       modal.classList.add('active');
       document.getElementById('closeArticleBtn')?.addEventListener('click', closeArticleModal);
+      document.getElementById('closeArticleBtnX')?.addEventListener('click', closeArticleModal);
     }
 
     function closeArticleModal() {

@@ -390,6 +390,7 @@ export const catalogMethods = {
     const card = document.getElementById('compareCard');
     if (!card) return;
     card.innerHTML = `
+      <button class="modal-close-x" data-action="close-checkout-compare" aria-label="${this.t('btn_close')}">&times;</button>
       <h3 style="margin-bottom:16px;">${this.t('compare_title')}</h3>
       <div style="overflow-x:auto;">
         <table class="compare-table">
