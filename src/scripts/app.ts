@@ -346,14 +346,23 @@ export class VintageHallApp {
       this.showToast(zoomedLabel(Math.round(this.zoomSteps[this.zoomIndex] * 100)));
     });
 
+    const savedContrast = localStorage.getItem('vh_contrast');
+    if (savedContrast === 'high') {
+      this.highContrast = true;
+      document.documentElement.setAttribute('data-contrast', 'high');
+      contrast.classList.add('active');
+    }
+
     contrast.addEventListener('click', () => {
       this.highContrast = !this.highContrast;
       if (this.highContrast) {
         document.documentElement.setAttribute('data-contrast', 'high');
         contrast.classList.add('active');
+        try { localStorage.setItem('vh_contrast', 'high'); } catch {}
       } else {
         document.documentElement.removeAttribute('data-contrast');
         contrast.classList.remove('active');
+        try { localStorage.removeItem('vh_contrast'); } catch {}
       }
     });
 

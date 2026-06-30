@@ -221,6 +221,7 @@ export const lotDetailMethods = {
 
     $('checkoutCard').classList.add('wide');
     $('checkoutCard').innerHTML = `
+      <button class="modal-close-x" data-action="close-checkout" aria-label="Закрити">&times;</button>
       ${galleryBlock}
       ${p.badge ? `<span class="prestige-chip ${p.badge === 'rare' ? 'prestige-chip-rare' : ''}">${this.badgeLabel(p.badge)}</span>` : ''}
       <h3>${tr.name}</h3>

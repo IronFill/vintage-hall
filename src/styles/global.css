@@ -1150,3 +1150,28 @@
   @media (max-width: 560px){
     .safety-steps{grid-template-columns:1fr;}
   }
+
+  /* BACK BUTTON */
+  .back-btn{
+    position:fixed; top:80px; left:20px; z-index:49;
+    width:40px; height:40px; border-radius:50%;
+    background:var(--bg-card); border:1px solid var(--line);
+    color:var(--ivory); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:border-color .2s, background .2s, transform .2s;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+  }
+  .back-btn:hover{border-color:var(--brass); background:var(--accent-tint); transform:translateX(-2px);}
+  .back-btn svg{width:18px; height:18px;}
+  @media (max-width:560px){.back-btn{top:70px; left:12px; width:36px; height:36px;}}
+
+  /* MODAL CLOSE BUTTON (top-right on lot detail & other modals) */
+  .modal-close-x{
+    position:absolute; top:14px; right:14px;
+    width:32px; height:32px; border-radius:50%;
+    background:var(--field-bg); border:1px solid var(--line); color:var(--sage);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.125rem; line-height:1; cursor:pointer;
+    transition:background .2s, border-color .2s, color .2s;
+  }
+  .modal-close-x:hover{background:var(--oxblood-tint); border-color:var(--oxblood); color:var(--ivory);}
+  .modal-card{position:relative;}

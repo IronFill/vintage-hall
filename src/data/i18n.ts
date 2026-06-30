@@ -58,7 +58,7 @@ export const UI: Translations = {
     tab_silver: "Срібло", tab_painting: "Живопис", tab_militaria: "Військова історія", tab_jewelry: "Прикраси",
     tab_clocks: "Годинники", tab_glass: "Скло і хрусталь", tab_philately: "Філателія", tab_books: "Книги",
     trust_rating: "рейтинг площадки", trust_deals: "успішних угод", trust_sellers_buyers: "продавців та покупців", trust_volume: "продано на суму", trust_online: "онлайн зараз",
-    why_buy_title: "Чому купувати на Vintage Hall", why_verified_sellers: "Перевірені продавці", why_expertise: "Експертиза справжності",
+    why_buy_title: "Чому купувати на Vintage Hall", why_verified_sellers: "Перевірені продавці", why_expertise: "Експертиза автентичності",
     why_safe_deal: "Безпечна угода", why_return_guarantee: "Гарантія повернення", why_delivery_ua: "Доставка по Україні", why_intl_delivery: "Міжнародна доставка",
     safety_title: "Як захищена ваша угода",
     safety_step1: "Покупець оплачує — кошти резервуються платформою", safety_step2: "Продавець відправляє лот покупцю",
