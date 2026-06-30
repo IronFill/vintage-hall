@@ -1,10 +1,6 @@
 ---
 import { SEEDED_PRODUCTS, PRODUCT_I18N } from '../data/products';
 
-// Fills the previously empty decorative space to the right of the headline (per the "carousel of
-// top lots — photo + price + auction timer" request) with a small rotating spotlight of real seeded
-// lots: two live auctions (so the countdown timer has something real to count down to) plus two
-// standout shop/request lots.
 const featuredIds = [2, 7, 12, 10] as const;
 const featured = featuredIds.map((id) => {
   const p = SEEDED_PRODUCTS.find((x) => x.id === id)!;
@@ -21,46 +17,53 @@ const featured = featuredIds.map((id) => {
 });
 ---
 
-<section class="relative z-[1] mx-auto grid max-w-[1320px] grid-cols-1 items-center gap-10 px-4 pt-12 pb-12 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:gap-[60px] md:px-8 md:pt-[90px] md:pb-[70px]">
-  <div>
-    <div class="mb-4 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.2em] text-brass md:mb-[22px] md:text-[0.875rem]">
-      <span class="h-px w-8 bg-brass"></span> <span id="heroEyebrow">Кожна річ — лот №1</span>
+<section class="hero">
+  <div class="hero-editorial-left">
+    <div class="eyebrow-editorial">
+      <span id="heroEyebrow">Осінні торги 2026</span>
     </div>
-    <h1 id="heroH1" class="mb-4 font-display text-[2rem] leading-[1.15] font-medium text-ivory md:mb-[22px] md:text-[3rem] md:leading-[1.12]">Знайдіть справжній антикваріат з гарантією походження</h1>
-    <p id="heroP" class="mb-7 max-w-[480px] text-base font-medium text-ivory md:mb-8">Понад 2 800 успішних угод · Перевірені продавці · Безпечна угода</p>
-    <div class="flex flex-wrap gap-3.5">
-      <a href="#live-auctions" class="btn btn-primary" id="btnViewAuctions">Дивитись аукціони</a>
+    <h1 id="heroH1">Предмети з <em>характером</em><br>та гарантією справжності</h1>
+    <div class="hero-rule"></div>
+    <p id="heroP" class="hero-sub">Аукціонний дім та маркетплейс антикваріату. 48 верифікованих продавців, понад 2 800 угод.</p>
+    <div class="hero-actions">
+      <a href="#live-auctions" class="btn btn-dark" id="btnViewAuctions">Переглянути каталог</a>
       <button class="btn btn-ghost" id="heroSellBtn">Продати предмет</button>
     </div>
-    <div class="mt-5 flex flex-wrap items-center gap-3.5 sm:gap-[18px] md:mt-7 md:gap-[28px]">
-      <div class="flex flex-col gap-[3px]">
-        <span class="font-mono text-[1.375rem] text-brass-light" id="heroLotCount">11</span>
-        <span class="text-[0.875rem] tracking-[0.03em] text-sage" id="heroLotLabel">лотів на майданчику</span>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="mono hero-stat-num" id="heroLotCount">11</span>
+        <span class="hero-stat-lbl" id="heroLotLabel">лотів</span>
       </div>
-      <div class="hidden sm:block h-8 w-px bg-line"></div>
-      <div class="flex flex-col gap-[3px]">
-        <span class="font-mono text-[1.375rem] text-brass-light">48</span>
-        <span class="text-[0.875rem] tracking-[0.03em] text-sage" id="heroSellersLabel">продавців</span>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <span class="mono hero-stat-num">48</span>
+        <span class="hero-stat-lbl" id="heroSellersLabel">продавців</span>
       </div>
-      <div class="hidden sm:block h-8 w-px bg-line"></div>
-      <div class="flex flex-col gap-[3px]">
-        <span class="font-mono text-[1.375rem] text-brass-light">312</span>
-        <span class="text-[0.875rem] tracking-[0.03em] text-sage" id="heroSoldLabel">лотів продано</span>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat">
+        <span class="mono hero-stat-num">312</span>
+        <span class="hero-stat-lbl" id="heroSoldLabel">продано</span>
       </div>
     </div>
   </div>
-  <div class="relative mx-auto flex aspect-square w-full max-w-[280px] items-center justify-center sm:max-w-[340px] md:mx-0 md:max-w-none">
-    <div class="absolute inset-0 rounded-full border border-line"></div>
-    <div class="absolute inset-[30px] rounded-full border border-dashed border-line"></div>
 
-    <!-- Top-lots spotlight carousel: fills the space that used to be just decorative rings -->
+  <div class="hero-lot-col">
+    <div class="hero-lot-stamp" id="heroStamp">СПРАВЖНІСТЬ<br>ГАРАНТОВАНА</div>
     <a class="hero-lot-card" id="heroLotCard" href={`/lot/${featured[0].id}`} aria-label="Перейти до топ-лоту">
-      <div class="hero-lot-eyebrow">★ Топ-лот тижня</div>
+      <div class="hero-lot-badge">★ Топ-лот тижня</div>
+      <div class="hero-lot-num" id="heroLotNum">ЛОТ-002</div>
       <div class="hero-lot-photo"><img id="heroLotImg" src={featured[0].photo} alt="" /></div>
-      <div class="hero-lot-name" id="heroLotName">{featured[0].name}</div>
-      <div class="hero-lot-price-row">
-        <span class="hero-lot-price mono" id="heroLotPrice"></span>
-        <span class="hero-lot-timer mono" id="heroLotTimer"></span>
+      <div class="hero-lot-body">
+        <div class="hero-lot-name" id="heroLotName">{featured[0].name}</div>
+        <div class="hero-lot-meta" id="heroLotMeta">Антикваріат · XIX ст.</div>
+        <div class="hero-lot-price-row">
+          <span class="hero-lot-price mono" id="heroLotPrice"></span>
+          <span class="hero-lot-timer mono" id="heroLotTimer"></span>
+        </div>
+      </div>
+      <div class="hero-lot-footer">
+        <span class="hero-lot-cta" id="heroLotCta">Зробити ставку</span>
+        <span class="hero-lot-arrow">→</span>
       </div>
     </a>
     <div class="hero-lot-dots" id="heroLotDots">
@@ -68,8 +71,6 @@ const featured = featuredIds.map((id) => {
         <span class={`hero-lot-dot ${i === 0 ? 'active' : ''}`} data-idx={i}></span>
       ))}
     </div>
-
-    <div class="absolute right-[3%] bottom-[3%] flex h-[64px] w-[64px] -rotate-12 items-center justify-center rounded-full border-[1.5px] border-oxblood text-center font-mono text-[0.71875rem] tracking-[0.05em] text-oxblood opacity-85" id="heroStamp">СПРАВЖНІСТЬ<br>ГАРАНТОВАНА</div>
   </div>
 </section>
 
@@ -100,15 +101,17 @@ const featured = featuredIds.map((id) => {
       const img = document.getElementById('heroLotImg');
       const name = document.getElementById('heroLotName');
       const price = document.getElementById('heroLotPrice');
+      const num = document.getElementById('heroLotNum');
+      const cta = document.getElementById('heroLotCta');
       if (card) card.setAttribute('href', `/lot/${f.id}`);
       if (img) img.setAttribute('src', f.photo);
       if (name) name.textContent = f.name;
+      if (num) num.textContent = `ЛОТ-0${f.id.toString().padStart(2,'0')}`;
       if (price) price.textContent = f.saleType === 'auction' ? `Ставка: ${heroFmtPrice(f.price)}` : heroFmtPrice(f.price);
+      if (cta) cta.textContent = f.saleType === 'auction' ? 'Зробити ставку' : 'Переглянути лот';
       document.querySelectorAll('#heroLotDots .hero-lot-dot').forEach((d, i) => d.classList.toggle('active', i === heroLotIdx));
       heroUpdateTimer();
     };
-    // Cross-fade + slight rise on every switch (a quiet, "turning a card over" feel rather than an
-    // abrupt content jump); skipped on first paint so the card is visible immediately on load.
     if (animate && card) {
       card.classList.add('hero-lot-fade');
       setTimeout(() => {
