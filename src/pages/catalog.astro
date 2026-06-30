@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import CatalogSection from '../components/CatalogSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Overlays from '../components/Overlays.astro';
+---
+
+<Layout
+  title="Каталог лотів — Vintage Hall"
+  description="Повний каталог антикваріату Vintage Hall: монети, фарфор, бронза, меблі, годинники та прикраси. Пошук, фільтри та всі категорії в одному місці."
+>
+  <Header />
+  <main class="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 md:px-8 md:py-[50px]">
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Каталог</div>
+    <h1 class="mb-3 font-display text-[1.75rem] sm:text-[2.375rem]">Каталог лотів</h1>
+    <p class="mb-8 max-w-[640px] text-[0.9375rem] text-sage">Шукайте за назвою лоту або обирайте категорію праворуч — фільтри та сортування працюють одночасно.</p>
+
+    <!-- Catalog grid on the left, full category list on the right (per the "категорії праворуч" request) -->
+    <div class="grid grid-cols-1 items-start gap-[18px] md:grid-cols-[1fr_240px] md:gap-9">
+      <CatalogSection />
+      <Sidebar />
+    </div>
+  </main>
+  <SiteFooter />
+  <Overlays />
+  <script src="../scripts/app.ts"></script>
+  <script>
+    import type { Lang } from '../types';
+    import { SEEDED_PRODUCTS, PRODUCT_I18N } from '../data/products';
+
+    let lang: Lang = (localStorage.getItem('vh_lang') as Lang) || 'uk';
+
+    function buildIndex() {
+      return SEEDED_PRODUCTS.map((p) => {
+        const i18n = PRODUCT_I18N[p.id];
+        const tr = i18n?.[lang] ?? i18n?.uk;
+        const price = p.price ?? p.currentBid ?? p.startPrice ?? null;
+        return { id: p.id, name: tr?.name ?? '', price };
+      }).filter((p) => p.name);
+    }
+
+    const input = document.getElementById('searchInput') as HTMLInputElement | null;
+    const wrap = input?.closest('.search-box') as HTMLElement | null;
+    let box: HTMLDivElement | null = null;
+
+    function ensureBox(): HTMLDivElement | null {
+      if (!wrap) return null;
+      if (!box) {
+        box = document.createElement('div');
+        box.className = 'search-suggestions';
+        wrap.appendChild(box);
+      }
+      return box;
+    }
+
+    function renderSuggestions() {
+      const b = ensureBox();
+      if (!b || !input) return;
+      const q = input.value.trim().toLowerCase();
+      if (!q) { b.classList.remove('open'); b.innerHTML = ''; return; }
+      const matches = buildIndex().filter((p) => p.name.toLowerCase().includes(q)).slice(0, 6);
+      if (matches.length === 0) { b.classList.remove('open'); b.innerHTML = ''; return; }
+      b.innerHTML = matches.map((m) => `
+        <a href="/lot/${m.id}" class="search-suggestion-row">
+          <span>${m.name}</span>
+          ${m.price ? `<span class="mono">${m.price.toLocaleString('ru-RU')} ₴</span>` : ''}
+        </a>
+      `).join('');
+      b.classList.add('open');
+    }
+
+    input?.addEventListener('input', renderSuggestions);
+    input?.addEventListener('focus', renderSuggestions);
+    document.addEventListener('click', (e) => {
+      if (wrap && !wrap.contains(e.target as Node)) box?.classList.remove('open');
+    });
+    document.addEventListener('vh-lang-changed', (e) => {
+      lang = (e as CustomEvent<Lang>).detail;
+      renderSuggestions();
+    });
+
+    // Pre-fill from ?q=… (set by the header's global search) and trigger app.ts's own filter listener.
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q && input) {
+      input.value = q;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  </script>
+</Layout>

@@ -1,0 +1,135 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Overlays from '../components/Overlays.astro';
+---
+
+<Layout title="Новини — Vintage Hall">
+  <Header />
+  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Новини</div>
+    <h1 class="mb-8 font-display text-[1.75rem] sm:text-[2.375rem]">Новини антикваріату</h1>
+
+    <div class="mb-8 flex flex-wrap gap-2" id="newsCats">
+      <button class="tab active" data-ncat="all">Усі</button>
+      <button class="tab" data-ncat="auctions">Аукціони</button>
+      <button class="tab" data-ncat="numismatics">Нумізматика</button>
+      <button class="tab" data-ncat="archaeology">Археологія</button>
+      <button class="tab" data-ncat="architecture">Архітектура</button>
+      <button class="tab" data-ncat="interviews">Інтерв'ю</button>
+    </div>
+
+    <div class="news-grid" id="newsGrid"></div>
+  </main>
+  <SiteFooter />
+  <Overlays />
+  <script src="../scripts/app.ts"></script>
+  <script>
+    import type { Lang, NewsCategory } from '../types';
+    import { NEWS_ARTICLES } from '../data/community';
+
+    let lang: Lang = (localStorage.getItem('vh_lang') as Lang) || 'uk';
+    let activeCat: string = 'all';
+
+    const catLabels: Record<NewsCategory, Record<Lang, string>> = {
+      numismatics: { uk: 'Нумізматика', en: 'Numismatics', pl: 'Numizmatyka', ru: 'Нумизматика' },
+      archaeology: { uk: 'Археологія', en: 'Archaeology', pl: 'Archeologia', ru: 'Археология' },
+      architecture: { uk: 'Архітектура', en: 'Architecture', pl: 'Architektura', ru: 'Архитектура' },
+      interviews: { uk: "Інтерв'ю", en: 'Interviews', pl: 'Wywiady', ru: 'Интервью' },
+      auctions: { uk: 'Аукціони', en: 'Auctions', pl: 'Aukcje', ru: 'Аукционы' }
+    };
+
+    function openArticleModal(id: number) {
+      const a = NEWS_ARTICLES.find(x => x.id === id);
+      const card = document.getElementById('checkoutCard');
+      const modal = document.getElementById('checkoutModal');
+      if (!a || !card || !modal) return;
+
+      const closeLabels: Record<Lang, string> = { uk: 'Закрити', en: 'Close', pl: 'Zamknij', ru: 'Закрыть' };
+
+      card.classList.add('news-modal');
+      const bodyParagraphs = a.body[lang].split('\n\n').map((para) => `<p>${para}</p>`).join('');
+      card.innerHTML = `
+        <div class="news-modal-layout">
+          <img src="${a.imageUrl}" alt="">
+          <div>
+            <div class="news-card-meta" style="margin-bottom:10px;">
+              <span class="news-cat-badge">${catLabels[a.category][lang]}</span>
+              <span class="mono">${a.date}</span>
+            </div>
+            <h2 style="font-family:'Cormorant',serif; font-size:28px; margin-bottom:12px; line-height:1.25;">${a.title[lang]}</h2>
+            <div class="mono" style="font-size:13px; color:var(--sage); margin-bottom:16px;">${a.author}</div>
+            <p style="font-size:1.0625rem; color:var(--ivory); line-height:1.75; margin-bottom:14px; font-weight:500;">${a.excerpt[lang]}</p>
+            <div class="news-modal-body" style="color:var(--sage);">${bodyParagraphs}</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-block mt-lg" id="closeArticleBtn">${closeLabels[lang]}</button>
+      `;
+      modal.classList.add('active');
+      document.getElementById('closeArticleBtn')?.addEventListener('click', closeArticleModal);
+    }
+
+    function closeArticleModal() {
+      document.getElementById('checkoutModal')?.classList.remove('active');
+      document.getElementById('checkoutCard')?.classList.remove('news-modal');
+    }
+
+    let lastOpenedArticleId: number | null = null;
+
+    function renderModalIfOpen() {
+      if (lastOpenedArticleId !== null && document.getElementById('checkoutModal')?.classList.contains('active')) {
+        openArticleModal(lastOpenedArticleId);
+      }
+    }
+
+    document.getElementById('newsGrid')?.addEventListener('click', (e) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>('[data-action="open-news"]');
+      if (!card) return;
+      lastOpenedArticleId = parseInt(card.dataset.id!, 10);
+      openArticleModal(lastOpenedArticleId);
+    });
+
+    // The shared overlay also closes on outer-overlay click — keep our state in sync
+    document.getElementById('overlay')?.addEventListener('click', closeArticleModal);
+
+    function render() {
+      const grid = document.getElementById('newsGrid');
+      if (!grid) return;
+      const filtered = activeCat === 'all' ? NEWS_ARTICLES : NEWS_ARTICLES.filter(a => a.category === activeCat);
+
+      grid.innerHTML = filtered.map(a => `
+        <article class="news-card" data-action="open-news" data-id="${a.id}">
+          <div class="news-card-img"><img src="${a.imageUrl}" alt="" loading="lazy"></div>
+          <div class="news-card-body">
+            <div class="news-card-meta">
+              <span class="news-cat-badge">${catLabels[a.category][lang]}</span>
+              <span class="mono">${a.date}</span>
+            </div>
+            <h3 class="news-card-title">${a.title[lang]}</h3>
+            <p class="news-card-excerpt">${a.excerpt[lang]}</p>
+            <div class="news-card-author">${a.author}</div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    document.getElementById('newsCats')?.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#newsCats .tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.ncat ?? 'all';
+      render();
+    });
+
+    // React to language changes made via the header switch (dispatched by the main app script)
+    document.addEventListener('vh-lang-changed', (e) => {
+      lang = (e as CustomEvent<Lang>).detail;
+      render();
+      renderModalIfOpen();
+    });
+
+    render();
+  </script>
+</Layout>

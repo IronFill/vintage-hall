@@ -1,0 +1,192 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Overlays from '../components/Overlays.astro';
+---
+
+<Layout
+  title="Про нас — Vintage Hall"
+  description="Історія Vintage Hall — від однієї монети на блошиному ринку до аукціонного дому з командою експертів-нумізматів та реставраторів."
+>
+  <Header />
+  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Про нас</div>
+    <h1 class="mb-6 font-display text-[1.75rem] sm:text-[2.375rem]">Усе почалося з однієї монети</h1>
+    <div class="mb-14 grid grid-cols-1 items-start gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-[60px]">
+      <div class="border-l-2 border-brass pl-6 font-display text-[1.1875rem] italic leading-[1.4] text-brass-light md:text-2xl">«Антикваріат — це не старі речі. Це пам'ять, яку можна тримати в руках.»</div>
+      <div>
+        <p class="mb-4 text-base text-sage"><strong class="font-medium text-ivory">Vintage Hall</strong> — аукціонний дім та платформа для антикваріату, де колекціонери і продавці з усієї країни зустрічаються в одному місці. Кожен лот перевіряється, а кожен продавець відповідає за стан своєї речі — без сюрпризів після покупки.</p>
+        <p class="mb-4 text-base text-sage">Але перш ніж стати платформою, Vintage Hall тридцять років жив у вигляді однієї людини, її кишені, повної монет, і звички розглядати кожну річ так, наче вона хоче щось розповісти.</p>
+      </div>
+    </div>
+
+    <!-- FOUNDER STORY TIMELINE -->
+    <div class="mb-8 flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Наша історія</div>
+    <div class="story-timeline mb-14 max-w-[760px]">
+
+      <div class="story-item">
+        <div class="story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><circle cx="11" cy="11" r="3" stroke-dasharray="1.5 1.5"/></svg>
+        </div>
+        <div>
+          <div class="story-year">1996</div>
+          <h3 class="story-title">Монета з дідової шафи</h3>
+          <p class="story-text">Івану Коваленку було дванадцять, коли він знайшов у дідовій шафі потерту срібну монету часів Російської імперії. Дід не пам'ятав, звідки вона — «лежала завжди». Цього вистачило, щоб хлопець почав ставити запитання, на які бібліотека не мала готових відповідей: скільки їй років, чому саме такий профіль, чому срібло, а не мідь.</p>
+        </div>
+      </div>
+
+      <div class="story-item">
+        <div class="story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21l1.5-7.5L18 0l3 3-13.5 13.5L0 18z" transform="translate(2,2) scale(0.85)"/><path d="M20.5 20.5l-3-3"/></svg>
+        </div>
+        <div>
+          <div class="story-year">2003</div>
+          <h3 class="story-title">Перші суботи на блошиному ринку</h3>
+          <p class="story-text">Студентом історичного факультету Іван щосуботи їздив на блошиний ринок — спершу як покупець, потім як той, до кого приходили за порадою. Перші серйозні гроші, зароблені на репетиторстві, пішли на каталог Краузе та лупу з 10-кратним збільшенням. Колекція з «коробки з-під взуття» переросла у три альбоми.</p>
+        </div>
+      </div>
+
+      <div class="story-item">
+        <div class="story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 3 7v5c0 5 4 8 9 10 5-2 9-5 9-10V7z"/></svg>
+        </div>
+        <div>
+          <div class="story-year">2009</div>
+          <h3 class="story-title">Перше офіційне «так, оригінал»</h3>
+          <p class="story-text">Кандидатська з історії та репутація людини, яка «бачить підробку по краю карбування», привели до першого офіційного запрошення — провести експертизу нумізматичної колекції для регіонального аукціонного дому. За рік таких запрошень стало більше, ніж вільних вихідних.</p>
+        </div>
+      </div>
+
+      <div class="story-item">
+        <div class="story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5 12 4l9 5.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-7h6v7"/></svg>
+        </div>
+        <div>
+          <div class="story-year">2014</div>
+          <h3 class="story-title">Дві кімнати на Андріївському узвозі</h3>
+          <p class="story-text">Vintage Hall почався не з сайту, а з двох орендованих кімнат на історичній «вулиці антикварів» Києва — кілька вітрин, стіл для огляду лотів і записник, куди вручну вписували ставки на щомісячних офлайн-торгах для двадцяти знайомих колекціонерів. Назву придумали за чаєм: «Зала, де старі речі знову мають голос».</p>
+        </div>
+      </div>
+
+      <div class="story-item">
+        <div class="story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="story-year">2017–2020</div>
+          <h3 class="story-title">Команда, а не один експерт</h3>
+          <p class="story-text">Один нумізмат не може чесно оцінити фарфор чи живопис — Іван це визнав першим. До Vintage Hall послідовно приєдналися Олена Семенова (фарфор і керамика), Михайло Бондар (годинники й механізми) та Анна Ткачук (живопис і графіка) — кожен зі своєю спеціалізацією і власною впертою звичкою не довіряти речі на слово.</p>
+        </div>
+      </div>
+
+      <div class="story-item">
+        <div class="story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18M8 4v16"/></svg>
+        </div>
+        <div>
+          <div class="story-year">2023</div>
+          <h3 class="story-title">З записника — у браузер</h3>
+          <p class="story-text">Записник зі ставками не витримав масштабу: колекціонери з інших міст просили «зробити те саме, але онлайн». Так з'явилась цифрова платформа — з тими ж принципами офлайн-залу (перевірка, прозора історія ставок, відповідальність продавця), але без потреби їхати до Києва, щоб зробити ставку.</p>
+        </div>
+      </div>
+
+      <div class="story-item">
+        <div class="story-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17 9 11l4 4 8-8"/><path d="M21 7v6M21 7h-6"/></svg>
+        </div>
+        <div>
+          <div class="story-year">2026 — сьогодні</div>
+          <h3 class="story-title">Понад 2800 угод і далі рахуємо</h3>
+          <p class="story-text">Сьогодні Vintage Hall — це команда з чотирьох профільних експертів, 48 активних продавців з усієї країни та понад 2800 завершених угод. Кімнати на Андріївському узвозі досі існують — там і досі можна особисто потримати лот перед тим, як зробити ставку. Просто тепер до цього додався весь інтернет.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="my-12 h-px bg-line md:my-[70px]"></div>
+    <h2 class="my-8 font-display text-[1.75rem]">Наші цінності</h2>
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+      <button type="button" class="value-card" data-value="authenticity">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mb-2.5 w-7 text-brass-light"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+        <h3 class="mb-2 font-display text-[1.125rem] text-ivory">Справжність</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Кожен лот перевіряється на відповідність опису. Ми не допускаємо підробок.</p>
+        <span class="value-card-more">Детальніше →</span>
+      </button>
+      <button type="button" class="value-card" data-value="transparency">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mb-2.5 w-7 text-brass-light"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <h3 class="mb-2 font-display text-[1.125rem] text-ivory">Прозорість</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Відкрита історія ставок, чесний опис стану, ніяких прихованих комісій.</p>
+        <span class="value-card-more">Детальніше →</span>
+      </button>
+      <button type="button" class="value-card" data-value="community">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mb-2.5 w-7 text-brass-light"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <h3 class="mb-2 font-display text-[1.125rem] text-ivory">Спільнота</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Ми з'єднуємо людей, які цінують історію та красу речей з минулого.</p>
+        <span class="value-card-more">Детальніше →</span>
+      </button>
+    </div>
+
+    <!-- Value detail modal — self-contained, doesn't touch the shared checkout/cabinet modal -->
+    <div class="modal" id="valueModal" role="dialog" aria-modal="true">
+      <div class="modal-card" id="valueModalCard" style="max-width:560px;">
+        <h3 id="valueModalTitle"></h3>
+        <div id="valueModalBody" style="margin-top:14px; font-size:0.9375rem; line-height:1.7; color:var(--sage);"></div>
+        <button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:20px;" id="valueModalClose">Закрити</button>
+      </div>
+    </div>
+
+    <div class="mt-14 rounded-vh border border-dashed border-line bg-accent-tint p-6 text-[0.8125rem] leading-[1.6] text-sage">
+      Історія засновника на цій сторінці написана для демонстраційної версії платформи й узгоджена з демо-профілем експерта «Іван Коваленко» в каталозі лотів — це не біографія реальної людини.
+    </div>
+  </main>
+  <SiteFooter />
+  <Overlays />
+  <script src="../scripts/app.ts"></script>
+  <script>
+    const VALUE_DETAILS: Record<string, { title: string; html: string }> = {
+      authenticity: {
+        title: 'Справжність',
+        html: `
+          <p style="margin-bottom:12px;">Перед публікацією кожен лот проходить перевірку профільним експертом — нумізматику оцінює нумізмат, фарфор оцінює фарфорист, годинник розбирає годинникар. Це не формальність «для галочки»: експерт фізично оглядає річ, звіряє клейма й маркування з довідниками, перевіряє відповідність матеріалу і техніки заявленій епосі.</p>
+          <p style="margin-bottom:12px;">Якщо є сумніви в оригінальності — лот не публікується, поки сумніви не знято, або публікується з чесним застереженням «потребує додаткової експертизи», а не мовчки.</p>
+          <p>Якщо після покупки виявляється розбіжність з описом, яку не можна було визначити неозброєним оком заздалегідь — діє гарантія повернення коштів протягом 14 днів.</p>
+        `
+      },
+      transparency: {
+        title: 'Прозорість',
+        html: `
+          <p style="margin-bottom:12px;">Історія ставок на кожному аукціонному лоті відкрита повністю: видно, хто і коли підвищував ставку (за нікнеймом, без розкриття особистих даних), а не лише фінальну ціну. Це унеможливлює приховані «договірні» торги.</p>
+          <p style="margin-bottom:12px;">Комісія платформи фіксована й показана заздалегідь у калькуляторі — продавець бачить точну суму до публікації лота, без сюрпризів після продажу.</p>
+          <p>Стан речі описується чесно, включно з дефектами: подряпини, реставрація, заміна деталей — усе зазначається в описі, а не виявляється покупцем по факту.</p>
+        `
+      },
+      community: {
+        title: 'Спільнота',
+        html: `
+          <p style="margin-bottom:12px;">Vintage Hall — це не лише вітрина лотів, а форум, де колекціонери радяться один з одним, дізнаються про виставки та зустрічі, обмінюються досвідом з визначення підробок.</p>
+          <p style="margin-bottom:12px;">Досвідчені учасники регулярно допомагають новачкам безкоштовно — оцінити стан монети, розпізнати клеймо на фарфорі, порадити, як безпечно упакувати крихку річ для пересилання.</p>
+          <p>Раз на сезон ми організовуємо офлайн-зустрічі колекціонерів у різних містах — можливість показати свою колекцію наживо, а не лише на фото.</p>
+        `
+      }
+    };
+
+    const valueModal = document.getElementById('valueModal');
+    const valueModalTitle = document.getElementById('valueModalTitle');
+    const valueModalBody = document.getElementById('valueModalBody');
+
+    document.querySelectorAll<HTMLButtonElement>('.value-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const key = card.dataset.value;
+        const detail = key ? VALUE_DETAILS[key] : null;
+        if (!detail || !valueModal || !valueModalTitle || !valueModalBody) return;
+        valueModalTitle.textContent = detail.title;
+        valueModalBody.innerHTML = detail.html;
+        valueModal.classList.add('active');
+      });
+    });
+
+    document.getElementById('valueModalClose')?.addEventListener('click', () => valueModal?.classList.remove('active'));
+    valueModal?.addEventListener('click', (e) => { if (e.target === valueModal) valueModal.classList.remove('active'); });
+  </script>
+</Layout>

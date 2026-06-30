@@ -1,0 +1,84 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  ogType?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = 'Vintage Hall — аукціонний дім антикваріату',
+  description = 'Vintage Hall — аукціонний дім та маркетплейс антикваріату: монети, фарфор, бронза, меблі, прикраси. Перевірені лоти від продавців з усієї країни.',
+  image,
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://vintagehall.example').toString();
+
+// Analytics are OPT-IN via environment variables — with nothing set, zero third-party
+// scripts load (no fake/placeholder tracker IDs). Fill these in /.env to enable:
+//   PUBLIC_GA_ID=G-XXXXXXXXXX        (Google Analytics 4 measurement ID)
+//   PUBLIC_YM_COUNTER_ID=12345678    (Yandex Metrica counter ID)
+const gaId = import.meta.env.PUBLIC_GA_ID as string | undefined;
+const ymId = import.meta.env.PUBLIC_YM_COUNTER_ID as string | undefined;
+---
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  <link rel="canonical" href={canonicalUrl} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:site_name" content="Vintage Hall" />
+  {image && <meta property="og:image" content={image} />}
+  <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  {image && <meta name="twitter:image" content={image} />}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Karla:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23182620'/%3E%3Cpath d='M60 18 L98 36 L98 70 L60 100 L22 70 L22 36 Z' fill='none' stroke='%23D9B877' stroke-width='4'/%3E%3Ctext x='60' y='68' font-family='Georgia,serif' font-size='34' fill='%23D9B877' text-anchor='middle'%3EVH%3C/text%3E%3C/svg%3E" />
+
+  {gaId && (
+    <>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <script define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(...args) { window.dataLayer.push(args); }
+        gtag('js', new Date());
+        gtag('config', gaId);
+      </script>
+    </>
+  )}
+
+  {ymId && (
+    <script define:vars={{ ymId }}>
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+      ym(ymId, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true });
+    </script>
+  )}
+</head>
+<body>
+  <a class="skip-link" href="#catalog">Перейти до контенту</a>
+  <div class="brand-watermark" aria-hidden="true">Luchin Family</div>
+  <slot />
+  {ymId && (
+    <noscript><div><img src={`https://mc.yandex.ru/watch/${ymId}`} style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  )}
+</body>
+</html>

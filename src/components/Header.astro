@@ -1,0 +1,95 @@
+<header class="sticky top-0 z-50 border-b border-line bg-header backdrop-blur-md">
+  <div class="mx-auto flex max-w-[1320px] items-center justify-between gap-3 px-4 py-3 xl:grid xl:grid-cols-[auto_1fr_auto] xl:gap-6 xl:px-8 xl:py-[18px]">
+    <a href="/" class="flex items-center gap-2.5 transition-opacity hover:opacity-85" aria-label="Vintage Hall — на головну">
+      <svg class="w-7 h-7 md:w-[34px] md:h-[34px] shrink-0 text-brass-light" viewBox="0 0 120 120" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M60 18 L98 36 L98 70 L60 100 L22 70 L22 36 Z" stroke-width="3.4"/>
+        <path d="M60 26 L91 41 L91 67 L60 91 L29 67 L29 41 Z" stroke-width="1.4"/>
+        <text x="60" y="66" font-family="Cormorant" font-size="30" fill="currentColor" stroke="none" text-anchor="middle">VH</text>
+        <line x1="40" y1="78" x2="80" y2="78" stroke-width="1.6"/>
+      </svg>
+      <div class="flex flex-col leading-none">
+        <span class="font-display text-xl md:text-[1.75rem] font-semibold italic tracking-[0.015em] text-brass-light">Vintage Hall</span>
+        <span class="hidden sm:block font-display text-[0.84375rem] font-medium italic tracking-[0.06em] text-sage mt-[3px]" id="tagline">Аукціонний дім антикваріату</span>
+      </div>
+    </a>
+
+    <!-- Nav links only appear at lg+ (1024px) — below that, logo + a full icon cluster (theme, lang,
+         account, cart, sitemap) already fills a md/tablet-width header on its own; cramming 5 links
+         in too caused them to run together with no breathing room. The "Карта сайта" panel covers
+         full navigation below lg. -->
+    <nav class="hidden xl:flex w-full items-center justify-evenly gap-5">
+      <a href="/catalog" id="navCatalog" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 transition-opacity hover:text-brass-light hover:opacity-100">Каталог</a>
+      <a href="/news" id="navNews" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 transition-opacity hover:text-brass-light hover:opacity-100">Новини</a>
+      <a href="/forum" id="navForum" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 transition-opacity hover:text-brass-light hover:opacity-100">Форум</a>
+      <a href="/about" id="navAbout" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 transition-opacity hover:text-brass-light hover:opacity-100">Про нас</a>
+      <a href="/contacts" id="navContacts" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 transition-opacity hover:text-brass-light hover:opacity-100">Контакти</a>
+    </nav>
+
+    <div class="flex items-center gap-1.5 md:gap-3.5">
+      <!-- Global quick search — sits on the right, next to the account/cart cluster (not on the left
+           where it used to compete for space with the logo). Submits to /catalog?q=… so results land
+           on the dedicated catalog page regardless of which page the search was started from. -->
+      <form id="headerSearchForm" class="header-search hidden xl:flex" role="search" aria-label="Пошук по каталогу">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="headerSearchInput" placeholder="Пошук лотів..." aria-label="Пошук лотів">
+      </form>
+
+      <button class="flex h-8 w-8 md:h-[34px] md:w-[34px] shrink-0 items-center justify-center rounded-full border border-line transition-colors hover:border-brass hover:bg-accent-tint" id="themeToggle" aria-label="Перемкнути тему">
+        <svg id="themeIcon" class="h-4 w-4 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.4A9 9 0 1 1 11.6 3a7 7 0 0 0 9.4 9.4Z"/></svg>
+      </button>
+      <div class="hidden md:flex gap-1 rounded-vh border border-line p-[3px]" id="langSwitch">
+        <button data-lang="uk" class="active rounded-[1px] px-[9px] py-1.5 font-mono text-[0.8125rem] tracking-[0.04em] text-sage transition-colors hover:text-ivory">UA</button>
+        <button data-lang="en" class="rounded-[1px] px-[9px] py-1.5 font-mono text-[0.8125rem] tracking-[0.04em] text-sage transition-colors hover:text-ivory">EN</button>
+        <button data-lang="pl" class="rounded-[1px] px-[9px] py-1.5 font-mono text-[0.8125rem] tracking-[0.04em] text-sage transition-colors hover:text-ivory">PL</button>
+        <button data-lang="ru" class="rounded-[1px] px-[9px] py-1.5 font-mono text-[0.8125rem] tracking-[0.04em] text-sage transition-colors hover:text-ivory">RU</button>
+      </div>
+      <button class="cart-btn hidden md:flex" id="accountBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        <span id="accountBtnLabel">Кабінет</span>
+      </button>
+      <button class="cart-btn" id="cartOpenBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h2l2.4 12.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L21 9H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="hidden sm:inline" id="cartBtnLabel">Кошик</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <!-- Site-map panel trigger — visible at every breakpoint (not a mobile-only hamburger). Opens
+           a dedicated slide-in panel; visibility is purely JS-driven via the .open class below, so it
+           can never get stuck half-open by a responsive class clash the way the old mobile drawer did. -->
+      <button class="flex h-8 w-8 items-center justify-center rounded-vh border border-line transition-colors hover:border-brass hover:bg-accent-tint" id="sitemapBtn" aria-label="Карта сайта" aria-expanded="false" aria-controls="sitemapPanel" title="Карта сайта">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3v18M15 3v18M3 8h18M3 16h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Site-map slide panel: lists every page on the site (replaces the old duplicate dropdown that
+     used to overlay the page on its own). Closed by default; opens only via #sitemapBtn. -->
+<div class="sitemap-overlay" id="sitemapOverlay"></div>
+<aside class="sitemap-panel" id="sitemapPanel" role="dialog" aria-modal="true" aria-labelledby="sitemapTitle">
+  <div class="sitemap-head">
+    <h3 id="sitemapTitle">Карта сайта</h3>
+    <button class="drawer-close" id="sitemapCloseBtn" aria-label="Закрити карту сайта">&times;</button>
+  </div>
+  <nav class="sitemap-links">
+    <a href="/catalog">Каталог</a>
+    <a href="/#live-auctions">Активні аукціони</a>
+    <a href="/news">Новини</a>
+    <a href="/forum">Форум</a>
+    <a href="/about">Про нас</a>
+    <a href="/contacts">Контакти</a>
+    <a href="/delivery">Доставка</a>
+    <a href="/rules">Правила</a>
+  </nav>
+  <div class="sitemap-mobile-extra md:hidden">
+    <div class="flex gap-1 pt-2" id="langSwitchMobile">
+      <button data-lang="uk" class="active flex-1 rounded-vh border border-line py-2 font-mono text-[0.8125rem] text-sage">UA</button>
+      <button data-lang="en" class="flex-1 rounded-vh border border-line py-2 font-mono text-[0.8125rem] text-sage">EN</button>
+      <button data-lang="pl" class="flex-1 rounded-vh border border-line py-2 font-mono text-[0.8125rem] text-sage">PL</button>
+      <button data-lang="ru" class="flex-1 rounded-vh border border-line py-2 font-mono text-[0.8125rem] text-sage">RU</button>
+    </div>
+    <button class="cart-btn mt-2 w-full justify-center" id="accountBtnMobile">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      <span>Кабінет</span>
+    </button>
+  </div>
+</aside>

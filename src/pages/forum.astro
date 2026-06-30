@@ -1,0 +1,241 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Overlays from '../components/Overlays.astro';
+---
+
+<Layout title="Форум — Vintage Hall">
+  <Header />
+  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Форум</div>
+    <h1 class="mb-8 font-display text-[1.75rem] sm:text-[2.375rem]">Спільнота Vintage Hall</h1>
+
+    <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_320px]">
+      <!-- LEFT: Topics -->
+      <div>
+        <div class="mb-5">
+          <div class="flex gap-2" id="forumTabs">
+            <button class="tab active" data-ftab="topics">Теми</button>
+            <button class="tab" data-ftab="create">Створити тему</button>
+          </div>
+        </div>
+
+        <!-- Topic list -->
+        <div id="forumTopicList"></div>
+
+        <!-- Create topic form (hidden by default) -->
+        <div id="forumCreateForm" style="display:none;">
+          <div class="field"><label>Назва теми</label><input id="ftTitle" placeholder="Ваша тема..."></div>
+          <div class="field"><label>Категорія</label>
+            <select id="ftCategory">
+              <option value="numismatics">Нумізматика</option>
+              <option value="decor">Декор і меблі</option>
+              <option value="general">Загальне</option>
+            </select>
+          </div>
+          <div class="field"><label>Текст</label><textarea id="ftBody" rows="5" style="width:100%; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); border-radius:var(--radius); padding:12px; font-family:'Karla',sans-serif; font-size:14px; resize:vertical;"></textarea></div>
+          <div class="field">
+            <label>Вкладення (фото)</label>
+            <input type="file" id="ftAttachment" accept="image/*" style="font-size:13px; padding:6px 0;">
+          </div>
+          <div class="field" style="display:flex; gap:8px;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;"><input type="checkbox" id="ftPin"> Закріпити тему</label>
+          </div>
+          <button class="btn btn-primary btn-block" id="ftSubmit">Опублікувати тему</button>
+        </div>
+
+        <!-- Topic detail view (hidden by default) -->
+        <div id="forumTopicDetail" style="display:none;"></div>
+      </div>
+
+      <!-- RIGHT: Quick chat -->
+      <div class="forum-sidebar">
+        <div class="forum-sidebar-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="width:16px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Швидка бесіда
+        </div>
+        <div class="quick-chat-feed" id="quickChatFeed"></div>
+        <div class="quick-chat-input">
+          <input type="text" id="quickChatInput" placeholder="Ваше повідомлення...">
+          <button id="quickChatSend">→</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <SiteFooter />
+  <Overlays />
+  <script src="../scripts/app.ts"></script>
+  <script>
+    import type { ForumTopic, ForumReply, QuickMessage } from '../types';
+    import { SEEDED_FORUM_TOPICS, SEEDED_QUICK_MESSAGES } from '../data/community';
+
+    const topics: ForumTopic[] = SEEDED_FORUM_TOPICS.map(t => ({ ...t, replies: [...t.replies] }));
+    const quickMessages: QuickMessage[] = [...SEEDED_QUICK_MESSAGES];
+    let nextTopicId = 10;
+    let currentView: 'list' | 'create' | 'detail' = 'list';
+    let openTopicId: number | null = null;
+
+    // Detect current user from localStorage or prompt
+    function getUser(): string | null {
+      return (window as any).__vh_user ?? null;
+    }
+
+    // Render topic list
+    function renderTopics() {
+      const el = document.getElementById('forumTopicList');
+      if (!el) return;
+      el.style.display = '';
+      document.getElementById('forumCreateForm')!.style.display = 'none';
+      document.getElementById('forumTopicDetail')!.style.display = 'none';
+
+      el.innerHTML = topics.length === 0
+        ? '<p style="color:var(--sage); padding:30px 0;">Тем ще немає. Створіть першу!</p>'
+        : [...topics].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)).map(t => {
+          const tagLabel = t.topicType === 'promo' ? 'Акція' : t.topicType === 'contest' ? 'Конкурс' : t.topicType === 'event' ? 'Зустріч' : t.topicType === 'announcement' ? 'Анонс' : '';
+          const tag = tagLabel ? `<span class="forum-tag type-${t.topicType}">${tagLabel}</span>` : '';
+          return `
+          <div class="forum-topic-row ${t.pinned ? 'pinned' : ''}" data-action="open-topic" data-tid="${t.id}">
+            <div class="forum-topic-left">
+              <div class="forum-topic-title">${tag}${t.title}</div>
+              <div class="forum-topic-meta mono">${t.author} · ${t.date} · ${t.category}</div>
+            </div>
+            <div class="forum-topic-stats">
+              <div class="forum-stat"><span class="forum-stat-num">${t.replies.length}</span> відповідей</div>
+              <div class="forum-stat"><span class="forum-stat-num">${t.views}</span> переглядів</div>
+            </div>
+          </div>`;
+        }).join('');
+    }
+
+    // Render single topic with replies
+    function renderTopicDetail(id: number) {
+      const t = topics.find(x => x.id === id);
+      if (!t) return;
+      openTopicId = id;
+      t.views++;
+
+      document.getElementById('forumTopicList')!.style.display = 'none';
+      document.getElementById('forumCreateForm')!.style.display = 'none';
+      const el = document.getElementById('forumTopicDetail')!;
+      el.style.display = '';
+
+      el.innerHTML = `
+        <button class="btn btn-ghost" data-action="back-to-topics" style="margin-bottom:16px; font-size:13px;">← Назад до тем</button>
+        <h2 style="font-family:'Cormorant',serif; font-size:22px; margin-bottom:8px;">${t.title}</h2>
+        <div class="mono" style="font-size:12px; color:var(--sage); margin-bottom:18px;">${t.author} · ${t.date} · ${t.views} переглядів</div>
+        <div style="font-size:14px; color:var(--ivory); line-height:1.6; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid var(--line);">${t.body}</div>
+
+        <div style="font-size:12px; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Відповіді (${t.replies.length})</div>
+
+        ${t.replies.map(r => `
+          <div class="forum-reply">
+            <div class="forum-reply-meta mono">${r.author} · ${r.date}</div>
+            <div class="forum-reply-text">${r.text}</div>
+          </div>
+        `).join('')}
+
+        <div class="forum-reply-form">
+          <textarea id="replyText" rows="3" placeholder="Ваша відповідь..." style="width:100%; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); border-radius:var(--radius); padding:10px; font-family:'Karla',sans-serif; font-size:14px; resize:vertical;"></textarea>
+          <button class="btn btn-primary" data-action="submit-reply" data-tid="${t.id}" style="margin-top:8px;">Відповісти</button>
+        </div>
+      `;
+    }
+
+    // Show create form
+    function showCreateForm() {
+      document.getElementById('forumTopicList')!.style.display = 'none';
+      document.getElementById('forumTopicDetail')!.style.display = 'none';
+      document.getElementById('forumCreateForm')!.style.display = '';
+    }
+
+    // Render quick chat
+    function renderQuickChat() {
+      const feed = document.getElementById('quickChatFeed');
+      if (!feed) return;
+      feed.innerHTML = quickMessages.map(m => `
+        <div class="qchat-msg">
+          <div class="qchat-author mono">${m.author} <span style="color:var(--sage); font-weight:400;">${m.date.split(' ')[1] ?? ''}</span></div>
+          <div class="qchat-text">${m.text}</div>
+        </div>
+      `).join('');
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    // Event handlers
+    document.getElementById('forumTabs')?.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#forumTabs .tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      if (btn.dataset.ftab === 'create') showCreateForm();
+      else renderTopics();
+    });
+
+    document.getElementById('ftSubmit')?.addEventListener('click', () => {
+      const title = (document.getElementById('ftTitle') as HTMLInputElement).value.trim();
+      const body = (document.getElementById('ftBody') as HTMLTextAreaElement).value.trim();
+      const category = (document.getElementById('ftCategory') as HTMLSelectElement).value;
+      if (!title || !body) { alert('Заповніть назву та текст теми.'); return; }
+
+      const user = getUser() ?? 'Гість';
+      topics.unshift({
+        id: nextTopicId++, title, body, author: user, date: new Date().toISOString().slice(0, 10),
+        category, replies: [], views: 0
+      });
+
+      (document.getElementById('ftTitle') as HTMLInputElement).value = '';
+      (document.getElementById('ftBody') as HTMLTextAreaElement).value = '';
+      document.querySelectorAll('#forumTabs .tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('#forumTabs .tab')?.classList.add('active');
+      renderTopics();
+    });
+
+    document.getElementById('quickChatSend')?.addEventListener('click', () => {
+      const input = document.getElementById('quickChatInput') as HTMLInputElement;
+      const text = input.value.trim();
+      if (!text) return;
+      const user = getUser() ?? 'Гість';
+      const now = new Date();
+      quickMessages.push({ author: user, text, date: `${now.toISOString().slice(0,10)} ${now.toTimeString().slice(0,5)}` });
+      input.value = '';
+      renderQuickChat();
+    });
+
+    document.getElementById('quickChatInput')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('quickChatSend')?.click();
+    });
+
+    document.body.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest<HTMLElement>('[data-action]');
+      if (!target) return;
+      if (target.dataset.action === 'open-topic') renderTopicDetail(parseInt(target.dataset.tid!, 10));
+      if (target.dataset.action === 'back-to-topics') renderTopics();
+      if (target.dataset.action === 'submit-reply') {
+        const tid = parseInt(target.dataset.tid!, 10);
+        const t = topics.find(x => x.id === tid);
+        const textarea = document.getElementById('replyText') as HTMLTextAreaElement;
+        if (!t || !textarea) return;
+        const text = textarea.value.trim();
+        if (!text) return;
+        const user = getUser() ?? 'Гість';
+        t.replies.push({ author: user, text, date: new Date().toISOString().slice(0, 10) });
+        renderTopicDetail(tid);
+      }
+    });
+
+    // Sync user from main app (if logged in there)
+    document.getElementById('accountBtn')?.addEventListener('click', () => {
+      setTimeout(() => {
+        const nameEl = document.querySelector('.modal-card .sub');
+        if (nameEl?.textContent?.includes(' ')) {
+          const parts = nameEl.textContent.split(' ');
+          (window as any).__vh_user = parts[parts.length - 3] ?? 'Гість';
+        }
+      }, 500);
+    });
+
+    renderTopics();
+    renderQuickChat();
+  </script>
+</Layout>

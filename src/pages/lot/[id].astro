@@ -1,0 +1,206 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import LiteHeader from '../../components/LiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { SEEDED_PRODUCTS, PRODUCT_I18N, SELLERS, MATERIAL_BY_ICON, CONDITION_BY_CAT } from '../../data/products';
+import { EXPERTS } from '../../data/experts';
+import type { Product } from '../../types';
+
+export function getStaticPaths() {
+  return SEEDED_PRODUCTS.map((p: Product) => ({
+    params: { id: String(p.id) },
+    props: { product: p },
+  }));
+}
+
+const { product: p } = Astro.props as { product: Product };
+const tr = PRODUCT_I18N[p.id]?.uk;
+const seller = SELLERS[p.seller];
+const price = p.saleType === 'auction' ? (p.currentBid ?? p.startPrice ?? 0) : (p.price ?? 0);
+const priceLabel = p.saleType === 'auction' ? 'Поточна ставка' : p.saleType === 'request' ? 'Ціна за запитом' : 'Ціна';
+const material = p.custom?.material || MATERIAL_BY_ICON[p.icon].uk;
+const condition = p.custom?.condition || CONDITION_BY_CAT[p.category].uk;
+const gallery = [p.photo, ...(p.extraPhotos ?? [])].filter((s): s is string => !!s);
+const rarityLabel = p.badge === 'museum' ? 'Музейний рівень' : p.rarity === 'unique' ? 'Дуже рідкісний' : p.rarity === 'rare' ? 'Рідкісний' : p.rarity === 'common' ? 'Поширений' : null;
+const rarityColor = p.badge === 'museum' ? '#E0463F' : p.rarity === 'unique' ? '#E08A2E' : p.rarity === 'rare' ? '#D9B877' : '#4FA876';
+const avgReview = p.reviews?.length ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length : null;
+const expert = p.expertId ? EXPERTS[p.expertId] : undefined;
+const similar = SEEDED_PRODUCTS.filter(x => x.category === p.category && x.id !== p.id).slice(0, 3);
+
+const title = `${tr?.name ?? 'Лот'} — LOT-0${p.id} — Vintage Hall`;
+const description = tr?.desc ?? 'Антикварний лот на Vintage Hall.';
+---
+
+<Layout title={title} description={description} image={p.photo ?? undefined} ogType="product">
+  <LiteHeader />
+  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> LOT-0{p.id}</div>
+    <div class="grid grid-cols-1 gap-7 md:grid-cols-[1fr_1.2fr] md:gap-10">
+      <div>
+        <div class="lot-page-media">
+          {p.photo
+            ? <img src={p.photo} alt={tr?.name ?? ''} loading="eager" />
+            : <div class="lot-page-media-empty">VH</div>}
+        </div>
+        {gallery.length > 1 && (
+          <div class="lot-page-thumbs">
+            {gallery.map(src => <img src={src} alt="" loading="lazy" />)}
+          </div>
+        )}
+      </div>
+      <div>
+        {p.badge && <span class="prestige-chip">{p.badge === 'museum' ? 'Музейний рівень' : p.badge === 'expert' ? 'Підтверджено експертом' : p.badge === 'certified' ? 'Сертифіковано' : p.badge}</span>}
+        <h1 class="page-title" style="margin:8px 0 6px;">{tr?.name}</h1>
+        <p style="color:var(--sage); font-size:0.875rem; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+          {rarityLabel && <span class="rarity-dot" style={`background:${rarityColor};`}></span>}
+          {tr?.era} · {p.origin}{rarityLabel && ` · ${rarityLabel}`}
+        </p>
+        <p style="margin-bottom:20px; line-height:1.6;">{tr?.desc}</p>
+
+        {seller && (
+          <a href={`/seller/${encodeURIComponent(p.seller)}`} class="seller-card" style="margin-bottom:18px; text-decoration:none;">
+            <div class="seller-card-avatar">{p.seller.slice(0, 2).toUpperCase()}</div>
+            <div>
+              <div class="seller-card-name">{p.seller}{seller.verified && ' ✓'} <span class="mono" style="color:var(--brass-light);">★ {seller.rating.toFixed(1)}</span></div>
+              <div class="seller-card-meta">{seller.salesCount} продажів · на платформі з {2026 - seller.yearsActive} · {Math.round((seller.rating / 5) * 100)}% позитивних відгуків</div>
+            </div>
+          </a>
+        )}
+
+        <table class="specs-table">
+          <tr><td>Матеріал</td><td>{material}</td></tr>
+          <tr><td>Стан</td><td>{condition}</td></tr>
+          {p.dimensions && <tr><td>Розміри</td><td>{p.dimensions}</td></tr>}
+          {p.weight && <tr><td>Вага</td><td>{p.weight}</td></tr>}
+          {p.origin && <tr><td>Походження</td><td>{p.origin}</td></tr>}
+        </table>
+
+        {p.provenance && (
+          <div style="background:var(--accent-tint); border-radius:var(--radius); padding:12px 14px; margin:14px 0; font-size:0.8125rem; line-height:1.55;">
+            <div style="font-size:0.6875rem; color:var(--sage); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px;">Походження лота</div>
+            {p.provenance.uk}
+          </div>
+        )}
+
+        {expert && (
+          <div class="seller-card" style="background:var(--accent-tint-strong); border:1px solid var(--line); margin-bottom:14px;">
+            <div class="seller-card-avatar" style="background:var(--oxblood);">{expert.name.split(' ').map(w => w[0]).join('')}</div>
+            <div>
+              <div class="seller-card-name">✓ Експертиза — {expert.name}</div>
+              <div class="seller-card-meta">{expert.specialization} · {expert.yearsExperience} років досвіду · {expert.verificationsCount} перевірок · ★ {expert.rating.toFixed(1)}</div>
+            </div>
+          </div>
+        )}
+
+        {p.investmentRating && (
+          <div class="investment-card">
+            <div class="investment-row"><span>Інвестиційний потенціал</span><span class="mono" style="color:var(--brass-light);">{'★'.repeat(p.investmentRating)}{'☆'.repeat(5 - p.investmentRating)}</span></div>
+            {p.priceGrowthPct && (
+              <div class="investment-row"><span>Зростання вартості за {p.priceGrowthYears ?? 5} років</span><span class="mono" style="color:#4FA876;">+{p.priceGrowthPct}%</span></div>
+            )}
+          </div>
+        )}
+
+        {p.priceHistory && p.priceHistory.length > 0 && (
+          <>
+            <div style="margin:14px 0 6px; font-size:0.8125rem; color:var(--sage);">Історія цін на подібні предмети</div>
+            <div class="price-history-list">
+              {p.priceHistory.map(h => (
+                <div class="price-history-row"><span class="mono">{h.year}</span><span class="mono" style="color:var(--brass-light);">{h.price.toLocaleString('ru-RU')} ₴</span></div>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div style="display:flex; align-items:baseline; gap:10px; margin:24px 0 16px;">
+          <span style="font-size:0.8125rem; color:var(--sage);">{priceLabel}:</span>
+          <span class="mono" style="font-size:1.625rem; color:var(--brass-light); font-weight:600;">{price.toLocaleString('ru-RU')} ₴</span>
+        </div>
+        <a class="btn btn-primary btn-block" href={`/?lot=${p.id}#catalog`}>
+          {p.saleType === 'auction' ? 'Зробити ставку →' : p.saleType === 'request' ? 'Залишити запит →' : 'Купити лот →'}
+        </a>
+        <p style="font-size:0.75rem; color:var(--sage); margin-top:10px;">
+          Ставки, чат із продавцем і кошик доступні на повній сторінці каталогу.
+        </p>
+      </div>
+    </div>
+
+    <section style="margin-top:48px; max-width:640px;">
+      <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:14px;">
+        <h2 style="font-size:1.25rem;">Відгуки покупців</h2>
+        {avgReview && <span class="mono" style="color:var(--brass-light);">★ {avgReview.toFixed(1)} ({p.reviews?.length})</span>}
+      </div>
+      {p.reviews && p.reviews.length > 0 ? (
+        <div class="reviews-list">
+          {p.reviews.map(r => (
+            <div class="review-row">
+              <div class="review-row-head"><span>{r.author}</span><span class="mono" style="color:var(--brass-light);">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span></div>
+              <div class="review-row-date mono">{r.date}</div>
+              <p>{r.text}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p style="font-size:0.8125rem; color:var(--sage);">Поки немає відгуків на цей лот.</p>
+      )}
+    </section>
+
+    {p.qa && p.qa.length > 0 && (
+      <section style="margin-top:40px; max-width:640px;">
+        <h2 style="font-size:1.25rem; margin-bottom:14px;">Запитання покупців</h2>
+        <div class="reviews-list">
+          {p.qa.map(item => (
+            <div class="review-row">
+              <div class="review-row-head"><span>{item.author}</span></div>
+              <p style="font-style:italic;">{item.question}</p>
+              <div class="review-row-head" style={`margin-top:8px; color:${item.answerIsExpert ? 'var(--oxblood)' : 'var(--brass-light)'};`}>
+                <span>{item.answerIsExpert && '✓ '}{item.answerAuthor}</span>
+              </div>
+              <p>{item.answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {similar.length > 0 && (
+      <section style="margin-top:40px;">
+        <h2 style="font-size:1.25rem; margin-bottom:14px;">Схожі лоти</h2>
+        <div class="category-grid">
+          {similar.map((s) => {
+            const str = PRODUCT_I18N[s.id]?.uk;
+            const sPrice = s.saleType === 'auction' ? (s.currentBid ?? s.startPrice ?? 0) : (s.price ?? 0);
+            return (
+              <a class="category-card" href={`/lot/${s.id}`}>
+                <div class="category-card-media">
+                  {s.photo ? <img src={s.photo} alt={str?.name ?? ''} loading="lazy" /> : <div class="category-card-empty">VH</div>}
+                </div>
+                <div class="category-card-name">{str?.name}</div>
+                <div class="category-card-price mono">{sPrice.toLocaleString('ru-RU')} ₴</div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .lot-page-grid{display:grid; grid-template-columns:1fr 1.2fr; gap:40px; margin-top:24px;}
+  .lot-page-media{aspect-ratio:4/3; border-radius:var(--radius); overflow:hidden; background:var(--bg-card); border:1px solid var(--line);}
+  .lot-page-media img{width:100%; height:100%; object-fit:cover; display:block;}
+  .lot-page-media-empty{width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'Cormorant',serif; font-size:3rem; color:var(--brass-light);}
+  .lot-page-thumbs{display:flex; gap:8px; margin-top:8px;}
+  .lot-page-thumbs img{width:64px; height:64px; object-fit:cover; border-radius:var(--radius); border:1px solid var(--line);}
+  .category-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:16px;}
+  .category-card{display:block; background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; transition:border-color .2s, transform .2s;}
+  .category-card:hover{border-color:var(--brass); transform:translateY(-2px);}
+  .category-card-media{aspect-ratio:4/3; overflow:hidden;}
+  .category-card-media img{width:100%; height:100%; object-fit:cover; display:block;}
+  .category-card-empty{width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'Cormorant',serif; font-size:1.5rem; color:var(--brass-light); background:var(--accent-tint);}
+  .category-card-name{padding:8px 10px 2px; font-size:0.8125rem; color:var(--ivory);}
+  .category-card-price{padding:0 10px 10px; font-size:0.78125rem; color:var(--brass-light);}
+  @media (max-width:780px){ .lot-page-grid{grid-template-columns:1fr;} }
+</style>

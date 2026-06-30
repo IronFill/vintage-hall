@@ -1,0 +1,71 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import LiteHeader from '../../components/LiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { SEEDED_PRODUCTS, PRODUCT_I18N } from '../../data/products';
+import { UI } from '../../data/i18n';
+import type { Product, Category } from '../../types';
+
+const CATEGORY_LABEL_KEY: Record<Category, keyof typeof UI.uk> = {
+  decor: 'tab_decor', numismatics: 'tab_numismatics', porcelain: 'tab_porcelain', special: 'tab_vip',
+  silver: 'tab_silver', painting: 'tab_painting', militaria: 'tab_militaria', jewelry: 'tab_jewelry',
+  clocks: 'tab_clocks', glass: 'tab_glass', philately: 'tab_philately', books: 'tab_books',
+};
+
+export function getStaticPaths() {
+  const categories = Array.from(new Set(SEEDED_PRODUCTS.map(p => p.category))) as Category[];
+  return categories.map((cat) => ({
+    params: { slug: cat },
+    props: { cat, items: SEEDED_PRODUCTS.filter(p => p.category === cat) },
+  }));
+}
+
+const { cat, items } = Astro.props as { cat: Category; items: Product[] };
+const categoryName = UI.uk[CATEGORY_LABEL_KEY[cat]];
+const title = `${categoryName} — каталог антикваріату — Vintage Hall`;
+const description = `${categoryName}: ${items.length} лотів на Vintage Hall — перевірені продавці, гарантія походження, безпечна угода.`;
+const minPrice = Math.min(...items.map(p => (p.saleType === 'auction' ? (p.startPrice ?? 0) : (p.price ?? 0))).filter(Boolean));
+const maxPrice = Math.max(...items.map(p => (p.saleType === 'auction' ? (p.currentBid ?? p.startPrice ?? 0) : (p.price ?? 0))));
+---
+
+<Layout title={title} description={description} ogType="website">
+  <LiteHeader />
+  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Каталог</div>
+    <h1 class="mb-2 font-display text-[1.75rem] sm:text-[2.375rem]">{categoryName}</h1>
+    <p class="mb-6 max-w-[640px] leading-[1.6] text-sage">
+      {items.length} {items.length === 1 ? 'лот' : 'лотів'} у категорії «{categoryName}» — від {minPrice.toLocaleString('ru-RU')} ₴
+      до {maxPrice.toLocaleString('ru-RU')} ₴. Кожен лот перевірений, продавці підтверджені, угода проходить безпечно через Vintage Hall.
+    </p>
+
+    <div class="category-grid">
+      {items.map((p, i) => {
+        const tr = PRODUCT_I18N[p.id]?.uk;
+        const price = p.saleType === 'auction' ? (p.currentBid ?? p.startPrice ?? 0) : (p.price ?? 0);
+        return (
+          <a class="category-card" href={`/lot/${p.id}`}>
+            <div class="category-card-media">
+              {p.photo ? <img src={p.photo} alt={tr?.name ?? ''} loading={i < 4 ? 'eager' : 'lazy'} /> : <div class="category-card-empty">VH</div>}
+            </div>
+            <div class="category-card-name">{tr?.name}</div>
+            <div class="category-card-price mono">{price.toLocaleString('ru-RU')} ₴</div>
+          </a>
+        );
+      })}
+    </div>
+
+    <a class="btn btn-primary" style="margin-top:28px;" href={`/?category=${cat}#catalog`}>Дивитись у каталозі з фільтрами →</a>
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style>
+  .category-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:18px;}
+  .category-card{display:block; background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; transition:border-color .2s, transform .2s;}
+  .category-card:hover{border-color:var(--brass); transform:translateY(-2px);}
+  .category-card-media{aspect-ratio:4/3; overflow:hidden;}
+  .category-card-media img{width:100%; height:100%; object-fit:cover; display:block;}
+  .category-card-empty{width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:'Cormorant',serif; font-size:1.75rem; color:var(--brass-light); background:var(--accent-tint);}
+  .category-card-name{padding:10px 12px 2px; font-size:0.875rem; color:var(--ivory);}
+  .category-card-price{padding:0 12px 12px; font-size:0.8125rem; color:var(--brass-light);}
+</style>

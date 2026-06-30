@@ -1,0 +1,73 @@
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <div class="drawer-head">
+    <h3 id="cartTitle">Кошик</h3>
+    <button class="drawer-close" id="cartCloseBtn" aria-label="Закрити кошик">&times;</button>
+  </div>
+  <div class="drawer-items" id="cartItems"></div>
+  <div class="drawer-foot" id="cartFoot"></div>
+</aside>
+
+<!-- Compare bar: appears once 2+ lots are selected for comparison -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-bar-thumbs" id="compareBarThumbs"></div>
+  <span class="compare-bar-label" id="compareBarLabel"></span>
+  <button class="btn btn-primary" style="font-size:0.78125rem; padding:8px 16px;" data-action="open-compare">Порівняти</button>
+  <button class="btn btn-ghost" style="font-size:0.78125rem; padding:8px 14px;" data-action="clear-compare" aria-label="Очистити порівняння">✕</button>
+</div>
+
+<div class="modal" id="compareModal" role="dialog" aria-modal="true">
+  <div class="modal-card wide" id="compareCard" style="max-width:760px;"></div>
+</div>
+
+<div class="modal" id="checkoutModal" role="dialog" aria-modal="true">
+  <div class="modal-card" id="checkoutCard"></div>
+</div>
+
+<!-- Photo lightbox: full-size view with arrow navigation, opened from lot photos -->
+<div class="lightbox" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Перегляд фото">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Закрити" data-action="lightbox-close">&times;</button>
+  <button class="lightbox-arrow lightbox-prev" id="lightboxPrev" aria-label="Попереднє фото" data-action="lightbox-prev">&#8249;</button>
+  <div class="lightbox-stage" id="lightboxStage">
+    <img class="lightbox-img magnify-img" id="lightboxImg" src="" alt="">
+  </div>
+  <button class="lightbox-arrow lightbox-next" id="lightboxNext" aria-label="Наступне фото" data-action="lightbox-next">&#8250;</button>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
+
+<!-- Accessibility toolbar -->
+<div class="a11y-toolbar" id="a11yToolbar" role="group" aria-label="Налаштування доступності">
+  <button class="a11y-btn" id="a11yZoomIn" aria-label="Збільшити текст" title="Збільшити текст">A+</button>
+  <button class="a11y-btn" id="a11yZoomOut" aria-label="Зменшити текст" title="Зменшити текст">A−</button>
+  <button class="a11y-btn" id="a11yContrast" aria-label="Високий контраст" title="Високий контраст">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20V2Z" fill="currentColor"/></svg>
+  </button>
+</div>
+
+<!-- Mobile/Desktop view toggle -->
+<div class="view-toggle" id="viewToggle" role="group" aria-label="Перемикач версії сайту">
+  <button class="active" data-view="mobile" id="viewMobileBtn">📱 Мобільна</button>
+  <button data-view="desktop" id="viewDesktopBtn">🖥 Версія для ПК</button>
+</div>
+
+<!-- Toast notifications -->
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Support chat FAB + panel -->
+<button class="chat-fab" id="chatFab" aria-label="Підтримка">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+  <div class="chat-panel-head">
+    <h4 id="chatTitle">Підтримка Vintage Hall</h4>
+    <button class="drawer-close" id="chatCloseBtn" aria-label="Закрити чат">&times;</button>
+  </div>
+  <div class="chat-panel-body" id="chatBody">
+    <div class="chat-msg bot" id="chatWelcome">Вітаємо! Чим можемо допомогти? Напишіть ваше питання — ми відповімо якнайшвидше.</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Ваше повідомлення..." aria-label="Повідомлення в чат підтримки">
+    <button id="chatSendBtn" aria-label="Надіслати повідомлення">→</button>
+  </div>
+</div>

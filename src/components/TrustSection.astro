@@ -1,0 +1,126 @@
+<section class="relative z-[1] py-12 md:py-[70px]">
+  <div class="flex flex-wrap justify-center gap-7 border-y border-line py-7 md:gap-12 md:py-9 my-12 md:my-[50px]" id="trustStats">
+    <div class="text-center">
+      <span class="mono block font-display text-[1.875rem] text-brass-light" id="statRating" data-target="4.9" data-decimals="1" data-suffix=" ★">0.0 ★</span>
+      <span class="mt-1 block text-[0.78125rem] text-sage" id="trustRatingLabel">рейтинг площадки</span>
+    </div>
+    <div class="text-center">
+      <span class="mono block font-display text-[1.875rem] text-brass-light" id="statDeals" data-target="2847" data-live="deals">0</span>
+      <span class="mt-1 block text-[0.78125rem] text-sage" id="trustDealsLabel">успішних угод</span>
+    </div>
+    <div class="text-center">
+      <span class="mono block font-display text-[1.875rem] text-brass-light" id="statSellersBuyers" data-target="1360" data-prefix-fixed="48 / " data-live="people">48 / 0</span>
+      <span class="mt-1 block text-[0.78125rem] text-sage" id="trustSellersBuyersLabel">продавців та покупців</span>
+    </div>
+    <div class="text-center">
+      <span class="mono block font-display text-[1.875rem] text-brass-light" id="statVolume" data-target="6400000" data-format="volume" data-live="volume">0 млн ₴</span>
+      <span class="mt-1 block text-[0.78125rem] text-sage" id="trustVolumeLabel">продано на суму</span>
+    </div>
+    <div class="text-center">
+      <span class="mono flex items-center justify-center gap-1.5 font-display text-[1.875rem] text-brass-light"><span class="live-dot" aria-hidden="true"></span><span id="statOnline" data-target="127" data-live="online">0</span></span>
+      <span class="mt-1 block text-[0.78125rem] text-sage" id="trustOnlineLabel">онлайн зараз</span>
+    </div>
+  </div>
+
+  <script>
+    function fmtInt(v: number): string { return Math.round(v).toLocaleString('ru-RU'); }
+    function fmtVolume(v: number): string { return (v / 1_000_000).toFixed(1).replace('.', ',') + ' млн ₴'; }
+
+    function animateCount(el: HTMLElement, target: number, opts: { duration?: number; format: (v: number) => string }): void {
+      const duration = opts.duration ?? 1600;
+      const start = performance.now();
+      function tick(now: number): void {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = opts.format(target * eased);
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = opts.format(target);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function flash(el: HTMLElement | null): void {
+      if (!el) return;
+      el.classList.add('stat-flash');
+      setTimeout(() => el.classList.remove('stat-flash'), 500);
+    }
+
+    let trustStatsStarted = false;
+    function startTrustStats(): void {
+      if (trustStatsStarted) return;
+      trustStatsStarted = true;
+
+      const ratingEl = document.getElementById('statRating');
+      const dealsEl = document.getElementById('statDeals');
+      const sbEl = document.getElementById('statSellersBuyers');
+      const volEl = document.getElementById('statVolume');
+      const onlineEl = document.getElementById('statOnline');
+
+      if (ratingEl) animateCount(ratingEl, 4.9, { format: (v) => v.toFixed(1).replace('.', ',') + ' ★' });
+      if (dealsEl) animateCount(dealsEl, 2847, { format: fmtInt });
+      if (sbEl) animateCount(sbEl, 1360, { format: (v) => `48 / ${fmtInt(v)}` });
+      if (volEl) animateCount(volEl, 6400000, { duration: 1900, format: fmtVolume });
+      if (onlineEl) animateCount(onlineEl, 127, { duration: 1200, format: fmtInt });
+
+      // After the initial count-up settles, nudge the numbers every few seconds so the strip reads
+      // as live rather than a static snapshot — small, capped moves, not an ever-growing counter.
+      setTimeout(() => {
+        let deals = 2847;
+        let sellersBuyers = 1360;
+        let volume = 6400000;
+
+        setInterval(() => {
+          if (dealsEl && Math.random() < 0.5) { deals += 1; dealsEl.textContent = fmtInt(deals); flash(dealsEl); }
+          if (sbEl && Math.random() < 0.25) { sellersBuyers += 1; sbEl.textContent = `48 / ${fmtInt(sellersBuyers)}`; flash(sbEl); }
+          if (volEl && Math.random() < 0.6) { volume += Math.round((400 + Math.random() * 3000) / 100) * 100; volEl.textContent = fmtVolume(volume); flash(volEl); }
+        }, 5000);
+
+        // Online count drifts up and down within a band, rather than only climbing — closer to how
+        // a real "currently online" figure behaves.
+        setInterval(() => {
+          if (!onlineEl) return;
+          const current = parseInt(onlineEl.textContent?.replace(/\D/g, '') ?? '127', 10) || 127;
+          const next = Math.max(60, Math.min(210, current + Math.round((Math.random() - 0.5) * 10)));
+          onlineEl.textContent = String(next);
+          flash(onlineEl);
+        }, 3500);
+      }, 2000);
+    }
+
+    const trustStatsEl = document.getElementById('trustStats');
+    if (trustStatsEl) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { if (entry.isIntersecting) { startTrustStats(); io.disconnect(); } });
+      }, { threshold: 0.3 });
+      io.observe(trustStatsEl);
+    }
+  </script>
+
+  <h2 class="mb-9 text-center font-display text-[1.75rem]" id="whyBuyTitle">Чому купувати на Vintage Hall</h2>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="flex items-start gap-3 rounded-vh border border-line bg-bg-card p-4">
+      <svg class="mt-0.5 h-[22px] w-[22px] flex-shrink-0 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      <span class="text-[0.875rem] text-ivory" id="whyVerified">Перевірені продавці</span>
+    </div>
+    <div class="flex items-start gap-3 rounded-vh border border-line bg-bg-card p-4">
+      <svg class="mt-0.5 h-[22px] w-[22px] flex-shrink-0 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 6v6c0 5 4 8 8 10 4-2 8-5 8-10V6Z"/></svg>
+      <span class="text-[0.875rem] text-ivory" id="whyExpertise">Експертиза справжності</span>
+    </div>
+    <div class="flex items-start gap-3 rounded-vh border border-line bg-bg-card p-4">
+      <svg class="mt-0.5 h-[22px] w-[22px] flex-shrink-0 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="9" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <span class="text-[0.875rem] text-ivory" id="whySafeDeal">Безпечна угода</span>
+    </div>
+    <div class="flex items-start gap-3 rounded-vh border border-line bg-bg-card p-4">
+      <svg class="mt-0.5 h-[22px] w-[22px] flex-shrink-0 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 14l-4-4 4-4M5 10h14"/></svg>
+      <span class="text-[0.875rem] text-ivory" id="whyReturn">Гарантія повернення</span>
+    </div>
+    <div class="flex items-start gap-3 rounded-vh border border-line bg-bg-card p-4">
+      <svg class="mt-0.5 h-[22px] w-[22px] flex-shrink-0 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="6" width="15" height="11" rx="1"/><path d="M16 9h4l3 3v5h-7Z"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+      <span class="text-[0.875rem] text-ivory" id="whyDeliveryUa">Доставка по Україні</span>
+    </div>
+    <div class="flex items-start gap-3 rounded-vh border border-line bg-bg-card p-4">
+      <svg class="mt-0.5 h-[22px] w-[22px] flex-shrink-0 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c2.5 2.7 4 6.3 4 10s-1.5 7.3-4 10c-2.5-2.7-4-6.3-4-10s1.5-7.3 4-10Z"/></svg>
+      <span class="text-[0.875rem] text-ivory" id="whyIntlDelivery">Міжнародна доставка</span>
+    </div>
+  </div>
+</section>

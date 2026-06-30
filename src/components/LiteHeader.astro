@@ -1,0 +1,50 @@
+<!--
+  Lightweight header for static SEO landing pages (/lot/[id], /category/[slug]).
+  Unlike the full <Header />, this has no JS-dependent state (theme toggle, language
+  switcher, cart count) — those need the full app bundle, which these pages intentionally
+  don't load, so they stay fast and fully readable with zero JavaScript. The nav uses a
+  no-JS <details> disclosure on mobile instead of a hamburger button (this page has no script
+  to wire a click handler to).
+-->
+<header class="border-b border-line bg-header">
+  <div class="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-8 md:py-[18px]">
+    <a href="/" class="flex items-center gap-2.5" aria-label="Vintage Hall — на головну">
+      <svg class="h-7 w-7 md:h-[34px] md:w-[34px] shrink-0 text-brass-light" viewBox="0 0 120 120" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M60 18 L98 36 L98 70 L60 100 L22 70 L22 36 Z" stroke-width="3.4"/>
+        <path d="M60 26 L91 41 L91 67 L60 91 L29 67 L29 41 Z" stroke-width="1.4"/>
+        <text x="60" y="66" font-family="Cormorant" font-size="30" fill="currentColor" stroke="none" text-anchor="middle">VH</text>
+        <line x1="40" y1="78" x2="80" y2="78" stroke-width="1.6"/>
+      </svg>
+      <div class="flex flex-col leading-none">
+        <span class="font-display text-xl md:text-[1.75rem] font-semibold italic tracking-[0.015em] text-brass-light">Vintage Hall</span>
+        <span class="hidden sm:block font-display text-[0.84375rem] font-medium italic tracking-[0.06em] text-sage mt-[3px]">Аукціонний дім антикваріату</span>
+      </div>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-6">
+      <a href="/catalog" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 hover:text-brass-light">Каталог</a>
+      <a href="/news" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 hover:text-brass-light">Новини</a>
+      <a href="/forum" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 hover:text-brass-light">Форум</a>
+      <a href="/about" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 hover:text-brass-light">Про нас</a>
+      <a href="/contacts" class="whitespace-nowrap text-[0.96875rem] tracking-[0.04em] text-ivory/85 hover:text-brass-light">Контакти</a>
+    </nav>
+
+    <a class="cart-btn" href="/">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      <span class="hidden sm:inline">Кабінет і кошик</span>
+      <span class="sm:hidden">Кабінет</span>
+    </a>
+  </div>
+
+  <!-- No-JS mobile menu (this page loads no script, so a <details> disclosure replaces the hamburger) -->
+  <details class="border-t border-line px-4 py-2 md:hidden">
+    <summary class="cursor-pointer select-none py-1.5 text-[0.875rem] text-sage">Меню ☰</summary>
+    <nav class="flex flex-col gap-1 pb-2 pt-1">
+      <a href="/catalog" class="block py-2 text-[0.96875rem] text-ivory/85">Каталог</a>
+      <a href="/news" class="block py-2 text-[0.96875rem] text-ivory/85">Новини</a>
+      <a href="/forum" class="block py-2 text-[0.96875rem] text-ivory/85">Форум</a>
+      <a href="/about" class="block py-2 text-[0.96875rem] text-ivory/85">Про нас</a>
+      <a href="/contacts" class="block py-2 text-[0.96875rem] text-ivory/85">Контакти</a>
+    </nav>
+  </details>
+</header>

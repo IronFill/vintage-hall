@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Overlays from '../components/Overlays.astro';
+---
+
+<Layout title="Доставка — Vintage Hall">
+  <Header />
+  <main class="mx-auto max-w-[780px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Доставка</div>
+    <h1 class="mb-7 font-display text-[1.75rem] sm:text-[2.375rem]">Доставка та оплата</h1>
+
+    <div class="grid grid-cols-1 gap-[18px] sm:grid-cols-3">
+      <div class="rounded-vh border border-line bg-bg-card p-[22px]">
+        <svg class="mb-3 h-7 w-7 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="6" width="22" height="15" rx="2"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        <h3 class="mb-2 font-display text-base text-ivory">Нова пошта</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Доставка у будь-яке відділення або поштомат по всій Україні. Орієнтовний термін — 1–3 дні. Вартість доставки за тарифами Нової пошти.</p>
+      </div>
+      <div class="rounded-vh border border-line bg-bg-card p-[22px]">
+        <svg class="mb-3 h-7 w-7 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/><path d="M15 5H1v11h14V5Z"/><path d="M15 9h4l3 3v5h-7V9Z"/></svg>
+        <h3 class="mb-2 font-display text-base text-ivory">Кур'єром по Харкову</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Для покупців з Харкова — доставка кур'єром у межах міста. Вартість та час узгоджуються з продавцем індивідуально.</p>
+      </div>
+      <div class="rounded-vh border border-line bg-bg-card p-[22px]">
+        <svg class="mb-3 h-7 w-7 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <h3 class="mb-2 font-display text-base text-ivory">Самовивіз / зустріч</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Покупець та продавець домовляються про зустріч особисто. Ідеально для цінних або великих предметів.</p>
+      </div>
+    </div>
+
+    <h2 class="my-8 font-display text-2xl text-ivory">Оплата</h2>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage">Оплата здійснюється безпосередньо між покупцем та продавцем одним із способів:</p>
+    <div class="mt-4 grid grid-cols-1 gap-[18px] sm:grid-cols-3">
+      <div class="rounded-vh border border-line bg-bg-card p-[22px]">
+        <h3 class="mb-2 font-display text-base text-ivory">Переказ на картку</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Після підтвердження замовлення продавець надає реквізити. Оплата перед відправкою.</p>
+      </div>
+      <div class="rounded-vh border border-line bg-bg-card p-[22px]">
+        <h3 class="mb-2 font-display text-base text-ivory">Накладений платіж</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">Оплата при отриманні в відділенні Нової пошти. Додаткова комісія за послуги пошти.</p>
+      </div>
+      <div class="rounded-vh border border-line bg-bg-card p-[22px]">
+        <h3 class="mb-2 font-display text-base text-ivory">Готівкою при зустрічі</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage">При особистій зустрічі покупець може оглянути річ та оплатити на місці.</p>
+      </div>
+    </div>
+
+    <div class="mt-7 rounded-vh border border-dashed border-line bg-accent-tint p-4 text-[0.875rem] leading-[1.6] text-sage">
+      <strong class="text-ivory">Страхування:</strong> Для лотів вартістю від 10 000 ₴ ми рекомендуємо відправку з оголошеною вартістю та страхуванням. Це захищає і покупця, і продавця від пошкодження під час транспортування.
+    </div>
+  </main>
+  <SiteFooter />
+  <Overlays />
+  <script src="../scripts/app.ts"></script>
+</Layout>
