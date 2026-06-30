@@ -1,0 +1,129 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Overlays from '../components/Overlays.astro';
+---
+
+<Layout
+  title="Експертиза та оцінка — Vintage Hall"
+  description="Професійна експертиза автентичності, сертифікат відповідності та ринкова оцінка антикваріату від фахівців Vintage Hall."
+>
+  <Header />
+  <main class="mx-auto max-w-[860px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass">
+      <span class="h-px w-8 bg-brass"></span> Сервіси
+    </div>
+    <h1 class="mb-4 font-display text-[1.875rem] sm:text-[2.5rem] leading-tight">Експертиза та оцінка</h1>
+    <p class="mb-12 max-w-[620px] text-[1.0625rem] leading-[1.7] text-sage">
+      Три незалежні послуги — від підтвердження справжності до обґрунтованої ринкової ціни. Кожну виконують акредитовані фахівці з профільною спеціалізацією.
+    </p>
+
+    <!-- Service 1 -->
+    <div class="mb-3 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.15em] text-brass">
+      <span class="h-px w-6 bg-brass"></span> Послуга 01
+    </div>
+    <h2 class="mb-6 font-display text-[1.5rem] text-ivory">Експертиза автентичності</h2>
+    <p class="mb-6 text-base leading-[1.7] text-sage">
+      Ліцензований експерт Vintage Hall особисто оглядає предмет або аналізує детальні фотографії. За результатами складається письмовий висновок із зазначенням матеріалу, орієнтовного датування, стану, наявності реставрацій та підтвердженням або спростуванням автентичності.
+    </p>
+    <div class="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {[
+        { label: 'Термін', val: 'від 3 робочих днів' },
+        { label: 'Формат', val: 'Письмовий висновок A4' },
+        { label: 'Спеціалізації', val: 'Нумізматика, живопис,\nфарфор, ювелірика, меблі' },
+      ].map(r => (
+        <div class="rounded-vh border border-line bg-bg-card p-4">
+          <div class="mb-1 font-mono text-[0.75rem] uppercase tracking-[0.1em] text-sage">{r.label}</div>
+          <div class="text-[0.9375rem] text-ivory" style="white-space:pre-line">{r.val}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Service 2 -->
+    <div class="mb-3 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.15em] text-brass">
+      <span class="h-px w-6 bg-brass"></span> Послуга 02
+    </div>
+    <h2 class="mb-6 font-display text-[1.5rem] text-ivory">Сертифікат відповідності</h2>
+    <p class="mb-6 text-base leading-[1.7] text-sage">
+      Офіційний документ на бланку Vintage Hall із підписом експерта, голографічним захистом і унікальним реєстраційним номером. Видається разом із висновком експертизи. Суттєво підвищує вартість лоту та є аргументом для покупця при перепродажі.
+    </p>
+    <div class="mb-10 rounded-vh border border-dashed border-brass border-opacity-30 bg-accent-tint px-6 py-5">
+      <div class="mb-3 font-display text-[1rem] text-ivory">Що включає сертифікат</div>
+      <ul class="space-y-2 text-[0.875rem] leading-[1.6] text-sage">
+        {[
+          'Фотографія предмета з усіх значущих ракурсів',
+          'Повний опис: матеріал, розміри, вага, датування, походження',
+          'Висновок щодо автентичності та стану',
+          'Ім\'я та підпис акредитованого експерта',
+          'QR-код для перевірки в реєстрі Vintage Hall',
+          'Голографічна наклейка на реверсі бланка',
+        ].map(item => (
+          <li class="flex items-start gap-2.5">
+            <svg class="mt-0.5 h-4 w-4 shrink-0 text-brass" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8l3 3 7-7"/></svg>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Service 3 -->
+    <div class="mb-3 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.15em] text-brass">
+      <span class="h-px w-6 bg-brass"></span> Послуга 03
+    </div>
+    <h2 class="mb-6 font-display text-[1.5rem] text-ivory">Ринкова оцінка вартості</h2>
+    <p class="mb-6 text-base leading-[1.7] text-sage">
+      Аналітик Vintage Hall вивчає результати аукціонів за останні 3 роки, стан ринку по конкретній категорії та поточний попит. Підсумком є обґрунтований діапазон ринкової вартості — для встановлення стартової ціни, страхування або спадкової оцінки.
+    </p>
+    <div class="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {[
+        { icon: `<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>`, title: 'Для продавців', text: 'Встановіть обґрунтовану стартову ціну — не занижуйте і не відлякуйте покупців.' },
+        { icon: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`, title: 'Для страхування', text: 'Офіційна ринкова вартість для договору страхування колекції.' },
+        { icon: `<path d="M3 3h18M3 9h18M3 15h18M3 21h18"/>`, title: 'Для спадщини', text: 'Документально підтверджена оцінка для нотаріального поділу або декларування.' },
+        { icon: `<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>`, title: 'Швидко', text: 'Результат за 1–2 робочі дні при наявності якісних фотографій.' },
+      ].map(c => (
+        <div class="rounded-vh border border-line bg-bg-card p-5">
+          <svg class="mb-3 h-5 w-5 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" set:html={c.icon} />
+          <div class="mb-1.5 font-display text-[0.9375rem] text-ivory">{c.title}</div>
+          <p class="text-[0.875rem] leading-[1.6] text-sage">{c.text}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- How to request -->
+    <div class="mb-3 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.15em] text-brass">
+      <span class="h-px w-6 bg-brass"></span> Як замовити
+    </div>
+    <h2 class="mb-8 font-display text-[1.5rem] text-ivory">Процес замовлення</h2>
+    <ol class="mb-10 space-y-3">
+      {[
+        { n: '01', t: 'Заявка', d: 'Напишіть нам через форму нижче або на hello@vintagehall.com — вкажіть, яка послуга потрібна та опишіть предмет.' },
+        { n: '02', t: 'Фотографії або огляд', d: 'Надішліть 8–12 детальних фото або доставте предмет до нас для особистого огляду.' },
+        { n: '03', t: 'Робота експерта', d: 'Фахівець вивчає предмет і готує висновок. Термін — від 1 до 5 робочих днів залежно від складності.' },
+        { n: '04', t: 'Отримання документів', d: 'Ви отримуєте PDF і оригінал сертифіката поштою. Висновок реєструється в базі Vintage Hall.' },
+      ].map(s => (
+        <li class="flex gap-4 rounded-vh border border-line bg-bg-card px-5 py-4">
+          <span class="mono shrink-0 text-[1.125rem] font-medium text-brass opacity-60">{s.n}</span>
+          <div>
+            <div class="mb-0.5 font-display text-[0.9375rem] text-ivory">{s.t}</div>
+            <p class="text-[0.875rem] leading-[1.6] text-sage">{s.d}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <!-- CTA -->
+    <div class="flex flex-wrap items-center gap-5 rounded-vh border border-brass border-opacity-25 bg-accent-tint px-6 py-6">
+      <div class="flex-1 min-w-[200px]">
+        <div class="font-display text-[1.125rem] text-ivory">Замовте консультацію</div>
+        <p class="mt-1 text-[0.875rem] leading-[1.55] text-sage">Безкоштовна первинна консультація — розкажіть про предмет і ми підберемо потрібний формат роботи.</p>
+      </div>
+      <a href="/contacts" class="btn btn-primary shrink-0">Написати нам</a>
+    </div>
+
+  </main>
+  <SiteFooter />
+  <Overlays />
+  <script src="../scripts/app.ts"></script>
+</Layout>

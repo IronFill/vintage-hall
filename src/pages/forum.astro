@@ -15,9 +15,13 @@ import Overlays from '../components/Overlays.astro';
       <!-- LEFT: Topics -->
       <div>
         <div class="mb-5">
-          <div class="flex gap-2" id="forumTabs">
+          <div class="flex flex-wrap gap-2" id="forumTabs">
             <button class="tab active" data-ftab="topics">Теми</button>
             <button class="tab" data-ftab="create">Створити тему</button>
+            <button class="tab" data-ftab="attribution">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="width:13px;height:13px;display:inline;margin-right:5px;vertical-align:-1px"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/><path d="M11 8l3 2-3 2"/></svg>
+              Атрибуція спільнотою
+            </button>
           </div>
         </div>
 
@@ -47,6 +51,41 @@ import Overlays from '../components/Overlays.astro';
 
         <!-- Topic detail view (hidden by default) -->
         <div id="forumTopicDetail" style="display:none;"></div>
+
+        <!-- Attribution panel (hidden by default) -->
+        <div id="forumAttributionPanel" style="display:none;">
+          <div style="border:1px solid var(--line); border-radius:var(--radius); background:var(--accent-tint); padding:20px 22px; margin-bottom:22px;">
+            <div style="font-family:'Cormorant',serif; font-size:1.125rem; color:var(--ivory); margin-bottom:6px;">Що таке Атрибуція спільнотою?</div>
+            <p style="font-size:0.875rem; line-height:1.65; color:var(--sage);">Ви публікуєте фото та опис предмета — спільнота знавців, колекціонерів і дослідників допомагає визначити епоху, автора, походження або орієнтовну вартість. Це не офіційна експертиза, але часто дає цінні підказки.</p>
+          </div>
+
+          <!-- Submissions list -->
+          <div id="attributionList"></div>
+
+          <!-- Submit form -->
+          <div style="margin-top:28px; border-top:1px solid var(--line); padding-top:24px;">
+            <div style="font-family:'Cormorant',serif; font-size:1.125rem; color:var(--ivory); margin-bottom:16px;">Подати предмет на атрибуцію</div>
+            <div class="field"><label>Назва предмета</label><input id="attrTitle" placeholder="Наприклад: «Срібний годинник без марки»"></div>
+            <div class="field"><label>Запитання до спільноти</label>
+              <select id="attrQuestion">
+                <option value="origin">Визначити походження / країну виробника</option>
+                <option value="era">Визначити епоху або датування</option>
+                <option value="author">Встановити автора або майстра</option>
+                <option value="value">Орієнтовна ринкова вартість</option>
+                <option value="authenticity">Автентичність — оригінал чи копія?</option>
+                <option value="other">Інше питання</option>
+              </select>
+            </div>
+            <div class="field"><label>Опис (матеріал, розміри, особливості, що вже відомо)</label>
+              <textarea id="attrDesc" rows="4" style="width:100%; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); border-radius:var(--radius); padding:12px; font-family:'Karla',sans-serif; font-size:14px; resize:vertical;" placeholder="Опишіть предмет максимально детально..."></textarea>
+            </div>
+            <div class="field">
+              <label>Фотографії (оберіть кілька ракурсів)</label>
+              <input type="file" id="attrPhoto" accept="image/*" multiple style="font-size:13px; padding:6px 0;">
+            </div>
+            <button class="btn btn-primary" id="attrSubmit">Опублікувати запит</button>
+          </div>
+        </div>
       </div>
 
       <!-- RIGHT: Quick chat -->
@@ -163,13 +202,62 @@ import Overlays from '../components/Overlays.astro';
     }
 
     // Event handlers
+    // Attribution submissions (in-memory for this session)
+    const attributionItems: {id:number; title:string; question:string; desc:string; author:string; date:string; comments:{author:string; text:string; date:string}[]}[] = [
+      { id:1, title:'Срібний жетон з монограмою', question:'Встановити автора або майстра', desc:'Знайдений у сімейному архіві, срібло 875°, розмір 3×2 см, з монограмою «АК» та написом на реверсі. Можливо, нагорода кінця XIX ст.', author:'Олена В.', date:'2026-06-14', comments:[{author:'Микола Т.', text:'Схоже на іменний дарунок 1880–1900 рр. Монограма «АК» зустрічається на ювілейних жетонах Харківського губернського земства.', date:'2026-06-15'}] },
+      { id:2, title:'Фарфоровий глечик без клейма', question:'Визначити походження / країну виробника', desc:'Матовий кобальт, ручний розпис, висота 22 см. Клейма не видно, але форма нагадує польський або богемський фарфор міжвоєнного періоду.', author:'Роман Д.', date:'2026-06-18', comments:[] },
+    ];
+    let nextAttrId = 3;
+
+    function renderAttributionList() {
+      const list = document.getElementById('attributionList');
+      if (!list) return;
+      if (!attributionItems.length) { list.innerHTML = '<p style="color:var(--sage);font-size:0.875rem;">Ще немає запитів. Будьте першим!</p>'; return; }
+      list.innerHTML = attributionItems.map(item => `
+        <div style="border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-card); padding:18px 20px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+            <div style="font-family:'Cormorant',serif; font-size:1.0625rem; color:var(--ivory);">${item.title}</div>
+            <span style="background:var(--accent-tint); border:1px solid var(--line); border-radius:20px; padding:2px 10px; font-size:0.75rem; color:var(--sage); white-space:nowrap;">${item.question}</span>
+          </div>
+          <p style="font-size:0.875rem; line-height:1.6; color:var(--sage); margin-bottom:12px;">${item.desc}</p>
+          <div style="font-size:0.78125rem; color:var(--sage); opacity:0.7; margin-bottom:${item.comments.length ? '12px' : '0'};">${item.author} · ${item.date}</div>
+          ${item.comments.map(c => `<div style="border-left:2px solid var(--brass); padding:8px 12px; margin-bottom:6px; background:var(--accent-tint); border-radius:0 var(--radius) var(--radius) 0;"><div style="font-size:0.8125rem; color:var(--ivory); margin-bottom:3px;">${c.author} <span style="opacity:0.5; font-size:0.75rem;">· ${c.date}</span></div><div style="font-size:0.875rem; color:var(--sage);">${c.text}</div></div>`).join('')}
+          <div style="margin-top:10px; display:flex; gap:6px;">
+            <input type="text" data-attr-reply="${item.id}" placeholder="Ваш коментар знавця..." style="flex:1; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); border-radius:var(--radius); padding:7px 12px; font-family:'Karla',sans-serif; font-size:13px;">
+            <button class="btn btn-ghost" style="padding:7px 14px; font-size:13px;" data-action="attr-comment" data-aid="${item.id}">Відповісти</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function showAttributionPanel() {
+      document.getElementById('forumTopicList')!.style.display = 'none';
+      document.getElementById('forumCreateForm')!.style.display = 'none';
+      document.getElementById('forumTopicDetail')!.style.display = 'none';
+      document.getElementById('forumAttributionPanel')!.style.display = 'block';
+      renderAttributionList();
+    }
+
     document.getElementById('forumTabs')?.addEventListener('click', (e) => {
       const btn = (e.target as HTMLElement).closest('button');
       if (!btn) return;
       document.querySelectorAll('#forumTabs .tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
       if (btn.dataset.ftab === 'create') showCreateForm();
+      else if (btn.dataset.ftab === 'attribution') showAttributionPanel();
       else renderTopics();
+    });
+
+    document.getElementById('attrSubmit')?.addEventListener('click', () => {
+      const title = (document.getElementById('attrTitle') as HTMLInputElement).value.trim();
+      const desc = (document.getElementById('attrDesc') as HTMLTextAreaElement).value.trim();
+      const question = (document.getElementById('attrQuestion') as HTMLSelectElement).options[(document.getElementById('attrQuestion') as HTMLSelectElement).selectedIndex].text;
+      if (!title || !desc) { alert('Заповніть назву та опис предмета.'); return; }
+      const user = getUser() ?? 'Гість';
+      attributionItems.unshift({ id: nextAttrId++, title, question, desc, author: user, date: new Date().toISOString().slice(0, 10), comments: [] });
+      (document.getElementById('attrTitle') as HTMLInputElement).value = '';
+      (document.getElementById('attrDesc') as HTMLTextAreaElement).value = '';
+      renderAttributionList();
     });
 
     document.getElementById('ftSubmit')?.addEventListener('click', () => {
@@ -211,6 +299,15 @@ import Overlays from '../components/Overlays.astro';
       if (!target) return;
       if (target.dataset.action === 'open-topic') renderTopicDetail(parseInt(target.dataset.tid!, 10));
       if (target.dataset.action === 'back-to-topics') renderTopics();
+      if (target.dataset.action === 'attr-comment') {
+        const aid = parseInt(target.dataset.aid!, 10);
+        const input = document.querySelector<HTMLInputElement>(`[data-attr-reply="${aid}"]`);
+        if (!input || !input.value.trim()) return;
+        const item = attributionItems.find(x => x.id === aid);
+        if (!item) return;
+        item.comments.push({ author: getUser() ?? 'Гість', text: input.value.trim(), date: new Date().toISOString().slice(0, 10) });
+        renderAttributionList();
+      }
       if (target.dataset.action === 'submit-reply') {
         const tid = parseInt(target.dataset.tid!, 10);
         const t = topics.find(x => x.id === tid);

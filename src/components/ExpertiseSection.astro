@@ -1,0 +1,50 @@
+---
+const services = [
+  {
+    icon: `<path d="M9 12l2 2 4-4"/><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/>`,
+    title: 'Експертиза автентичності',
+    desc: 'Перевірка предмета ліцензованим експертом. Висновок із зазначенням матеріалу, епохи, стану та підтвердженням справжності.',
+    badge: 'Від 3 днів',
+  },
+  {
+    icon: `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h6M9 17h4"/>`,
+    title: 'Сертифікат відповідності',
+    desc: 'Офіційний документ із фото, описом та підписом експерта. Підвищує цінність лоту та впевненість покупця.',
+    badge: 'Разом з експертизою',
+  },
+  {
+    icon: `<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>`,
+    title: 'Ринкова оцінка вартості',
+    desc: 'Аналіз актуальних аукціонних результатів і стану ринку. Отримайте обґрунтовану ціну для продажу або страхування.',
+    badge: 'Від 1 дня',
+  },
+];
+---
+
+<section class="py-16 md:py-[80px]" id="expertise-section">
+  <div class="mb-3 flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass">
+    <span class="h-px w-8 bg-brass"></span> Сервіси
+  </div>
+  <div class="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <h2 class="font-display text-[1.75rem] sm:text-[2.25rem] leading-tight">Професійні послуги<br class="hidden sm:block"> для колекціонерів</h2>
+    <a href="/expertise" class="shrink-0 self-start sm:self-auto text-[0.875rem] tracking-[0.04em] text-brass hover:text-brass-light transition-colors">
+      Детальніше про послуги →
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    {services.map(s => (
+      <a href="/expertise" class="group flex flex-col rounded-vh border border-line bg-bg-card p-6 transition-all duration-200 hover:border-brass hover:shadow-[0_0_0_1px_rgba(217,184,119,0.2)]">
+        <div class="mb-4 flex items-start justify-between">
+          <svg class="h-7 w-7 text-brass-light transition-colors group-hover:text-brass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" set:html={s.icon} />
+          <span class="rounded-full border border-line px-2.5 py-0.5 font-mono text-[0.6875rem] text-sage">{s.badge}</span>
+        </div>
+        <h3 class="mb-2 font-display text-[1.0625rem] text-ivory">{s.title}</h3>
+        <p class="mb-5 flex-1 text-[0.875rem] leading-[1.6] text-sage">{s.desc}</p>
+        <span class="text-[0.8125rem] tracking-[0.04em] text-brass opacity-0 transition-opacity group-hover:opacity-100">
+          Дізнатися більше →
+        </span>
+      </a>
+    ))}
+  </div>
+</section>
