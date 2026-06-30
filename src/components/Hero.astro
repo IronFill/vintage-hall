@@ -29,6 +29,26 @@ const featured = featuredIds.map((id) => {
       <a href="#live-auctions" class="btn btn-primary" id="btnViewAuctions">Переглянути каталог</a>
       <button class="btn btn-ghost" id="heroSellBtn">Продати предмет</button>
     </div>
+    <div class="hero-quick-links">
+      <a href="/expertise" class="hero-quick-link">
+        <svg class="hero-ql-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>
+        </svg>
+        Запит до експерта
+      </a>
+      <a href="/forum" class="hero-quick-link">
+        <svg class="hero-ql-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Спільнота
+      </a>
+      <button class="hero-quick-link" id="heroSearchTriggerBtn">
+        <svg class="hero-ql-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        Пошук лотів
+      </button>
+    </div>
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="mono hero-stat-num" id="heroLotCount">11</span>
@@ -134,4 +154,12 @@ const featured = featuredIds.map((id) => {
   heroRenderLot(false);
   setInterval(heroUpdateTimer, 1000);
   setInterval(() => { heroLotIdx = (heroLotIdx + 1) % featured.length; heroRenderLot(true); }, 5000);
+
+  document.getElementById('heroSearchTriggerBtn')?.addEventListener('click', () => {
+    const si = document.getElementById('searchInput');
+    if (si) {
+      si.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => si.focus(), 450);
+    }
+  });
 </script>

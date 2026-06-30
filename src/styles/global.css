@@ -1241,3 +1241,17 @@
   }
   .modal-close-x:hover{background:var(--oxblood-tint); border-color:var(--oxblood); color:var(--ivory);}
   .modal-card{position:relative;}
+
+  /* HERO QUICK LINKS (Запит до експерта / Спільнота / Пошук) */
+  .hero-quick-links{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+  .hero-quick-link{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:7px 14px 7px 10px; border-radius:20px;
+    border:1px solid var(--line); background:transparent;
+    color:var(--sage); font-size:0.8125rem; letter-spacing:0.02em;
+    text-decoration:none; cursor:pointer;
+    transition:border-color .18s, color .18s;
+    white-space:nowrap;
+  }
+  .hero-quick-link:hover{border-color:var(--brass); color:var(--brass);}
+  .hero-ql-icon{width:14px; height:14px; flex-shrink:0;}
