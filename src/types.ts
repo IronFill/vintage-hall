@@ -443,6 +443,15 @@ export interface UiStrings {
   empty_my_sellers: string;
   seller_member_since: string;
   seller_positive_pct: string;
+
+  // Support chat widget
+  chat_title: string;
+  chat_close_label: string;
+  chat_welcome: string;
+  chat_input_placeholder: string;
+  chat_input_aria: string;
+  chat_send_aria: string;
+  chat_auto_reply: string;
 }
 
 export type Translations = Record<Lang, UiStrings>;

@@ -81,7 +81,11 @@ export const UI: Translations = {
     collection_porcelain: "Українська порцеляна", collection_militaria: "Військова історія", collection_numismatics: "Монети Російської імперії та СРСР",
     collection_painting: "Європейський живопис", collection_clocks: "Кишенькові та камінні годинники", collection_jewelry: "Срібло та ювелірика",
     tab_my_favorites: "Обране", tab_my_sellers: "Мої продавці", empty_my_sellers: "Ви ще не купували у жодного продавця.",
-    seller_member_since: "на платформі з", seller_positive_pct: "позитивних відгуків"
+    seller_member_since: "на платформі з", seller_positive_pct: "позитивних відгуків",
+    chat_title: "Підтримка Vintage Hall", chat_close_label: "Закрити чат",
+    chat_welcome: "Вітаємо! Чим можемо допомогти? Напишіть ваше питання — ми відповімо якнайшвидше.",
+    chat_input_placeholder: "Ваше повідомлення...", chat_input_aria: "Повідомлення в чат підтримки",
+    chat_send_aria: "Надіслати повідомлення", chat_auto_reply: "Дякуємо за повідомлення! Наш менеджер відповість протягом кількох хвилин."
   },
   en: {
     tagline: "Antiques auction house", nav_catalog: "Catalog", nav_about: "About", nav_contacts: "Contacts", nav_news: "News", nav_forum: "Forum", cart_btn: "Cart",
@@ -163,7 +167,11 @@ export const UI: Translations = {
     collection_porcelain: "Ukrainian porcelain", collection_militaria: "Military history", collection_numismatics: "Imperial Russia & USSR coins",
     collection_painting: "European painting", collection_clocks: "Pocket & mantel clocks", collection_jewelry: "Silver & jewelry",
     tab_my_favorites: "Favorites", tab_my_sellers: "My sellers", empty_my_sellers: "You haven't bought from any seller yet.",
-    seller_member_since: "on the platform since", seller_positive_pct: "positive reviews"
+    seller_member_since: "on the platform since", seller_positive_pct: "positive reviews",
+    chat_title: "Vintage Hall Support", chat_close_label: "Close chat",
+    chat_welcome: "Welcome! How can we help? Send us your question and we'll reply shortly.",
+    chat_input_placeholder: "Your message...", chat_input_aria: "Message to support chat",
+    chat_send_aria: "Send message", chat_auto_reply: "Thank you! Our team will reply within a few minutes."
   },
   pl: {
     tagline: "Dom aukcyjny antyków", nav_catalog: "Katalog", nav_about: "O nas", nav_contacts: "Kontakt", nav_news: "Aktualności", nav_forum: "Forum", cart_btn: "Koszyk",
@@ -245,7 +253,11 @@ export const UI: Translations = {
     collection_porcelain: "Porcelana ukraińska", collection_militaria: "Historia wojskowości", collection_numismatics: "Monety Imperium Rosyjskiego i ZSRR",
     collection_painting: "Malarstwo europejskie", collection_clocks: "Zegarki kieszonkowe i kominkowe", collection_jewelry: "Srebro i biżuteria",
     tab_my_favorites: "Ulubione", tab_my_sellers: "Moi sprzedawcy", empty_my_sellers: "Nie kupiłeś jeszcze od żadnego sprzedawcy.",
-    seller_member_since: "na platformie od", seller_positive_pct: "pozytywnych opinii"
+    seller_member_since: "na platformie od", seller_positive_pct: "pozytywnych opinii",
+    chat_title: "Wsparcie Vintage Hall", chat_close_label: "Zamknij czat",
+    chat_welcome: "Witamy! W czym możemy pomóc? Napisz swoje pytanie — odpowiemy najszybciej jak to możliwe.",
+    chat_input_placeholder: "Twoja wiadomość...", chat_input_aria: "Wiadomość na czacie wsparcia",
+    chat_send_aria: "Wyślij wiadomość", chat_auto_reply: "Dziękujemy za wiadomość! Nasz menedżer odpowie w ciągu kilku minut."
   },
   ru: {
     tagline: "Аукционный дом антиквариата", nav_catalog: "Каталог", nav_about: "О нас", nav_contacts: "Контакты", nav_news: "Новости", nav_forum: "Форум", cart_btn: "Корзина",
@@ -327,6 +339,10 @@ export const UI: Translations = {
     collection_porcelain: "Украинский фарфор", collection_militaria: "Военная история", collection_numismatics: "Монеты Российской империи и СССР",
     collection_painting: "Европейская живопись", collection_clocks: "Карманные и каминные часы", collection_jewelry: "Серебро и ювелирика",
     tab_my_favorites: "Избранное", tab_my_sellers: "Мои продавцы", empty_my_sellers: "Вы пока не покупали ни у одного продавца.",
-    seller_member_since: "на платформе с", seller_positive_pct: "положительных отзывов"
+    seller_member_since: "на платформе с", seller_positive_pct: "положительных отзывов",
+    chat_title: "Поддержка Vintage Hall", chat_close_label: "Закрыть чат",
+    chat_welcome: "Приветствуем! Чем можем помочь? Напишите ваш вопрос — мы ответим как можно скорее.",
+    chat_input_placeholder: "Ваше сообщение...", chat_input_aria: "Сообщение в чат поддержки",
+    chat_send_aria: "Отправить сообщение", chat_auto_reply: "Спасибо за сообщение! Наш менеджер ответит в течение нескольких минут."
   }
 };

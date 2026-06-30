@@ -21,6 +21,7 @@ declare module './app' {
   submitVipRequest(id: number): void;
   showInfoModal(textKey: keyof typeof UI['uk'], titleKey: keyof typeof UI['uk']): void;
   initChat(): void;
+  detectMsgLang(text: string): Lang | null;
   renderLotChat(lotId: number, seller: string): string;
   sendLotChat(lotId: number, seller: string): void;
   }
@@ -381,6 +382,19 @@ export const lotDetailMethods = {
     `;
     $('checkoutModal').classList.add('active');
   },
+  /** Detects which of the site's 4 languages a typed message is written in, so the support bot
+      can reply in the visitor's own words rather than whatever language the UI happens to be set
+      to. Plain Cyrillic without a letter unique to either alphabet (uk: і ї є ґ, ru: ъ ы э) is
+      genuinely ambiguous between uk/ru — returns null so the caller falls back to the site's
+      current language instead of guessing. */
+  detectMsgLang(this: App, text: string): Lang | null {
+    if (/[ąęłżźćśńĄĘŁŻŹĆŚŃ]/.test(text)) return 'pl';
+    if (/[іїєґІЇЄҐ]/.test(text)) return 'uk';
+    if (/[ъыэЪЫЭ]/.test(text)) return 'ru';
+    if (/[а-яёА-ЯЁ]/.test(text)) return null;
+    if (/[a-zA-Z]/.test(text)) return 'en';
+    return null;
+  },
   initChat(this: App): void {
     const fab = document.getElementById('chatFab');
     const panel = document.getElementById('chatPanel');
@@ -399,14 +413,9 @@ export const lotDetailMethods = {
       body.innerHTML += `<div class="chat-msg user">${text}</div>`;
       input.value = '';
       body.scrollTop = body.scrollHeight;
+      const replyLang = this.detectMsgLang(text) ?? this.currentLang;
       setTimeout(() => {
-        const replies: Record<Lang, string> = {
-          uk: 'Дякуємо за повідомлення! Наш менеджер відповість протягом кількох хвилин.',
-          en: 'Thank you! Our team will reply shortly.',
-          pl: 'Dziękujemy! Nasz zespół odpowie wkrótce.',
-          ru: 'Спасибо! Наш менеджер ответит в ближайшее время.'
-        };
-        body.innerHTML += `<div class="chat-msg bot">${replies[this.currentLang]}</div>`;
+        body.innerHTML += `<div class="chat-msg bot">${UI[replyLang].chat_auto_reply}</div>`;
         body.scrollTop = body.scrollHeight;
       }, 1200);
     };

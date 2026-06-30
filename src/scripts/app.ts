@@ -130,6 +130,12 @@ export class VintageHallApp {
     set('safetyStep2', this.t('safety_step2'));
     set('safetyStep3', this.t('safety_step3'));
     set('safetyStep4', this.t('safety_step4'));
+    set('chatTitle', this.t('chat_title'));
+    set('chatWelcome', this.t('chat_welcome'));
+    document.getElementById('chatCloseBtn')?.setAttribute('aria-label', this.t('chat_close_label'));
+    document.getElementById('chatInput')?.setAttribute('placeholder', this.t('chat_input_placeholder'));
+    document.getElementById('chatInput')?.setAttribute('aria-label', this.t('chat_input_aria'));
+    document.getElementById('chatSendBtn')?.setAttribute('aria-label', this.t('chat_send_aria'));
 
     const raritySel = document.getElementById('filterRarity') as HTMLSelectElement | null;
     if (raritySel) {
