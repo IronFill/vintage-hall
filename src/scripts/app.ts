@@ -558,18 +558,27 @@ export class VintageHallApp {
       this.renderCatalog();
     });
 
+    const markActiveFilter = (sel: HTMLSelectElement) =>
+      sel.classList.toggle('active-filter', sel.value !== '');
+
     document.getElementById('filterOrigin')?.addEventListener('change', (e) => {
-      this.originFilter = (e.target as HTMLSelectElement).value;
+      const sel = e.target as HTMLSelectElement;
+      this.originFilter = sel.value;
+      markActiveFilter(sel);
       this.renderCatalog();
     });
 
     document.getElementById('filterRarity')?.addEventListener('change', (e) => {
-      this.rarityFilter = (e.target as HTMLSelectElement).value;
+      const sel = e.target as HTMLSelectElement;
+      this.rarityFilter = sel.value;
+      markActiveFilter(sel);
       this.renderCatalog();
     });
 
     document.getElementById('filterMaterial')?.addEventListener('change', (e) => {
-      this.materialFilter = (e.target as HTMLSelectElement).value;
+      const sel = e.target as HTMLSelectElement;
+      this.materialFilter = sel.value;
+      markActiveFilter(sel);
       this.renderCatalog();
     });
 
