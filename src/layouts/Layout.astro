@@ -16,7 +16,19 @@ const {
   ogType = 'website',
   noindex = false,
 } = Astro.props;
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://vintagehall.example').toString();
+const siteOrigin = (Astro.site ?? new URL('https://vintage-hall.vercel.app')).toString().replace(/\/$/, '');
+const canonicalUrl = new URL(Astro.url.pathname, siteOrigin).toString();
+// Every page gets a real preview image for Telegram/WhatsApp/social link sharing;
+// lot pages override this with the product photo.
+const ogImage = image ?? `${siteOrigin}/images/og-default.png`;
+const orgSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Vintage Hall',
+  url: siteOrigin,
+  description: 'Аукціонний дім та маркетплейс антикваріату',
+  address: { '@type': 'PostalAddress', addressLocality: 'Київ', addressCountry: 'UA' },
+});
 
 // Analytics are OPT-IN via environment variables — with nothing set, zero third-party
 // scripts load (no fake/placeholder tracker IDs). Fill these in /.env to enable:
@@ -40,11 +52,13 @@ const ymId = import.meta.env.PUBLIC_YM_COUNTER_ID as string | undefined;
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:site_name" content="Vintage Hall" />
-  {image && <meta property="og:image" content={image} />}
-  <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  {image && <meta name="twitter:image" content={image} />}
+  <meta name="twitter:image" content={ogImage} />
+  <script type="application/ld+json" set:html={orgSchema} />
+  <slot name="head" />
   <script is:inline>
     (function(){
       try {
@@ -98,6 +112,16 @@ const ymId = import.meta.env.PUBLIC_YM_COUNTER_ID as string | undefined;
       var isHome = window.location.pathname === '/' || window.location.pathname === '';
       var btn = document.getElementById('backBtn');
       if (btn && !isHome) btn.style.display = 'flex';
+
+      // Any product image that fails to load (dead hotlink, offline CDN) falls back to a
+      // branded placeholder instead of the browser's broken-image icon. Capture phase is
+      // required — img error events don't bubble. data-vh-fb guards against loops.
+      document.addEventListener('error', function(e){
+        var img = e.target;
+        if (!img || img.tagName !== 'IMG' || img.dataset.vhFb) return;
+        img.dataset.vhFb = '1';
+        img.src = '/images/placeholder-lot.svg';
+      }, true);
     })();
   </script>
 </body>

@@ -29,9 +29,31 @@ const similar = SEEDED_PRODUCTS.filter(x => x.category === p.category && x.id !=
 
 const title = `${tr?.name ?? 'Лот'} — LOT-0${p.id} — Vintage Hall`;
 const description = tr?.desc ?? 'Антикварний лот на Vintage Hall.';
+
+// Product structured data — lets Google show price/availability directly in search results.
+const productSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: tr?.name ?? `Лот LOT-0${p.id}`,
+  description,
+  ...(p.photo ? { image: gallery } : {}),
+  sku: `LOT-0${p.id}`,
+  brand: { '@type': 'Brand', name: 'Vintage Hall' },
+  ...(avgReview ? {
+    aggregateRating: { '@type': 'AggregateRating', ratingValue: avgReview.toFixed(1), reviewCount: p.reviews!.length },
+  } : {}),
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'UAH',
+    price,
+    availability: 'https://schema.org/InStock',
+    seller: { '@type': 'Organization', name: p.seller },
+  },
+});
 ---
 
 <Layout title={title} description={description} image={p.photo ?? undefined} ogType="product">
+  <script slot="head" type="application/ld+json" set:html={productSchema} />
   <LiteHeader />
   <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
     <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> LOT-0{p.id}</div>

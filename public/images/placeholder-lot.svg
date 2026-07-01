@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450">
+  <rect width="600" height="450" fill="#1C2B24"/>
+  <rect x="18" y="18" width="564" height="414" fill="none" stroke="#D9B877" stroke-opacity="0.25" stroke-width="1"/>
+  <path d="M300 130 L352 155 L352 205 L300 248 L248 205 L248 155 Z" fill="none" stroke="#D9B877" stroke-opacity="0.55" stroke-width="2"/>
+  <text x="300" y="200" font-family="Georgia, serif" font-size="34" font-style="italic" fill="#D9B877" fill-opacity="0.7" text-anchor="middle">VH</text>
+  <text x="300" y="300" font-family="Georgia, serif" font-size="17" letter-spacing="4" fill="#8FA396" text-anchor="middle">ФОТО ГОТУЄТЬСЯ</text>
+</svg>

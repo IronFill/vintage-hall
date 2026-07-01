@@ -161,6 +161,7 @@ export interface UiStrings {
   btn_about: string;
   hero_stamp: string;
   catalog_title: string;
+  catalog_page_sub: string;
   count_unit: string;
   count_in_section: string;
   tab_all: string;

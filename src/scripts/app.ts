@@ -107,6 +107,8 @@ export class VintageHallApp {
     setHTML('heroStamp', this.t('hero_stamp'));
     set('heroLotLabel', this.t('total_lots'));
     set('catalogTitle', this.t('catalog_title'));
+    set('catalogPageTitle', this.t('catalog_title'));
+    set('catalogPageSub', this.t('catalog_page_sub'));
     set('aboutQuote', this.t('about_quote'));
     setHTML('aboutP1', this.t('about_p1'));
     set('aboutP2', this.t('about_p2'));

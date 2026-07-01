@@ -14,8 +14,8 @@ import Overlays from '../components/Overlays.astro';
   <Header />
   <main class="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 md:px-8 md:py-[50px]">
     <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Каталог</div>
-    <h1 class="mb-3 font-display text-[1.75rem] sm:text-[2.375rem]">Каталог лотів</h1>
-    <p class="mb-8 max-w-[640px] text-[0.9375rem] text-sage">Шукайте за назвою лоту або обирайте категорію праворуч — фільтри та сортування працюють одночасно.</p>
+    <h1 id="catalogPageTitle" class="mb-3 font-display text-[1.75rem] sm:text-[2.375rem]">Каталог лотів</h1>
+    <p id="catalogPageSub" class="mb-8 max-w-[640px] text-[0.9375rem] text-sage">Шукайте за назвою лоту або обирайте категорію праворуч — фільтри та сортування працюють одночасно.</p>
 
     <!-- Catalog grid on the left, full category list on the right (per the "категорії праворуч" request) -->
     <div class="grid grid-cols-1 items-start gap-[18px] md:grid-cols-[1fr_240px] md:gap-9">
