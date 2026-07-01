@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { SEEDED_PRODUCTS, SELLERS } from '../data/products';
 
-const SITE = 'https://vintagehall.example';
+const SITE = (import.meta.env.SITE ?? 'https://vintage-hall.vercel.app').replace(/\/$/, '');
 
-const staticRoutes = ['', 'about', 'delivery', 'forum', 'news', 'rules'];
+const staticRoutes = ['', 'about', 'delivery', 'forum', 'news', 'rules', 'catalog', 'expertise', 'guarantee', 'contacts'];
 
 export const GET: APIRoute = () => {
   const categories = Array.from(new Set(SEEDED_PRODUCTS.map(p => p.category)));

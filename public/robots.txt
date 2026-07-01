@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vintagehall.example/sitemap.xml
+Sitemap: https://vintage-hall.vercel.app/sitemap.xml
