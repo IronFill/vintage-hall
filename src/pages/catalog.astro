@@ -65,7 +65,7 @@ import Overlays from '../components/Overlays.astro';
       b.innerHTML = matches.map((m) => `
         <a href="/lot/${m.id}" class="search-suggestion-row">
           <span>${m.name}</span>
-          ${m.price ? `<span class="mono">${m.price.toLocaleString('ru-RU')} ₴</span>` : ''}
+          ${m.price ? `<span class="mono">${m.price.toLocaleString('uk-UA')} ₴</span>` : ''}
         </a>
       `).join('');
       b.classList.add('open');

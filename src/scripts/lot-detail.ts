@@ -59,8 +59,8 @@ export const lotDetailMethods = {
     }
 
     this.showToast(extended
-      ? `${this.t('bid_placed_as')} <span class="mono">${newBid.toLocaleString('ru-RU')} ₴</span><br><span style="font-size:0.75rem; color:var(--brass-light);">${this.t('auction_extended_msg')}</span>`
-      : `${this.t('bid_placed_as')} <span class="mono">${newBid.toLocaleString('ru-RU')} ₴</span>`);
+      ? `${this.t('bid_placed_as')} <span class="mono">${newBid.toLocaleString('uk-UA')} ₴</span><br><span style="font-size:0.75rem; color:var(--brass-light);">${this.t('auction_extended_msg')}</span>`
+      : `${this.t('bid_placed_as')} <span class="mono">${newBid.toLocaleString('uk-UA')} ₴</span>`);
     this.renderCatalog();
     if ($('checkoutModal').classList.contains('active')) this.openLotDetail(id);
   },
@@ -83,7 +83,7 @@ export const lotDetailMethods = {
     p.bidHistory = [{ user: this.currentUser, bid: price, time: new Date().toISOString() }, ...(p.bidHistory ?? [])];
     p.endTime = new Date(Date.now() - 1000).toISOString();
 
-    this.showToast(`${this.t('buy_now_success')} <span class="mono">${price.toLocaleString('ru-RU')} ₴</span>`);
+    this.showToast(`${this.t('buy_now_success')} <span class="mono">${price.toLocaleString('uk-UA')} ₴</span>`);
     this.renderCatalog();
     if ($('checkoutModal').classList.contains('active')) this.openLotDetail(id);
   },
@@ -105,14 +105,14 @@ export const lotDetailMethods = {
     if (p.saleType === 'auction') {
       const ended = !!p.endTime && new Date(p.endTime).getTime() <= Date.now();
       const minNext = (p.currentBid ?? p.startPrice ?? 0) + (p.bidStep ?? 100);
-      priceBlock = `<div class="lot-price mono" style="font-size:1.25rem;">${(p.currentBid ?? p.startPrice ?? 0).toLocaleString('ru-RU')} ₴</div>`;
+      priceBlock = `<div class="lot-price mono" style="font-size:1.25rem;">${(p.currentBid ?? p.startPrice ?? 0).toLocaleString('uk-UA')} ₴</div>`;
       actionBtn = `<button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:14px;" data-action="place-bid" data-id="${id}" ${ended ? 'disabled' : ''}>${this.t('btn_place_bid')}</button>`;
       if (!ended && p.buyNowPrice) {
-        actionBtn += `<button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:8px;" data-action="buy-now" data-id="${id}">⚡ ${this.t('btn_buy_now')} · <span class="mono">${p.buyNowPrice.toLocaleString('ru-RU')} ₴</span></button>`;
+        actionBtn += `<button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:8px;" data-action="buy-now" data-id="${id}">⚡ ${this.t('btn_buy_now')} · <span class="mono">${p.buyNowPrice.toLocaleString('uk-UA')} ₴</span></button>`;
       }
       extraRows = `
-        <tr><td>${this.t('label_start_price')}</td><td>${(p.startPrice ?? 0).toLocaleString('ru-RU')} ₴</td></tr>
-        <tr><td>${this.t('label_min_next_bid')}</td><td class="mono">${minNext.toLocaleString('ru-RU')} ₴</td></tr>
+        <tr><td>${this.t('label_start_price')}</td><td>${(p.startPrice ?? 0).toLocaleString('uk-UA')} ₴</td></tr>
+        <tr><td>${this.t('label_min_next_bid')}</td><td class="mono">${minNext.toLocaleString('uk-UA')} ₴</td></tr>
         <tr><td>${this.t('label_bids_count')}</td><td>${p.bidsCount ?? 0}</td></tr>
         <tr><td>${this.t('label_time_left')}</td><td><span class="timer" data-timer-id="${id}" data-end="${p.endTime ?? ''}"></span></td></tr>`;
       const hist = p.bidHistory ?? [];
@@ -122,7 +122,7 @@ export const lotDetailMethods = {
         </div>
         ${hist.length === 0 ? `<p style="font-size:0.8125rem; color:var(--sage);">${this.t('no_bids_yet')}</p>` : hist.slice(0, 6).map(h => `
           <div style="display:flex; justify-content:space-between; font-size:0.78125rem; color:var(--sage); padding:4px 0; border-bottom:1px solid var(--line);">
-            <span>${h.user}</span><span class="mono">${h.bid.toLocaleString('ru-RU')} ₴</span>
+            <span>${h.user}</span><span class="mono">${h.bid.toLocaleString('uk-UA')} ₴</span>
           </div>`).join('')}`;
       if (!ended) {
         autobidBlock = `
@@ -135,7 +135,7 @@ export const lotDetailMethods = {
       priceBlock = `<div class="lot-price on-request">${this.priceOnRequestLabel()}</div>`;
       actionBtn = `<button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:14px;" data-action="open-vip-from-detail" data-id="${id}">${this.t('btn_send')}</button>`;
     } else {
-      priceBlock = `<div class="lot-price mono" style="font-size:1.25rem;">${(p.price ?? 0).toLocaleString('ru-RU')} ₴</div>`;
+      priceBlock = `<div class="lot-price mono" style="font-size:1.25rem;">${(p.price ?? 0).toLocaleString('uk-UA')} ₴</div>`;
       actionBtn = `<button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:14px;" data-action="add-to-cart-and-close" data-id="${id}">${this.addToCartLabel()}</button>`;
     }
 
@@ -174,7 +174,7 @@ export const lotDetailMethods = {
     const priceHistoryBlock = p.priceHistory?.length ? `
       <div style="margin:14px 0 6px; font-size:0.8125rem; color:var(--sage);">${this.t('label_price_history')}</div>
       <div class="price-history-list">
-        ${p.priceHistory.map(h => `<div class="price-history-row"><span class="mono">${h.year}</span><span class="mono" style="color:var(--brass-light);">${h.price.toLocaleString('ru-RU')} ₴</span></div>`).join('')}
+        ${p.priceHistory.map(h => `<div class="price-history-row"><span class="mono">${h.year}</span><span class="mono" style="color:var(--brass-light);">${h.price.toLocaleString('uk-UA')} ₴</span></div>`).join('')}
       </div>` : '';
 
     const isFollowing = this.followedSellers.has(p.seller);
@@ -257,7 +257,7 @@ export const lotDetailMethods = {
                 ${s.photo ? `<img src="${s.photo}" alt="" style="width:100%; height:100%; object-fit:cover;">` : ''}
               </div>
               <div style="font-size:0.71875rem; color:var(--ivory); line-height:1.3; margin-bottom:2px;">${str.name}</div>
-              <div class="mono" style="font-size:0.71875rem; color:var(--brass-light);">${sPrice.toLocaleString('ru-RU')} ₴</div>
+              <div class="mono" style="font-size:0.71875rem; color:var(--brass-light);">${sPrice.toLocaleString('uk-UA')} ₴</div>
             </div>`;
         }).join('')}
       </div>` : '';
@@ -374,7 +374,7 @@ export const lotDetailMethods = {
     const max = parseInt(input.value, 10);
     if (!this.currentUser) { alert(this.t('bid_login_required')); this.openLogin('my_bids'); return; }
     if (isNaN(max) || max <= 0) return;
-    this.showToast(`${this.t('autobid_set')}: <span class="mono">${max.toLocaleString('ru-RU')} ₴</span>`);
+    this.showToast(`${this.t('autobid_set')}: <span class="mono">${max.toLocaleString('uk-UA')} ₴</span>`);
     // Demo-scope: confirms the intent without a live backend to execute future automatic bids.
   },
   enterContactLabel(this: App): string {

@@ -232,7 +232,7 @@ export const catalogMethods = {
     if (p.saleType === 'auction') {
       const ended = !!p.endTime && new Date(p.endTime).getTime() <= Date.now();
       footer = `
-        <div class="lot-price mono">${(p.currentBid ?? p.startPrice ?? 0).toLocaleString('ru-RU')} ₴</div>
+        <div class="lot-price mono">${(p.currentBid ?? p.startPrice ?? 0).toLocaleString('uk-UA')} ₴</div>
         <button class="lot-add" data-action="place-bid" data-id="${p.id}" ${ended ? 'disabled' : ''}>${this.t('btn_place_bid')}</button>`;
     } else if (p.saleType === 'request') {
       footer = `
@@ -240,7 +240,7 @@ export const catalogMethods = {
         <button class="lot-add" data-action="vip-request" data-id="${p.id}">${this.t('btn_send')}</button>`;
     } else {
       footer = `
-        <div class="lot-price">${(p.price ?? 0).toLocaleString('ru-RU')} ₴</div>
+        <div class="lot-price">${(p.price ?? 0).toLocaleString('uk-UA')} ₴</div>
         <button class="lot-add" data-action="add-to-cart" data-id="${p.id}">${this.addToCartLabel()}</button>`;
     }
 
@@ -265,7 +265,7 @@ export const catalogMethods = {
          </div>` : '';
 
     const buyNowChip = (p.saleType === 'auction' && p.buyNowPrice && (!p.endTime || new Date(p.endTime).getTime() > Date.now()))
-      ? `<button class="buy-now-chip" data-action="buy-now" data-id="${p.id}">⚡ ${this.t('btn_buy_now')} · ${p.buyNowPrice.toLocaleString('ru-RU')} ₴</button>` : '';
+      ? `<button class="buy-now-chip" data-action="buy-now" data-id="${p.id}">⚡ ${this.t('btn_buy_now')} · ${p.buyNowPrice.toLocaleString('uk-UA')} ₴</button>` : '';
 
     const dot = this.rarityDot(p);
     const rarityDotHtml = dot ? `<span class="rarity-dot" style="background:${dot.color};" title="${dot.label}"></span>` : '';
@@ -388,7 +388,7 @@ export const catalogMethods = {
     const items = this.products.filter(p => this.compareSet.has(p.id));
     if (items.length < 2) return;
     const rows: [string, (p: Product) => string][] = [
-      [this.t('label_price'), p => `${(p.saleType === 'auction' ? (p.currentBid ?? p.startPrice ?? 0) : (p.price ?? 0)).toLocaleString('ru-RU')} ₴`],
+      [this.t('label_price'), p => `${(p.saleType === 'auction' ? (p.currentBid ?? p.startPrice ?? 0) : (p.price ?? 0)).toLocaleString('uk-UA')} ₴`],
       [this.t('field_lot_era'), p => this.getProductText(p).era],
       [this.t('label_material'), p => this.materialOf(p)],
       [this.t('label_condition'), p => p.conditionGrade ?? p.custom?.condition ?? '—'],
@@ -455,9 +455,9 @@ export const catalogMethods = {
           <div class="recent-sale-body">
             <div class="recent-sale-name">${tr.name}</div>
             <div class="recent-sale-prices mono">
-              <span class="recent-sale-start">${startPrice.toLocaleString('ru-RU')} ₴</span>
+              <span class="recent-sale-start">${startPrice.toLocaleString('uk-UA')} ₴</span>
               <span class="recent-sale-arrow">→</span>
-              <span class="recent-sale-final">${finalPrice.toLocaleString('ru-RU')} ₴</span>
+              <span class="recent-sale-final">${finalPrice.toLocaleString('uk-UA')} ₴</span>
             </div>
             <div class="recent-sale-meta">${sale.soldMinutesAgo} ${this.t('label_sold_minutes_ago')}${sellerInfo ? ` · ★ ${sellerInfo.rating.toFixed(1)}` : ''}</div>
           </div>
@@ -488,7 +488,7 @@ export const catalogMethods = {
           <div class="live-card-body">
             <div class="live-card-name">${tr.name}</div>
             <div class="live-card-row">
-              <span class="live-card-price mono">${(p.currentBid ?? p.startPrice ?? 0).toLocaleString('ru-RU')} ₴</span>
+              <span class="live-card-price mono">${(p.currentBid ?? p.startPrice ?? 0).toLocaleString('uk-UA')} ₴</span>
               <span class="live-card-timer ${urgent ? 'urgent' : ''} timer" data-end="${p.endTime}"></span>
             </div>
             <div class="live-card-row">

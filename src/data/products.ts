@@ -21,13 +21,13 @@ export const RECENT_SALES: RecentSale[] = [
 ];
 
 export const SEEDED_PRODUCTS: Product[] = [
-  { id: 1, photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Samovar.silver.jpg?width=600', price: 4200, icon: 'samovar', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
+  { id: 1, photo: 'https://picsum.photos/seed/antique-samovar/600/450', price: 4200, icon: 'samovar', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'Дуже добрий', dimensions: '32 × 22 см', weight: '2.4 кг', origin: 'Росія', rarity: 'common', certified: false,
     reviews: [
       { author: 'Олена К.', rating: 5, text: 'Самовар прийшов у чудовому стані, точно як на фото. Продавець оперативно відповідав на питання.', date: '2026-05-12' },
       { author: 'Ihor M.', rating: 4, text: 'Гарна річ, трохи довше їхала доставка, але все ціле і відповідає опису.', date: '2026-04-02' },
     ] },
-  { id: 2, photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pocket_watch_with_chain.jpg?width=600', icon: 'watch', category: 'decor', seller: 'Vintage Hall', saleType: 'auction',
+  { id: 2, photo: 'https://picsum.photos/seed/pocket-watch-antique/600/450', icon: 'watch', category: 'decor', seller: 'Vintage Hall', saleType: 'auction',
     startPrice: 5000, currentBid: 5600, bidStep: 200, bidsCount: 3, endTime: '2026-06-28T21:00:00Z', watchingNow: 23, bidsLastHour: 2, buyNowPrice: 8500,
     conditionGrade: 'Добрий, механізм робочий', dimensions: '5 × 4 см', weight: '85 г', origin: 'Швейцарія', rarity: 'rare', badge: 'expert', certified: true,
     investmentRating: 4, priceGrowthPct: 28, priceGrowthYears: 5, expertId: 'bondar',

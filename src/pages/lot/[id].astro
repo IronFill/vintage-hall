@@ -106,7 +106,7 @@ const description = tr?.desc ?? 'Антикварний лот на Vintage Hall
             <div style="margin:14px 0 6px; font-size:0.8125rem; color:var(--sage);">Історія цін на подібні предмети</div>
             <div class="price-history-list">
               {p.priceHistory.map(h => (
-                <div class="price-history-row"><span class="mono">{h.year}</span><span class="mono" style="color:var(--brass-light);">{h.price.toLocaleString('ru-RU')} ₴</span></div>
+                <div class="price-history-row"><span class="mono">{h.year}</span><span class="mono" style="color:var(--brass-light);">{h.price.toLocaleString('uk-UA')} ₴</span></div>
               ))}
             </div>
           </>
@@ -114,14 +114,14 @@ const description = tr?.desc ?? 'Антикварний лот на Vintage Hall
 
         <div style="display:flex; align-items:baseline; gap:10px; margin:24px 0 16px;">
           <span style="font-size:0.8125rem; color:var(--sage);">{priceLabel}:</span>
-          <span class="mono" style="font-size:1.625rem; color:var(--brass-light); font-weight:600;">{price.toLocaleString('ru-RU')} ₴</span>
+          <span class="mono" style="font-size:1.625rem; color:var(--brass-light); font-weight:600;">{price.toLocaleString('uk-UA')} ₴</span>
         </div>
         <a class="btn btn-primary btn-block" href={`/?lot=${p.id}#catalog`}>
           {p.saleType === 'auction' ? 'Зробити ставку →' : p.saleType === 'request' ? 'Залишити запит →' : 'Купити лот →'}
         </a>
         {p.saleType === 'auction' && p.buyNowPrice && (!p.endTime || new Date(p.endTime).getTime() > Date.now()) && (
           <a class="btn btn-ghost btn-block" style="margin-top:10px;" href={`/?lot=${p.id}#catalog`}>
-            ⚡ Купити зараз за {p.buyNowPrice.toLocaleString('ru-RU')} ₴
+            ⚡ Купити зараз за {p.buyNowPrice.toLocaleString('uk-UA')} ₴
           </a>
         )}
         <p style="font-size:0.75rem; color:var(--sage); margin-top:10px;">
@@ -181,7 +181,7 @@ const description = tr?.desc ?? 'Антикварний лот на Vintage Hall
                   {s.photo ? <img src={s.photo} alt={str?.name ?? ''} loading="lazy" /> : <div class="category-card-empty">VH</div>}
                 </div>
                 <div class="category-card-name">{str?.name}</div>
-                <div class="category-card-price mono">{sPrice.toLocaleString('ru-RU')} ₴</div>
+                <div class="category-card-price mono">{sPrice.toLocaleString('uk-UA')} ₴</div>
               </a>
             );
           })}

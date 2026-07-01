@@ -34,8 +34,8 @@ const maxPrice = Math.max(...items.map(p => (p.saleType === 'auction' ? (p.curre
     <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Каталог</div>
     <h1 class="mb-2 font-display text-[1.75rem] sm:text-[2.375rem]">{categoryName}</h1>
     <p class="mb-6 max-w-[640px] leading-[1.6] text-sage">
-      {items.length} {items.length === 1 ? 'лот' : 'лотів'} у категорії «{categoryName}» — від {minPrice.toLocaleString('ru-RU')} ₴
-      до {maxPrice.toLocaleString('ru-RU')} ₴. Кожен лот перевірений, продавці підтверджені, угода проходить безпечно через Vintage Hall.
+      {items.length} {items.length === 1 ? 'лот' : 'лотів'} у категорії «{categoryName}» — від {minPrice.toLocaleString('uk-UA')} ₴
+      до {maxPrice.toLocaleString('uk-UA')} ₴. Кожен лот перевірений, продавці підтверджені, угода проходить безпечно через Vintage Hall.
     </p>
 
     <div class="category-grid">
@@ -48,7 +48,7 @@ const maxPrice = Math.max(...items.map(p => (p.saleType === 'auction' ? (p.curre
               {p.photo ? <img src={p.photo} alt={tr?.name ?? ''} loading={i < 4 ? 'eager' : 'lazy'} /> : <div class="category-card-empty">VH</div>}
             </div>
             <div class="category-card-name">{tr?.name}</div>
-            <div class="category-card-price mono">{price.toLocaleString('ru-RU')} ₴</div>
+            <div class="category-card-price mono">{price.toLocaleString('uk-UA')} ₴</div>
           </a>
         );
       })}

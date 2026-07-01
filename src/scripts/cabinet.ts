@@ -88,7 +88,7 @@ export const cabinetMethods = {
     return `
       <div style="background:var(--accent-tint); border-radius:var(--radius); padding:16px; margin-bottom:14px;">
         <div style="font-size:0.75rem; color:var(--sage); text-transform:uppercase; letter-spacing:0.05em;">${this.t('wallet_balance')}</div>
-        <div class="mono" style="font-size:1.5rem; color:var(--brass-light); margin-top:4px;">${this.walletBalance.toLocaleString('ru-RU')} ₴</div>
+        <div class="mono" style="font-size:1.5rem; color:var(--brass-light); margin-top:4px;">${this.walletBalance.toLocaleString('uk-UA')} ₴</div>
       </div>
       <p style="font-size:0.78125rem; color:var(--sage); margin-bottom:16px;">${this.t('wallet_note')}</p>
       <div style="font-size:0.8125rem; color:var(--sage); margin-bottom:8px;">${this.t('wallet_commission_history')}</div>
@@ -105,7 +105,7 @@ export const cabinetMethods = {
       return `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line); font-size:0.8125rem;">
           <span>${tr.name} <span class="mono" style="color:var(--sage);">· LOT-0${p.id}</span></span>
-          <span class="mono" style="color:${statusColor};">${statusText} · ${(p.currentBid ?? 0).toLocaleString('ru-RU')} ₴</span>
+          <span class="mono" style="color:${statusColor};">${statusText} · ${(p.currentBid ?? 0).toLocaleString('uk-UA')} ₴</span>
         </div>`;
     }).join('');
   },
@@ -116,7 +116,7 @@ export const cabinetMethods = {
     if (won.length === 0) return `<p style="font-size:0.8125rem; color:var(--sage); padding:20px 0;">${this.t('empty_won_lots')}</p>`;
     return won.map(p => {
       const tr = this.getProductText(p);
-      return `<div style="padding:10px 0; border-bottom:1px solid var(--line); font-size:0.8125rem;">${tr.name} — ${(p.currentBid ?? 0).toLocaleString('ru-RU')} ₴</div>`;
+      return `<div style="padding:10px 0; border-bottom:1px solid var(--line); font-size:0.8125rem;">${tr.name} — ${(p.currentBid ?? 0).toLocaleString('uk-UA')} ₴</div>`;
     }).join('');
   },
   /** "Обране" cabinet tab (#14) — same favorites set used by the catalog's ♥ filter, surfaced inside the cabinet too. */
@@ -129,7 +129,7 @@ export const cabinetMethods = {
       return `
         <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); font-size:0.8125rem; cursor:pointer;" data-action="open-detail" data-id="${p.id}">
           <span>${tr.name} <span class="mono" style="color:var(--sage);">· LOT-0${p.id}</span></span>
-          <span class="mono" style="color:var(--brass-light);">${priceLabel.toLocaleString('ru-RU')} ₴</span>
+          <span class="mono" style="color:var(--brass-light);">${priceLabel.toLocaleString('uk-UA')} ₴</span>
         </div>`;
     }).join('');
   },
@@ -164,7 +164,7 @@ export const cabinetMethods = {
     const summary = `
       <div class="investment-card" style="margin-bottom:18px;">
         <div class="investment-row"><span>${this.t('label_collection_items')}</span><span class="mono">${items.length}</span></div>
-        <div class="investment-row"><span>${this.t('label_collection_value')}</span><span class="mono" style="color:var(--brass-light);">${totalValue.toLocaleString('ru-RU')} ₴</span></div>
+        <div class="investment-row"><span>${this.t('label_collection_value')}</span><span class="mono" style="color:var(--brass-light);">${totalValue.toLocaleString('uk-UA')} ₴</span></div>
         ${avgGrowth !== null ? `<div class="investment-row"><span>${this.t('label_collection_growth')}</span><span class="mono" style="color:#4FA876;">+${avgGrowth}%</span></div>` : ''}
       </div>`;
 
@@ -176,7 +176,7 @@ export const cabinetMethods = {
           <span>${tr.name} <span class="mono" style="color:var(--sage);">· LOT-0${p.id}</span></span>
           <span style="display:flex; align-items:center; gap:8px;">
             ${p.priceGrowthPct ? `<span class="mono" style="color:#4FA876; font-size:0.71875rem;">+${p.priceGrowthPct}%</span>` : ''}
-            <span class="mono" style="color:var(--brass-light);">${price.toLocaleString('ru-RU')} ₴</span>
+            <span class="mono" style="color:var(--brass-light);">${price.toLocaleString('uk-UA')} ₴</span>
           </span>
         </div>`;
     }).join('');
@@ -288,7 +288,7 @@ export const cabinetMethods = {
           <div style="padding:10px 0; border-bottom:1px solid var(--line); font-size:0.8125rem;">
             <div class="mono" style="color:var(--sage); margin-bottom:3px;">${o.date}</div>
             <div>${o.itemNames}</div>
-            <div class="mono" style="color:var(--brass-light); margin-top:3px;">${o.total.toLocaleString('ru-RU')} ₴</div>
+            <div class="mono" style="color:var(--brass-light); margin-top:3px;">${o.total.toLocaleString('uk-UA')} ₴</div>
           </div>
         `).join('');
     } else if (tab === 'my_bids') {
@@ -368,9 +368,9 @@ export const cabinetMethods = {
     const fee = Math.round(price * this.platformFeePct / 100);
     const net = price - fee;
     return `
-      <div class="commission-row"><span>${this.t('label_sale_price')}</span><span class="mono">${price.toLocaleString('ru-RU')} ₴</span></div>
-      <div class="commission-row"><span>${this.t('label_platform_fee')} (${this.platformFeePct}%)</span><span class="mono" style="color:var(--oxblood);">−${fee.toLocaleString('ru-RU')} ₴</span></div>
-      <div class="commission-row commission-net"><span>${this.t('label_net_payout')}</span><span class="mono">${net.toLocaleString('ru-RU')} ₴</span></div>
+      <div class="commission-row"><span>${this.t('label_sale_price')}</span><span class="mono">${price.toLocaleString('uk-UA')} ₴</span></div>
+      <div class="commission-row"><span>${this.t('label_platform_fee')} (${this.platformFeePct}%)</span><span class="mono" style="color:var(--oxblood);">−${fee.toLocaleString('uk-UA')} ₴</span></div>
+      <div class="commission-row commission-net"><span>${this.t('label_net_payout')}</span><span class="mono">${net.toLocaleString('uk-UA')} ₴</span></div>
     `;
   },
   updateCommissionBox(this: App): void {

@@ -33,7 +33,7 @@ export const cartMethods = {
     this.renderCart();
     this.openDrawer();
     const tr = this.getProductText(prod);
-    this.showToast(`${tr.name} — <span class="mono">${(prod.price ?? 0).toLocaleString('ru-RU')} ₴</span>`);
+    this.showToast(`${tr.name} — <span class="mono">${(prod.price ?? 0).toLocaleString('uk-UA')} ₴</span>`);
   },
   changeQty(this: App, id: number, delta: number): void {
     const item = this.cart.find(c => c.id === id);
@@ -66,7 +66,7 @@ export const cartMethods = {
         <div class="cart-row-media"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">${ICON_PATHS[c.icon]}</svg></div>
         <div class="cart-row-info">
           <div class="cart-row-name">${tr.name}</div>
-          <div class="cart-row-price mono">${(c.price ?? 0).toLocaleString('ru-RU')} ₴</div>
+          <div class="cart-row-price mono">${(c.price ?? 0).toLocaleString('uk-UA')} ₴</div>
           <div class="qty-control">
             <button data-action="qty-dec" data-id="${c.id}">−</button>
             <span>${c.qty}</span>
@@ -79,7 +79,7 @@ export const cartMethods = {
 
     const total = this.cart.reduce((s, c) => s + (c.price ?? 0) * c.qty, 0);
     footEl.innerHTML = `
-      <div class="drawer-total"><span>${this.t('cart_total')}</span><span class="mono">${total.toLocaleString('ru-RU')} ₴</span></div>
+      <div class="drawer-total"><span>${this.t('cart_total')}</span><span class="mono">${total.toLocaleString('uk-UA')} ₴</span></div>
       <button class="btn btn-primary checkout-btn" data-action="open-checkout">${this.t('cart_checkout')}</button>
     `;
   },
@@ -96,7 +96,7 @@ export const cartMethods = {
     const total = this.cart.reduce((s, c) => s + (c.price ?? 0) * c.qty, 0);
     $('checkoutCard').innerHTML = `
       <h3>${this.t('checkout_title')}</h3>
-      <div class="sub">${this.t('checkout_sub')}<span class="mono">${total.toLocaleString('ru-RU')} ₴</span></div>
+      <div class="sub">${this.t('checkout_sub')}<span class="mono">${total.toLocaleString('uk-UA')} ₴</span></div>
       <div class="field"><label>${this.t('field_name')}</label><input id="ckName"></div>
       <div class="field"><label>${this.t('field_phone')}</label><input id="ckPhone" placeholder="+380 ..."></div>
       <div class="field"><label>${this.t('field_delivery')}</label>

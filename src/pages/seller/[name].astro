@@ -68,7 +68,7 @@ const description = `${name}: ${info.salesCount} продажів, рейтин�
               {p.photo ? <img src={p.photo} alt={tr?.name ?? ''} loading={i < 4 ? 'eager' : 'lazy'} /> : <div class="category-card-empty">VH</div>}
             </div>
             <div class="category-card-name">{tr?.name}</div>
-            <div class="category-card-price mono">{price.toLocaleString('ru-RU')} ₴</div>
+            <div class="category-card-price mono">{price.toLocaleString('uk-UA')} ₴</div>
           </a>
         );
       })}
