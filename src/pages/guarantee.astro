@@ -14,10 +14,10 @@ import Overlays from '../components/Overlays.astro';
 
     <!-- Eyebrow + Title -->
     <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass">
-      <span class="h-px w-8 bg-brass"></span> Гарантія
+      <span class="h-px w-8 bg-brass"></span> <span data-i18n="guar.eyebrow">Гарантія</span>
     </div>
-    <h1 class="mb-5 font-display text-[1.875rem] sm:text-[2.5rem] leading-tight">Гарантія автентичності</h1>
-    <p class="mb-10 max-w-[620px] text-[1.0625rem] leading-[1.7] text-sage">
+    <h1 class="mb-5 font-display text-[1.875rem] sm:text-[2.5rem] leading-tight" data-i18n="guar.h1">Гарантія автентичності</h1>
+    <p class="mb-10 max-w-[620px] text-[1.0625rem] leading-[1.7] text-sage" data-i18n="guar.sub">
       Кожен предмет на Vintage Hall проходить перевірку перед публікацією. Ми відповідаємо за те, що лот відповідає опису — а якщо ні, ми на вашому боці.
     </p>
 
@@ -28,104 +28,104 @@ import Overlays from '../components/Overlays.astro';
         <path d="M16 24 L21 29 L32 18"/>
       </svg>
       <div>
-        <div class="font-display text-[1.0625rem] text-ivory">Підтверджено експертами Vintage Hall</div>
-        <div class="mt-1 text-[0.875rem] leading-[1.55] text-sage">48 верифікованих продавців · понад 2 800 успішних угод · 0 підтверджених підробок</div>
+        <div class="font-display text-[1.0625rem] text-ivory" data-i18n="guar.banner.t">Підтверджено експертами Vintage Hall</div>
+        <div class="mt-1 text-[0.875rem] leading-[1.55] text-sage" data-i18n="guar.banner.sub">48 верифікованих продавців · понад 2 800 успішних угод · 0 підтверджених підробок</div>
       </div>
     </div>
 
     <!-- For buyers -->
     <div class="mb-2 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.15em] text-brass">
-      <span class="h-px w-6 bg-brass"></span> Для покупців
+      <span class="h-px w-6 bg-brass"></span> <span data-i18n="guar.buyers.label">Для покупців</span>
     </div>
-    <h2 class="mb-6 font-display text-[1.5rem] text-ivory">Ваш захист при кожній покупці</h2>
+    <h2 class="mb-6 font-display text-[1.5rem] text-ivory" data-i18n="guar.buyers.h2">Ваш захист при кожній покупці</h2>
 
     <div class="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <path d="M9 12l2 2 4-4"/><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Перевірений опис і фото</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">Перед публікацією модератор перевіряє відповідність фотографій та опису. Матеріал, епоха, стан, дефекти — все має бути зазначено чесно.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.b1.t">Перевірений опис і фото</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.b1.p">Перед публікацією модератор перевіряє відповідність фотографій та опису. Матеріал, епоха, стан, дефекти — все має бути зазначено чесно.</p>
       </div>
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Захист від підробок</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">Продавець несе повну відповідальність за справжність лоту. Якщо предмет виявився підробкою — ви маєте право на повне повернення коштів.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.b2.t">Захист від підробок</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.b2.p">Продавець несе повну відповідальність за справжність лоту. Якщо предмет виявився підробкою — ви маєте право на повне повернення коштів.</p>
       </div>
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Повернення протягом 24 годин</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">Якщо отриманий предмет суттєво не відповідає опису або фото, ви можете ініціювати повернення протягом 24 годин після отримання.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.b3.t">Повернення протягом 24 годин</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.b3.p">Якщо отриманий предмет суттєво не відповідає опису або фото, ви можете ініціювати повернення протягом 24 годин після отримання.</p>
       </div>
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Підтримка в суперечці</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">У разі конфлікту з продавцем — зв'яжіться з нами. Наша команда розгляне суперечку і допоможе знайти справедливе рішення протягом 3 робочих днів.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.b4.t">Підтримка в суперечці</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.b4.p">У разі конфлікту з продавцем — зв'яжіться з нами. Наша команда розгляне суперечку і допоможе знайти справедливе рішення протягом 3 робочих днів.</p>
       </div>
     </div>
 
     <!-- For sellers -->
     <div class="mb-2 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.15em] text-brass">
-      <span class="h-px w-6 bg-brass"></span> Для продавців
+      <span class="h-px w-6 bg-brass"></span> <span data-i18n="guar.sellers.label">Для продавців</span>
     </div>
-    <h2 class="mb-6 font-display text-[1.5rem] text-ivory">Репутація, яка продає</h2>
+    <h2 class="mb-6 font-display text-[1.5rem] text-ivory" data-i18n="guar.sellers.h2">Репутація, яка продає</h2>
 
     <div class="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Значок верифікованого продавця</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">Після проходження верифікації ваш профіль отримує значок «Перевірений продавець». Це підвищує довіру покупців і збільшує шанси успішного продажу.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.s1.t">Значок верифікованого продавця</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.s1.p">Після проходження верифікації ваш профіль отримує значок «Перевірений продавець». Це підвищує довіру покупців і збільшує шанси успішного продажу.</p>
       </div>
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Документація та провенанс</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">Маєте сертифікат, паспорт предмета або документи про походження? Додайте їх до лоту — це суттєво підвищує ціну і прискорює продаж.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.s2.t">Документація та провенанс</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.s2.p">Маєте сертифікат, паспорт предмета або документи про походження? Додайте їх до лоту — це суттєво підвищує ціну і прискорює продаж.</p>
       </div>
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Рейтинг та відгуки</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">Кожна успішна угода додає до вашого рейтингу. Відсоток позитивних відгуків відображається публічно — чесність окупається.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.s3.t">Рейтинг та відгуки</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.s3.p">Кожна успішна угода додає до вашого рейтингу. Відсоток позитивних відгуків відображається публічно — чесність окупається.</p>
       </div>
       <div class="rounded-vh border border-line bg-bg-card p-5">
         <svg class="mb-3 h-6 w-6 text-brass-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
           <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
         </svg>
-        <h3 class="mb-2 font-display text-[1rem] text-ivory">Відповідальність за опис</h3>
-        <p class="text-[0.9rem] leading-[1.6] text-sage">Зазначте всі відомі дефекти та реставрації — це знижує ризик суперечок і зміцнює вашу репутацію. Чесний опис захищає вас так само, як і покупця.</p>
+        <h3 class="mb-2 font-display text-[1rem] text-ivory" data-i18n="guar.s4.t">Відповідальність за опис</h3>
+        <p class="text-[0.9rem] leading-[1.6] text-sage" data-i18n="guar.s4.p">Зазначте всі відомі дефекти та реставрації — це знижує ризик суперечок і зміцнює вашу репутацію. Чесний опис захищає вас так само, як і покупця.</p>
       </div>
     </div>
 
     <!-- Process steps -->
     <div class="mb-2 flex items-center gap-2.5 text-[0.8125rem] uppercase tracking-[0.15em] text-brass">
-      <span class="h-px w-6 bg-brass"></span> Як це працює
+      <span class="h-px w-6 bg-brass"></span> <span data-i18n="guar.process.label">Як це працює</span>
     </div>
-    <h2 class="mb-8 font-display text-[1.5rem] text-ivory">Процес верифікації лоту</h2>
+    <h2 class="mb-8 font-display text-[1.5rem] text-ivory" data-i18n="guar.process.h2">Процес верифікації лоту</h2>
 
     <ol class="mb-10 space-y-4">
       {[
-        { n: '01', title: 'Продавець публікує лот', text: 'Детальний опис, фотографії з усіх ракурсів, зазначення стану, матеріалу, орієнтовного датування та будь-яких дефектів.' },
-        { n: '02', title: 'Перевірка модератором', text: 'Команда Vintage Hall перевіряє опис на повноту та відповідність фото. Лоти з неповним або суперечливим описом повертаються на доопрацювання.' },
-        { n: '03', title: 'Публікація зі статусом', text: 'Схвалені лоти отримують статус «Перевірено» і стають видимими покупцям. Для предметів з документами — додатковий значок «Провенанс підтверджено».' },
-        { n: '04', title: 'Угода та доставка', text: 'Покупець отримує предмет і має 24 години на перевірку. Якщо все відповідає опису — угода закривається і кошти зараховуються продавцю.' },
-        { n: '05', title: 'Суперечка (якщо виникла)', text: 'Покупець відкриває заявку через підтримку. Ми вивчаємо доказову базу обох сторін і виносимо рішення протягом 3 робочих днів.' },
+        { n: '01', k: 'guar.p1', title: 'Продавець публікує лот', text: 'Детальний опис, фотографії з усіх ракурсів, зазначення стану, матеріалу, орієнтовного датування та будь-яких дефектів.' },
+        { n: '02', k: 'guar.p2', title: 'Перевірка модератором', text: 'Команда Vintage Hall перевіряє опис на повноту та відповідність фото. Лоти з неповним або суперечливим описом повертаються на доопрацювання.' },
+        { n: '03', k: 'guar.p3', title: 'Публікація зі статусом', text: 'Схвалені лоти отримують статус «Перевірено» і стають видимими покупцям. Для предметів з документами — додатковий значок «Провенанс підтверджено».' },
+        { n: '04', k: 'guar.p4', title: 'Угода та доставка', text: 'Покупець отримує предмет і має 24 години на перевірку. Якщо все відповідає опису — угода закривається і кошти зараховуються продавцю.' },
+        { n: '05', k: 'guar.p5', title: 'Суперечка (якщо виникла)', text: 'Покупець відкриває заявку через підтримку. Ми вивчаємо доказову базу обох сторін і виносимо рішення протягом 3 робочих днів.' },
       ].map(step => (
         <li class="flex gap-4 rounded-vh border border-line bg-bg-card px-5 py-4">
           <span class="mono shrink-0 text-[1.25rem] font-medium text-brass opacity-60">{step.n}</span>
           <div>
-            <div class="mb-1 font-display text-[1rem] text-ivory">{step.title}</div>
-            <p class="text-[0.875rem] leading-[1.6] text-sage">{step.text}</p>
+            <div class="mb-1 font-display text-[1rem] text-ivory" data-i18n={`${step.k}.t`}>{step.title}</div>
+            <p class="text-[0.875rem] leading-[1.6] text-sage" data-i18n={`${step.k}.d`}>{step.text}</p>
           </div>
         </li>
       ))}
@@ -133,22 +133,22 @@ import Overlays from '../components/Overlays.astro';
 
     <!-- What we do NOT guarantee -->
     <div class="mb-10 rounded-vh border border-dashed border-line bg-accent-tint px-6 py-5">
-      <h3 class="mb-3 font-display text-[1rem] text-ivory">Що не охоплює гарантія</h3>
+      <h3 class="mb-3 font-display text-[1rem] text-ivory" data-i18n="guar.not.h3">Що не охоплює гарантія</h3>
       <ul class="space-y-1.5 text-[0.875rem] leading-[1.6] text-sage">
-        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span>Природна патина та зношування, відповідне до зазначеного віку предмета.</li>
-        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span>Суб'єктивне незадоволення зовнішнім виглядом, якщо предмет відповідає опису.</li>
-        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span>Пошкодження, завдані покупцем після отримання.</li>
-        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span>Зміна ринкової вартості предмета після покупки.</li>
+        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span><span data-i18n="guar.not.i1">Природна патина та зношування, відповідне до зазначеного віку предмета.</span></li>
+        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span><span data-i18n="guar.not.i2">Суб'єктивне незадоволення зовнішнім виглядом, якщо предмет відповідає опису.</span></li>
+        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span><span data-i18n="guar.not.i3">Пошкодження, завдані покупцем після отримання.</span></li>
+        <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sage opacity-50"></span><span data-i18n="guar.not.i4">Зміна ринкової вартості предмета після покупки.</span></li>
       </ul>
     </div>
 
     <!-- CTA -->
     <div class="flex flex-wrap items-center gap-4 rounded-vh border border-brass border-opacity-20 bg-accent-tint px-6 py-6">
       <div class="flex-1 min-w-[200px]">
-        <div class="font-display text-[1.0625rem] text-ivory">Є питання або потрібна допомога?</div>
-        <p class="mt-1 text-[0.875rem] leading-[1.55] text-sage">Наша підтримка відповідає щодня з 10:00 до 18:00 за київським часом.</p>
+        <div class="font-display text-[1.0625rem] text-ivory" data-i18n="guar.cta.t">Є питання або потрібна допомога?</div>
+        <p class="mt-1 text-[0.875rem] leading-[1.55] text-sage" data-i18n="guar.cta.p">Наша підтримка відповідає щодня з 10:00 до 18:00 за київським часом.</p>
       </div>
-      <a href="/contacts" class="btn btn-primary shrink-0">Зв'язатися з нами</a>
+      <a href="/contacts" class="btn btn-primary shrink-0" data-i18n="common.contact_us">Зв'язатися з нами</a>
     </div>
 
   </main>

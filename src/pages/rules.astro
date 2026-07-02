@@ -8,26 +8,26 @@ import Overlays from '../components/Overlays.astro';
 <Layout title="Правила — Vintage Hall">
   <Header />
   <main class="mx-auto max-w-[780px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
-    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Правила</div>
-    <h1 class="mb-7 font-display text-[1.75rem] sm:text-[2.375rem]">Правила платформи</h1>
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> <span data-i18n="rules.eyebrow">Правила</span></div>
+    <h1 class="mb-7 font-display text-[1.75rem] sm:text-[2.375rem]" data-i18n="rules.h1">Правила платформи</h1>
 
-    <h2 class="my-8 font-display text-2xl text-ivory">Загальні положення</h2>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Vintage Hall — це платформа, де продавці та покупці здійснюють угоди між собою. Vintage Hall не є стороною купівлі-продажу, але модерує лоти та забезпечує дотримання правил.</p>
+    <h2 class="my-8 font-display text-2xl text-ivory" data-i18n="rules.general.h2">Загальні положення</h2>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.general.p">Vintage Hall — це платформа, де продавці та покупці здійснюють угоди між собою. Vintage Hall не є стороною купівлі-продажу, але модерує лоти та забезпечує дотримання правил.</p>
 
-    <h2 class="my-8 font-display text-2xl text-ivory">Для покупців</h2>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Кожна ставка на аукціоні є зобов'язуючою. Якщо ви виграли аукціон — ви зобов'язані завершити покупку протягом 48 годин або зв'язатися з продавцем. Неоплата виграних лотів може призвести до блокування акаунта.</p>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Повернення товару можливе протягом 24 годин після отримання, якщо стан речі суттєво не відповідає опису та фотографіям у лоті.</p>
+    <h2 class="my-8 font-display text-2xl text-ivory" data-i18n="rules.buyers.h2">Для покупців</h2>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.buyers.p1">Кожна ставка на аукціоні є зобов'язуючою. Якщо ви виграли аукціон — ви зобов'язані завершити покупку протягом 48 годин або зв'язатися з продавцем. Неоплата виграних лотів може призвести до блокування акаунта.</p>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.buyers.p2">Повернення товару можливе протягом 24 годин після отримання, якщо стан речі суттєво не відповідає опису та фотографіям у лоті.</p>
 
-    <h2 class="my-8 font-display text-2xl text-ivory">Для продавців</h2>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Продавець зобов'язаний чесно описувати стан речі: матеріал, дефекти, реставрації. Фотографії мають відображати реальний стан лоту. За свідомо неправдивий опис передбачене видалення лоту та блокування акаунта.</p>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Комісія платформи складає 5% від фінальної ціни продажу. Комісія стягується з продавця після успішного завершення угоди.</p>
+    <h2 class="my-8 font-display text-2xl text-ivory" data-i18n="rules.sellers.h2">Для продавців</h2>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.sellers.p1">Продавець зобов'язаний чесно описувати стан речі: матеріал, дефекти, реставрації. Фотографії мають відображати реальний стан лоту. За свідомо неправдивий опис передбачене видалення лоту та блокування акаунта.</p>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.sellers.p2">Комісія платформи складає 5% від фінальної ціни продажу. Комісія стягується з продавця після успішного завершення угоди.</p>
 
-    <h2 class="my-8 font-display text-2xl text-ivory">Аукціони</h2>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Мінімальний крок ставки встановлюється автоматично (5% від стартової ціни, мінімум 50 ₴). Торги завершуються у час, вказаний у лоті. Якщо ставка зроблена в останні 2 хвилини — час торгів автоматично продовжується на 2 хвилини.</p>
+    <h2 class="my-8 font-display text-2xl text-ivory" data-i18n="rules.auctions.h2">Аукціони</h2>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.auctions.p">Мінімальний крок ставки встановлюється автоматично (5% від стартової ціни, мінімум 50 ₴). Торги завершуються у час, вказаний у лоті. Якщо ставка зроблена в останні 2 хвилини — час торгів автоматично продовжується на 2 хвилини.</p>
 
-    <h2 class="my-8 font-display text-2xl text-ivory">Доставка та оплата</h2>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Доставка узгоджується між покупцем та продавцем. Рекомендовані способи: Нова пошта (по Україні), самовивіз, особиста зустріч. Оплата — на картку продавця або готівкою при отриманні.</p>
-    <p class="mb-3.5 text-base leading-[1.65] text-sage">Для цінних лотів (від 10 000 ₴) рекомендуємо страхування посилки та відправку з оголошеною вартістю.</p>
+    <h2 class="my-8 font-display text-2xl text-ivory" data-i18n="rules.delivery.h2">Доставка та оплата</h2>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.delivery.p1">Доставка узгоджується між покупцем та продавцем. Рекомендовані способи: Нова пошта (по Україні), самовивіз, особиста зустріч. Оплата — на картку продавця або готівкою при отриманні.</p>
+    <p class="mb-3.5 text-base leading-[1.65] text-sage" data-i18n="rules.delivery.p2">Для цінних лотів (від 10 000 ₴) рекомендуємо страхування посилки та відправку з оголошеною вартістю.</p>
   </main>
   <SiteFooter />
   <Overlays />

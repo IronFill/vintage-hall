@@ -11,18 +11,18 @@ import Overlays from '../components/Overlays.astro';
 >
   <Header />
   <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
-    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Про нас</div>
-    <h1 class="mb-6 font-display text-[1.75rem] sm:text-[2.375rem]">Усе почалося з однієї монети</h1>
+    <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> <span data-i18n="about.eyebrow">Про нас</span></div>
+    <h1 class="mb-6 font-display text-[1.75rem] sm:text-[2.375rem]" data-i18n="about.h1">Усе почалося з однієї монети</h1>
     <div class="mb-14 grid grid-cols-1 items-start gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-[60px]">
-      <div class="border-l-2 border-brass pl-6 font-display text-[1.1875rem] italic leading-[1.4] text-brass-light md:text-2xl">«Антикваріат — це не старі речі. Це пам'ять, яку можна тримати в руках.»</div>
+      <div class="border-l-2 border-brass pl-6 font-display text-[1.1875rem] italic leading-[1.4] text-brass-light md:text-2xl" data-i18n="about.quote">«Антикваріат — це не старі речі. Це пам'ять, яку можна тримати в руках.»</div>
       <div>
-        <p class="mb-4 text-base text-sage"><strong class="font-medium text-ivory">Vintage Hall</strong> — аукціонний дім та платформа для антикваріату, де колекціонери і продавці з усієї країни зустрічаються в одному місці. Кожен лот перевіряється, а кожен продавець відповідає за стан своєї речі — без сюрпризів після покупки.</p>
-        <p class="mb-4 text-base text-sage">Але перш ніж стати платформою, Vintage Hall тридцять років жив у вигляді однієї людини, її кишені, повної монет, і звички розглядати кожну річ так, наче вона хоче щось розповісти.</p>
+        <p class="mb-4 text-base text-sage" data-i18n="about.p1" data-i18n-html><strong class="font-medium text-ivory">Vintage Hall</strong> — аукціонний дім та платформа для антикваріату, де колекціонери і продавці з усієї країни зустрічаються в одному місці. Кожен лот перевіряється, а кожен продавець відповідає за стан своєї речі — без сюрпризів після покупки.</p>
+        <p class="mb-4 text-base text-sage" data-i18n="about.p2">Але перш ніж стати платформою, Vintage Hall тридцять років жив у вигляді однієї людини, її кишені, повної монет, і звички розглядати кожну річ так, наче вона хоче щось розповісти.</p>
       </div>
     </div>
 
     <!-- FOUNDER STORY TIMELINE -->
-    <div class="mb-8 flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Наша історія</div>
+    <div class="mb-8 flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> <span data-i18n="about.story">Наша історія</span></div>
     <div class="story-timeline mb-14 max-w-[760px]">
 
       <div class="story-item">
@@ -31,8 +31,8 @@ import Overlays from '../components/Overlays.astro';
         </div>
         <div>
           <div class="story-year">1996</div>
-          <h3 class="story-title">Монета з дідової шафи</h3>
-          <p class="story-text">Івану Коваленку було дванадцять, коли він знайшов у дідовій шафі потерту срібну монету часів Російської імперії. Дід не пам'ятав, звідки вона — «лежала завжди». Цього вистачило, щоб хлопець почав ставити запитання, на які бібліотека не мала готових відповідей: скільки їй років, чому саме такий профіль, чому срібло, а не мідь.</p>
+          <h3 class="story-title" data-i18n="about.s1.t">Монета з дідової шафи</h3>
+          <p class="story-text" data-i18n="about.s1.p">Івану Коваленку було дванадцять, коли він знайшов у дідовій шафі потерту срібну монету часів Російської імперії. Дід не пам'ятав, звідки вона — «лежала завжди». Цього вистачило, щоб хлопець почав ставити запитання, на які бібліотека не мала готових відповідей: скільки їй років, чому саме такий профіль, чому срібло, а не мідь.</p>
         </div>
       </div>
 
@@ -42,8 +42,8 @@ import Overlays from '../components/Overlays.astro';
         </div>
         <div>
           <div class="story-year">2003</div>
-          <h3 class="story-title">Перші суботи на блошиному ринку</h3>
-          <p class="story-text">Студентом історичного факультету Іван щосуботи їздив на блошиний ринок — спершу як покупець, потім як той, до кого приходили за порадою. Перші серйозні гроші, зароблені на репетиторстві, пішли на каталог Краузе та лупу з 10-кратним збільшенням. Колекція з «коробки з-під взуття» переросла у три альбоми.</p>
+          <h3 class="story-title" data-i18n="about.s2.t">Перші суботи на блошиному ринку</h3>
+          <p class="story-text" data-i18n="about.s2.p">Студентом історичного факультету Іван щосуботи їздив на блошиний ринок — спершу як покупець, потім як той, до кого приходили за порадою. Перші серйозні гроші, зароблені на репетиторстві, пішли на каталог Краузе та лупу з 10-кратним збільшенням. Колекція з «коробки з-під взуття» переросла у три альбоми.</p>
         </div>
       </div>
 
@@ -53,8 +53,8 @@ import Overlays from '../components/Overlays.astro';
         </div>
         <div>
           <div class="story-year">2009</div>
-          <h3 class="story-title">Перше офіційне «так, оригінал»</h3>
-          <p class="story-text">Кандидатська з історії та репутація людини, яка «бачить підробку по краю карбування», привели до першого офіційного запрошення — провести експертизу нумізматичної колекції для регіонального аукціонного дому. За рік таких запрошень стало більше, ніж вільних вихідних.</p>
+          <h3 class="story-title" data-i18n="about.s3.t">Перше офіційне «так, оригінал»</h3>
+          <p class="story-text" data-i18n="about.s3.p">Кандидатська з історії та репутація людини, яка «бачить підробку по краю карбування», привели до першого офіційного запрошення — провести експертизу нумізматичної колекції для регіонального аукціонного дому. За рік таких запрошень стало більше, ніж вільних вихідних.</p>
         </div>
       </div>
 
@@ -64,8 +64,8 @@ import Overlays from '../components/Overlays.astro';
         </div>
         <div>
           <div class="story-year">2014</div>
-          <h3 class="story-title">Дві кімнати на Андріївському узвозі</h3>
-          <p class="story-text">Vintage Hall почався не з сайту, а з двох орендованих кімнат на історичній «вулиці антикварів» Києва — кілька вітрин, стіл для огляду лотів і записник, куди вручну вписували ставки на щомісячних офлайн-торгах для двадцяти знайомих колекціонерів. Назву придумали за чаєм: «Зала, де старі речі знову мають голос».</p>
+          <h3 class="story-title" data-i18n="about.s4.t">Дві кімнати на Андріївському узвозі</h3>
+          <p class="story-text" data-i18n="about.s4.p">Vintage Hall почався не з сайту, а з двох орендованих кімнат на історичній «вулиці антикварів» Києва — кілька вітрин, стіл для огляду лотів і записник, куди вручну вписували ставки на щомісячних офлайн-торгах для двадцяти знайомих колекціонерів. Назву придумали за чаєм: «Зала, де старі речі знову мають голос».</p>
         </div>
       </div>
 
@@ -75,8 +75,8 @@ import Overlays from '../components/Overlays.astro';
         </div>
         <div>
           <div class="story-year">2017–2020</div>
-          <h3 class="story-title">Команда, а не один експерт</h3>
-          <p class="story-text">Один нумізмат не може чесно оцінити фарфор чи живопис — Іван це визнав першим. До Vintage Hall послідовно приєдналися Олена Семенова (фарфор і керамика), Михайло Бондар (годинники й механізми) та Анна Ткачук (живопис і графіка) — кожен зі своєю спеціалізацією і власною впертою звичкою не довіряти речі на слово.</p>
+          <h3 class="story-title" data-i18n="about.s5.t">Команда, а не один експерт</h3>
+          <p class="story-text" data-i18n="about.s5.p">Один нумізмат не може чесно оцінити фарфор чи живопис — Іван це визнав першим. До Vintage Hall послідовно приєдналися Олена Семенова (фарфор і керамика), Михайло Бондар (годинники й механізми) та Анна Ткачук (живопис і графіка) — кожен зі своєю спеціалізацією і власною впертою звичкою не довіряти речі на слово.</p>
         </div>
       </div>
 
@@ -86,8 +86,8 @@ import Overlays from '../components/Overlays.astro';
         </div>
         <div>
           <div class="story-year">2023</div>
-          <h3 class="story-title">З записника — у браузер</h3>
-          <p class="story-text">Записник зі ставками не витримав масштабу: колекціонери з інших міст просили «зробити те саме, але онлайн». Так з'явилась цифрова платформа — з тими ж принципами офлайн-залу (перевірка, прозора історія ставок, відповідальність продавця), але без потреби їхати до Києва, щоб зробити ставку.</p>
+          <h3 class="story-title" data-i18n="about.s6.t">З записника — у браузер</h3>
+          <p class="story-text" data-i18n="about.s6.p">Записник зі ставками не витримав масштабу: колекціонери з інших міст просили «зробити те саме, але онлайн». Так з'явилась цифрова платформа — з тими ж принципами офлайн-залу (перевірка, прозора історія ставок, відповідальність продавця), але без потреби їхати до Києва, щоб зробити ставку.</p>
         </div>
       </div>
 
@@ -96,34 +96,34 @@ import Overlays from '../components/Overlays.astro';
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17 9 11l4 4 8-8"/><path d="M21 7v6M21 7h-6"/></svg>
         </div>
         <div>
-          <div class="story-year">2026 — сьогодні</div>
-          <h3 class="story-title">Понад 2800 угод і далі рахуємо</h3>
-          <p class="story-text">Сьогодні Vintage Hall — це команда з чотирьох профільних експертів, 48 активних продавців з усієї країни та понад 2800 завершених угод. Кімнати на Андріївському узвозі досі існують — там і досі можна особисто потримати лот перед тим, як зробити ставку. Просто тепер до цього додався весь інтернет.</p>
+          <div class="story-year" data-i18n="about.s7.y">2026 — сьогодні</div>
+          <h3 class="story-title" data-i18n="about.s7.t">Понад 2800 угод і далі рахуємо</h3>
+          <p class="story-text" data-i18n="about.s7.p">Сьогодні Vintage Hall — це команда з чотирьох профільних експертів, 48 активних продавців з усієї країни та понад 2800 завершених угод. Кімнати на Андріївському узвозі досі існують — там і досі можна особисто потримати лот перед тим, як зробити ставку. Просто тепер до цього додався весь інтернет.</p>
         </div>
       </div>
 
     </div>
 
     <div class="my-12 h-px bg-line md:my-[70px]"></div>
-    <h2 class="my-8 font-display text-[1.75rem]">Наші цінності</h2>
+    <h2 class="my-8 font-display text-[1.75rem]" data-i18n="about.values.h2">Наші цінності</h2>
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
       <button type="button" class="value-card" data-value="authenticity">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mb-2.5 w-7 text-brass-light"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
-        <h3 class="mb-2 font-display text-[1.125rem] text-ivory">Справжність</h3>
-        <p class="text-[0.9375rem] leading-[1.55] text-sage">Кожен лот перевіряється на відповідність опису. Ми не допускаємо підробок.</p>
-        <span class="value-card-more">Детальніше →</span>
+        <h3 class="mb-2 font-display text-[1.125rem] text-ivory" data-i18n="about.v1.t">Справжність</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage" data-i18n="about.v1.p">Кожен лот перевіряється на відповідність опису. Ми не допускаємо підробок.</p>
+        <span class="value-card-more" data-i18n="common.more">Детальніше →</span>
       </button>
       <button type="button" class="value-card" data-value="transparency">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mb-2.5 w-7 text-brass-light"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        <h3 class="mb-2 font-display text-[1.125rem] text-ivory">Прозорість</h3>
-        <p class="text-[0.9375rem] leading-[1.55] text-sage">Відкрита історія ставок, чесний опис стану, ніяких прихованих комісій.</p>
-        <span class="value-card-more">Детальніше →</span>
+        <h3 class="mb-2 font-display text-[1.125rem] text-ivory" data-i18n="about.v2.t">Прозорість</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage" data-i18n="about.v2.p">Відкрита історія ставок, чесний опис стану, ніяких прихованих комісій.</p>
+        <span class="value-card-more" data-i18n="common.more">Детальніше →</span>
       </button>
       <button type="button" class="value-card" data-value="community">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="mb-2.5 w-7 text-brass-light"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <h3 class="mb-2 font-display text-[1.125rem] text-ivory">Спільнота</h3>
-        <p class="text-[0.9375rem] leading-[1.55] text-sage">Ми з'єднуємо людей, які цінують історію та красу речей з минулого.</p>
-        <span class="value-card-more">Детальніше →</span>
+        <h3 class="mb-2 font-display text-[1.125rem] text-ivory" data-i18n="about.v3.t">Спільнота</h3>
+        <p class="text-[0.9375rem] leading-[1.55] text-sage" data-i18n="about.v3.p">Ми з'єднуємо людей, які цінують історію та красу речей з минулого.</p>
+        <span class="value-card-more" data-i18n="common.more">Детальніше →</span>
       </button>
     </div>
 
@@ -132,11 +132,11 @@ import Overlays from '../components/Overlays.astro';
       <div class="modal-card" id="valueModalCard" style="max-width:560px;">
         <h3 id="valueModalTitle"></h3>
         <div id="valueModalBody" style="margin-top:14px; font-size:0.9375rem; line-height:1.7; color:var(--sage);"></div>
-        <button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:20px;" id="valueModalClose">Закрити</button>
+        <button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:20px;" id="valueModalClose" data-i18n="common.close">Закрити</button>
       </div>
     </div>
 
-    <div class="mt-14 rounded-vh border border-dashed border-line bg-accent-tint p-6 text-[0.8125rem] leading-[1.6] text-sage">
+    <div class="mt-14 rounded-vh border border-dashed border-line bg-accent-tint p-6 text-[0.8125rem] leading-[1.6] text-sage" data-i18n="about.disclaimer">
       Історія засновника на цій сторінці написана для демонстраційної версії платформи й узгоджена з демо-профілем експерта «Іван Коваленко» в каталозі лотів — це не біографія реальної людини.
     </div>
   </main>
@@ -144,32 +144,12 @@ import Overlays from '../components/Overlays.astro';
   <Overlays />
   <script src="../scripts/app.ts"></script>
   <script>
-    const VALUE_DETAILS: Record<string, { title: string; html: string }> = {
-      authenticity: {
-        title: 'Справжність',
-        html: `
-          <p style="margin-bottom:12px;">Перед публікацією кожен лот проходить перевірку профільним експертом — нумізматику оцінює нумізмат, фарфор оцінює фарфорист, годинник розбирає годинникар. Це не формальність «для галочки»: експерт фізично оглядає річ, звіряє клейма й маркування з довідниками, перевіряє відповідність матеріалу і техніки заявленій епосі.</p>
-          <p style="margin-bottom:12px;">Якщо є сумніви в оригінальності — лот не публікується, поки сумніви не знято, або публікується з чесним застереженням «потребує додаткової експертизи», а не мовчки.</p>
-          <p>Якщо після покупки виявляється розбіжність з описом, яку не можна було визначити неозброєним оком заздалегідь — діє гарантія повернення коштів протягом 14 днів.</p>
-        `
-      },
-      transparency: {
-        title: 'Прозорість',
-        html: `
-          <p style="margin-bottom:12px;">Історія ставок на кожному аукціонному лоті відкрита повністю: видно, хто і коли підвищував ставку (за нікнеймом, без розкриття особистих даних), а не лише фінальну ціну. Це унеможливлює приховані «договірні» торги.</p>
-          <p style="margin-bottom:12px;">Комісія платформи фіксована й показана заздалегідь у калькуляторі — продавець бачить точну суму до публікації лота, без сюрпризів після продажу.</p>
-          <p>Стан речі описується чесно, включно з дефектами: подряпини, реставрація, заміна деталей — усе зазначається в описі, а не виявляється покупцем по факту.</p>
-        `
-      },
-      community: {
-        title: 'Спільнота',
-        html: `
-          <p style="margin-bottom:12px;">Vintage Hall — це не лише вітрина лотів, а форум, де колекціонери радяться один з одним, дізнаються про виставки та зустрічі, обмінюються досвідом з визначення підробок.</p>
-          <p style="margin-bottom:12px;">Досвідчені учасники регулярно допомагають новачкам безкоштовно — оцінити стан монети, розпізнати клеймо на фарфорі, порадити, як безпечно упакувати крихку річ для пересилання.</p>
-          <p>Раз на сезон ми організовуємо офлайн-зустрічі колекціонерів у різних містах — можливість показати свою колекцію наживо, а не лише на фото.</p>
-        `
-      }
-    };
+    import type { Lang } from '../types';
+    import { PAGE_TEXTS } from '../data/pages-i18n';
+
+    // Value details live in the shared pages-i18n dictionary (val.<key>.title / val.<key>.html)
+    // so the modal follows the language switcher like the rest of the page.
+    const currentLang = (): Lang => (localStorage.getItem('vh_lang') as Lang) || 'uk';
 
     const valueModal = document.getElementById('valueModal');
     const valueModalTitle = document.getElementById('valueModalTitle');
@@ -178,10 +158,12 @@ import Overlays from '../components/Overlays.astro';
     document.querySelectorAll<HTMLButtonElement>('.value-card').forEach((card) => {
       card.addEventListener('click', () => {
         const key = card.dataset.value;
-        const detail = key ? VALUE_DETAILS[key] : null;
-        if (!detail || !valueModal || !valueModalTitle || !valueModalBody) return;
-        valueModalTitle.textContent = detail.title;
-        valueModalBody.innerHTML = detail.html;
+        const title = key ? PAGE_TEXTS[`val.${key}.title`] : null;
+        const html = key ? PAGE_TEXTS[`val.${key}.html`] : null;
+        if (!title || !html || !valueModal || !valueModalTitle || !valueModalBody) return;
+        const lang = currentLang();
+        valueModalTitle.textContent = title[lang] ?? title.uk;
+        valueModalBody.innerHTML = html[lang] ?? html.uk;
         valueModal.classList.add('active');
       });
     });

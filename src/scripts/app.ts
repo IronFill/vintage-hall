@@ -3,6 +3,7 @@ import type {
   SaleType, DashboardRole, Category, Rarity, Badge, SavedSearch
 } from '../types';
 import { UI } from '../data/i18n';
+import { PAGE_TEXTS, PAGE_TITLES } from '../data/pages-i18n';
 import {
   SEEDED_PRODUCTS, PRODUCT_I18N, MATERIAL_BY_ICON, CONDITION_BY_CAT, ICON_LABELS, ICON_PATHS, NEXT_LOT_ID, SELLERS
 } from '../data/products';
@@ -155,6 +156,12 @@ export class VintageHallApp {
     document.getElementById('searchInput')?.setAttribute('placeholder', this.t('search_ph'));
     document.getElementById('saveSearchBtn')?.setAttribute('aria-label', this.t('btn_save_search'));
     document.getElementById('saveSearchBtn')?.setAttribute('title', this.t('btn_save_search'));
+    const hdrSearchPh = PAGE_TEXTS['hdr.search_ph'];
+    if (hdrSearchPh) {
+      const ph = hdrSearchPh[this.currentLang] ?? hdrSearchPh.uk;
+      document.getElementById('headerSearchInput')?.setAttribute('placeholder', ph);
+      document.getElementById('headerSearchInput')?.setAttribute('aria-label', ph);
+    }
 
     document.querySelectorAll<HTMLButtonElement>('#sidebarTabs .tab').forEach(tab => {
       const key = tab.dataset.key as keyof typeof UI['uk'] | undefined;
@@ -169,6 +176,18 @@ export class VintageHallApp {
       sortSel.options[3].textContent = this.t('sort_new');
       sortSel.options[4].textContent = this.t('sort_ending_soon');
     }
+
+    // Static content pages + footer opt in with data-i18n="key" (see data/pages-i18n.ts).
+    // Keys carrying markup are marked with data-i18n-html and applied via innerHTML.
+    document.querySelectorAll<HTMLElement>('[data-i18n]').forEach(el => {
+      const entry = PAGE_TEXTS[el.dataset.i18n ?? ''];
+      if (!entry) return;
+      const value = entry[this.currentLang] ?? entry.uk;
+      if (el.dataset.i18nHtml !== undefined) el.innerHTML = value;
+      else el.textContent = value;
+    });
+    const pageTitle = PAGE_TITLES[location.pathname.replace(/\/+$/, '') || '/'];
+    if (pageTitle) document.title = pageTitle[this.currentLang] ?? pageTitle.uk;
   }
 
   // ---------- small label helpers (kept out of the UI dict since they're 4-way ternaries already) ----------
