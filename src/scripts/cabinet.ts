@@ -54,6 +54,7 @@ export const cabinetMethods = {
     if (!name) { alert(this.enterNameLabel()); return; }
     this.currentUser = name;
     this.savePreference('vh_user', name);
+    void this.ensureAuthProfile(name);
     this.openCabinet(afterTab);
   },
   logout(this: App): void {

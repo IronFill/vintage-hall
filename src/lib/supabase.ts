@@ -1,7 +1,9 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const url = import.meta.env.PUBLIC_SUPABASE_URL;
-const anonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+// The publishable (anon) key is public by design — it ships in the client bundle and all
+// access is gated by Row Level Security. Env vars override the demo project defaults.
+const url = import.meta.env.PUBLIC_SUPABASE_URL || 'https://rdmfjmgqcpfidvepegwi.supabase.co';
+const anonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_NYjKpT2uRKfkzK2kIHO6Vg_O2P1H7OR';
 
 /**
  * The live Supabase client, or `null` when PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY

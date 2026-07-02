@@ -44,6 +44,7 @@ export const lotDetailMethods = {
     p.currentBid = newBid;
     p.bidsCount = (p.bidsCount ?? 0) + 1;
     p.bidHistory = [{ user: this.currentUser, bid: newBid, time: new Date().toISOString() }, ...(p.bidHistory ?? [])];
+    this.pushBidRemote(id, newBid);
 
     // Anti-sniping: a bid placed inside the last 5 minutes pushes the close time out by 5 more
     // minutes, so a last-second bid can't win outright — mirrors how real auction houses (and
@@ -82,6 +83,7 @@ export const lotDetailMethods = {
     p.bidsCount = (p.bidsCount ?? 0) + 1;
     p.bidHistory = [{ user: this.currentUser, bid: price, time: new Date().toISOString() }, ...(p.bidHistory ?? [])];
     p.endTime = new Date(Date.now() - 1000).toISOString();
+    this.pushBidRemote(id, price);
 
     this.showToast(`${this.t('buy_now_success')} <span class="mono">${price.toLocaleString('uk-UA')} ₴</span>`);
     this.renderCatalog();
