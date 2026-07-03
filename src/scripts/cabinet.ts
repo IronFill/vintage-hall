@@ -3,17 +3,67 @@ import { $ } from './dom-utils';
 import { ICON_LABELS, SELLERS } from '../data/products';
 import { UI } from '../data/i18n';
 import type { IconKey, Category, DashboardRole, SaleType, Product, Lang } from '../types';
+import { AUTH_T, AUTH_COUNTRIES, AUTH_PHONE_CODES } from './auth-texts';
+import { findUser, updateUser, addUser } from './auth-store';
+
+/** Cabinet copy that isn't in the main UI dict — Violity-style menu groups and the
+    settings/password/messages/reviews sections added with the account rework. */
+const CAB_T: Record<string, Record<Lang, string>> = {
+  cab_title: { uk: 'Мій кабінет', en: 'My account', pl: 'Moje konto', ru: 'Мой кабинет' },
+  group_buy: { uk: 'Покупки', en: 'Buying', pl: 'Zakupy', ru: 'Покупки' },
+  group_sell: { uk: 'Продаж', en: 'Selling', pl: 'Sprzedaż', ru: 'Продажа' },
+  group_account: { uk: 'Рахунок', en: 'Account', pl: 'Rachunek', ru: 'Счёт' },
+  group_settings: { uk: 'Налаштування', en: 'Settings', pl: 'Ustawienia', ru: 'Настройки' },
+  menu_messages: { uk: 'Повідомлення', en: 'Messages', pl: 'Wiadomości', ru: 'Сообщения' },
+  menu_reviews: { uk: 'Відгуки', en: 'Reviews', pl: 'Opinie', ru: 'Отзывы' },
+  menu_settings: { uk: 'Особисті дані', en: 'Personal details', pl: 'Dane osobowe', ru: 'Личные данные' },
+  menu_password: { uk: 'Зміна пароля', en: 'Change password', pl: 'Zmiana hasła', ru: 'Смена пароля' },
+  member_since: { uk: 'На аукціоні з', en: 'Member since', pl: 'Na aukcji od', ru: 'На аукционе с' },
+  reviews_label: { uk: 'Відгуки', en: 'Reviews', pl: 'Opinie', ru: 'Отзывы' },
+  empty_messages: {
+    uk: 'Повідомлень поки немає. Напишіть продавцю на сторінці лота — діалог з\'явиться тут.',
+    en: 'No messages yet. Write to a seller on a lot page — the conversation will appear here.',
+    pl: 'Brak wiadomości. Napisz do sprzedawcy na stronie lotu — rozmowa pojawi się tutaj.',
+    ru: 'Сообщений пока нет. Напишите продавцу на странице лота — диалог появится здесь.',
+  },
+  reviews_summary: { uk: 'Діловий рейтинг', en: 'Business rating', pl: 'Rating biznesowy', ru: 'Деловой рейтинг' },
+  reviews_positive: { uk: 'позитивних', en: 'positive', pl: 'pozytywnych', ru: 'положительных' },
+  reviews_negative: { uk: 'негативних', en: 'negative', pl: 'negatywnych', ru: 'отрицательных' },
+  reviews_none: {
+    uk: 'Відгуків поки немає — вони з\'являться після завершених угод.',
+    en: 'No reviews yet — they will appear after completed deals.',
+    pl: 'Brak opinii — pojawią się po zakończonych transakcjach.',
+    ru: 'Отзывов пока нет — они появятся после завершённых сделок.',
+  },
+  field_city: { uk: 'Місто', en: 'City', pl: 'Miasto', ru: 'Город' },
+  field_address: { uk: 'Адреса доставки (відділення НП)', en: 'Delivery address', pl: 'Adres dostawy', ru: 'Адрес доставки (отделение НП)' },
+  field_login_ro: { uk: 'Логін (не змінюється)', en: 'Login (cannot be changed)', pl: 'Login (nie można zmienić)', ru: 'Логин (не меняется)' },
+  btn_save: { uk: 'Зберегти', en: 'Save', pl: 'Zapisz', ru: 'Сохранить' },
+  saved_toast: { uk: 'Дані збережено', en: 'Details saved', pl: 'Dane zapisane', ru: 'Данные сохранены' },
+  pw_current: { uk: 'Поточний пароль', en: 'Current password', pl: 'Obecne hasło', ru: 'Текущий пароль' },
+  pw_new: { uk: 'Новий пароль', en: 'New password', pl: 'Nowe hasło', ru: 'Новый пароль' },
+  pw_repeat: { uk: 'Повторіть новий пароль', en: 'Repeat new password', pl: 'Powtórz nowe hasło', ru: 'Повторите новый пароль' },
+  pw_changed: { uk: 'Пароль змінено', en: 'Password changed', pl: 'Hasło zmienione', ru: 'Пароль изменён' },
+  pw_wrong: { uk: 'Поточний пароль невірний', en: 'Current password is wrong', pl: 'Obecne hasło jest błędne', ru: 'Текущий пароль неверный' },
+  pw_len: { uk: 'Новий пароль: від 6 до 12 символів', en: 'New password: 6 to 12 characters', pl: 'Nowe hasło: od 6 do 12 znaków', ru: 'Новый пароль: от 6 до 12 символов' },
+  pw_match: { uk: 'Нові паролі не збігаються', en: 'New passwords do not match', pl: 'Nowe hasła nie są zgodne', ru: 'Новые пароли не совпадают' },
+  legacy_note: {
+    uk: 'Ваш акаунт створено за старою схемою (без пароля). Заповніть дані та збережіть — після цього можна встановити пароль.',
+    en: 'Your account was created the old way (no password). Fill in and save your details — then you can set a password.',
+    pl: 'Twoje konto utworzono starym sposobem (bez hasła). Uzupełnij i zapisz dane — potem możesz ustawić hasło.',
+    ru: 'Ваш аккаунт создан по старой схеме (без пароля). Заполните данные и сохраните — после этого можно установить пароль.',
+  },
+  btn_logout_menu: { uk: 'Вийти з кабінету', en: 'Sign out', pl: 'Wyloguj się', ru: 'Выйти из кабинета' },
+};
 
 declare module './app' {
   interface VintageHallApp {
-  enterNameLabel(): string;
   openLogin(afterTab: string): void;
-  submitLogin(afterTab: string): void;
   logout(): void;
   openCabinet(tab: string): void;
+  cabT(key: string): string;
   itemNameRequiredLabel(): string;
   priceRequiredLabel(): string;
-  renderRoleToggle(): string;
   renderWallet(): string;
   renderMyBids(): string;
   renderWonLots(): string;
@@ -21,7 +71,14 @@ declare module './app' {
   renderSellersTab(): string;
   renderMyCollection(): string;
   renderSavedSearchesTab(): string;
-  renderCabinetModal(tab: string): void;
+  renderSettingsTab(): string;
+  renderPasswordTab(): string;
+  renderMessagesTab(): string;
+  renderReviewsTab(): string;
+  cabinetBody(tab: string): string;
+  renderCabinet(tab: string): void;
+  saveProfileSettings(): void;
+  changePassword(): void;
   setRole(role: DashboardRole): void;
   commissionBoxHtml(price: number): string;
   updateCommissionBox(): void;
@@ -34,38 +91,28 @@ declare module './app' {
 }
 
 export const cabinetMethods = {
-  enterNameLabel(this: App): string {
-    const map: Record<Lang, string> = { en: 'Please enter your name.', pl: 'Podaj swoje imię.', ru: 'Укажите ваше имя.', uk: "Вкажіть ваше ім'я." };
-    return map[this.currentLang];
+  cabT(this: App, key: string): string {
+    return CAB_T[key]?.[this.currentLang] ?? CAB_T[key]?.uk ?? key;
   },
+  /** Sends the visitor to the standalone Violity-style /login page; ?after= brings them
+      back to the requested cabinet section once signed in. */
   openLogin(this: App, afterTab: string): void {
-    $('checkoutCard').innerHTML = `
-      <h3>${this.t('login_title')}</h3>
-      <div class="field"><label>${this.t('field_login_name')}</label><input id="loginName"></div>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" data-action="close-checkout">${this.t('btn_cancel')}</button>
-        <button class="btn btn-primary" data-action="submit-login" data-tab="${afterTab}">${this.t('btn_login')}</button>
-      </div>
-    `;
-    $('checkoutModal').classList.add('active');
-  },
-  submitLogin(this: App, afterTab: string): void {
-    const name = $<HTMLInputElement>('loginName').value.trim();
-    if (!name) { alert(this.enterNameLabel()); return; }
-    this.currentUser = name;
-    this.savePreference('vh_user', name);
-    void this.ensureAuthProfile(name);
-    this.openCabinet(afterTab);
+    window.location.href = `/login?after=${encodeURIComponent(afterTab)}`;
   },
   logout(this: App): void {
     this.currentUser = null;
     this.clearSavedUser();
-    this.closeCheckout();
+    window.location.href = '/';
   },
+  /** The cabinet is a full page now (Violity-style, /cabinet) — from any other page this
+      navigates there; on the cabinet page itself it re-renders in place. */
   openCabinet(this: App, tab: string): void {
+    if (!document.getElementById('cabinetRoot')) {
+      window.location.href = `/cabinet?tab=${encodeURIComponent(tab)}`;
+      return;
+    }
     this.currentLotDetailId = null;
-    this.renderCabinetModal(tab);
-    $('checkoutModal').classList.add('active');
+    this.renderCabinet(tab);
   },
   itemNameRequiredLabel(this: App): string {
     const map: Record<Lang, string> = { en: 'Please enter the item name.', pl: 'Podaj nazwę przedmiotu.', ru: 'Укажите название вещи.', uk: 'Вкажіть назву речі.' };
@@ -77,13 +124,6 @@ export const cabinetMethods = {
       ru: 'Укажите цену.', uk: 'Вкажіть ціну.'
     };
     return map[this.currentLang];
-  },
-  renderRoleToggle(this: App): string {
-    return `
-      <div class="tabs" style="margin-bottom:12px;">
-        <button class="tab ${this.dashboardRole === 'buyer' ? 'active' : ''}" data-action="set-role" data-role="buyer">${this.t('role_buyer')}</button>
-        <button class="tab ${this.dashboardRole === 'seller' ? 'active' : ''}" data-action="set-role" data-role="seller">${this.t('role_seller')}</button>
-      </div>`;
   },
   renderWallet(this: App): string {
     return `
@@ -204,13 +244,9 @@ export const cabinetMethods = {
         </div>`;
     }).join('');
   },
-  renderCabinetModal(this: App, tab: string): void {
+  /** Builds the inner HTML of one cabinet section (the right-hand content column). */
+  cabinetBody(this: App, tab: string): string {
     let body = '';
-    const sellerTabs = ['my_lots', 'create'];
-    const buyerTabs = ['my_bids', 'won_lots', 'purchases', 'favorites', 'sellers', 'collection', 'saved_searches'];
-    if (this.dashboardRole === 'seller' && !sellerTabs.includes(tab) && tab !== 'wallet') tab = 'my_lots';
-    if (this.dashboardRole === 'buyer' && !buyerTabs.includes(tab) && tab !== 'wallet') tab = 'my_bids';
-
     if (tab === 'create') {
       const editing = this.editingLotId !== null ? this.products.find(p => p.id === this.editingLotId) : undefined;
       const etr = editing ? this.getProductText(editing) : undefined;
@@ -306,8 +342,15 @@ export const cabinetMethods = {
       body = this.renderSavedSearchesTab();
     } else if (tab === 'wallet') {
       body = this.renderWallet();
+    } else if (tab === 'messages') {
+      body = this.renderMessagesTab();
+    } else if (tab === 'reviews') {
+      body = this.renderReviewsTab();
+    } else if (tab === 'settings') {
+      body = this.renderSettingsTab();
+    } else if (tab === 'password') {
+      body = this.renderPasswordTab();
     } else {
-      tab = 'my_lots';
       const mine = this.products.filter(p => p.seller === this.currentUser);
       body = mine.length === 0
         ? `<p style="font-size:0.8125rem; color:var(--sage); padding:20px 0;">${this.t('empty_my_lots')}</p>`
@@ -333,32 +376,179 @@ export const cabinetMethods = {
         }).join('');
     }
 
-    const tabsForRole = this.dashboardRole === 'seller'
-      ? `<button class="tab ${tab === 'my_lots' ? 'active' : ''}" data-action="cabinet-tab" data-tab="my_lots">${this.t('tab_my_lots')}</button>
-         <button class="tab ${tab === 'create' ? 'active' : ''}" data-action="cabinet-tab" data-tab="create">${this.t('tab_create')}</button>
-         <button class="tab ${tab === 'wallet' ? 'active' : ''}" data-action="cabinet-tab" data-tab="wallet">${this.t('tab_wallet')}</button>`
-      : `<button class="tab ${tab === 'my_bids' ? 'active' : ''}" data-action="cabinet-tab" data-tab="my_bids">${this.t('tab_my_bids')}</button>
-         <button class="tab ${tab === 'won_lots' ? 'active' : ''}" data-action="cabinet-tab" data-tab="won_lots">${this.t('tab_won_lots')}</button>
-         <button class="tab ${tab === 'purchases' ? 'active' : ''}" data-action="cabinet-tab" data-tab="purchases">${this.t('tab_purchases')}</button>
-         <button class="tab ${tab === 'favorites' ? 'active' : ''}" data-action="cabinet-tab" data-tab="favorites">${this.t('tab_my_favorites')}</button>
-         <button class="tab ${tab === 'collection' ? 'active' : ''}" data-action="cabinet-tab" data-tab="collection">${this.t('tab_my_collection')}</button>
-         <button class="tab ${tab === 'sellers' ? 'active' : ''}" data-action="cabinet-tab" data-tab="sellers">${this.t('tab_my_sellers')}</button>
-         <button class="tab ${tab === 'saved_searches' ? 'active' : ''}" data-action="cabinet-tab" data-tab="saved_searches">${this.t('tab_saved_searches')}</button>
-         <button class="tab ${tab === 'wallet' ? 'active' : ''}" data-action="cabinet-tab" data-tab="wallet">${this.t('tab_wallet')}</button>`;
+    return body;
+  },
 
-    // Create-lot form needs real room for the two-column media/fields layout — every other tab
-    // keeps the standard compact width.
-    $('checkoutCard').classList.toggle('wide', tab === 'create');
-    $('checkoutCard').classList.toggle('lot-form-card', tab === 'create');
+  /** «Повідомлення» — buyer-seller lot chats collected in one inbox, like Violity's messages. */
+  renderMessagesTab(this: App): string {
+    const entries = Object.entries(this.lotChatMessages).filter(([, msgs]) => msgs.length > 0);
+    if (entries.length === 0) return `<p class="cab-empty">${this.cabT('empty_messages')}</p>`;
+    return entries.map(([idStr, msgs]) => {
+      const p = this.products.find(x => x.id === Number(idStr));
+      const name = p ? this.getProductText(p).name : `LOT-0${idStr}`;
+      const last = msgs[msgs.length - 1];
+      return `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); font-size:0.8125rem; cursor:pointer;" data-action="open-detail" data-id="${idStr}">
+          <span>${name} <span class="mono" style="color:var(--sage);">· LOT-0${idStr}</span></span>
+          <span style="color:var(--sage); font-size:0.75rem;">${last.user}: ${last.text.slice(0, 48)}</span>
+        </div>`;
+    }).join('');
+  },
 
-    $('checkoutCard').innerHTML = `
-      <h3>${this.t('cabinet_title')}</h3>
-      <div class="sub">${this.t('logged_in_as')} ${this.currentUser} · <a href="#" data-action="logout" style="color:var(--oxblood);">${this.t('btn_logout')}</a></div>
-      ${this.renderRoleToggle()}
-      <div class="tabs" style="margin:0 0 16px;">${tabsForRole}</div>
-      <div>${body}</div>
-      <button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:16px;" data-action="close-checkout">${this.t('btn_close')}</button>
-    `;
+  /** «Відгуки» — Violity-style business rating (+N/−N). Honest zeros until real completed
+      deals produce reviews; the block exists so the mechanic is visible in the cabinet. */
+  renderReviewsTab(this: App): string {
+    return `
+      <div class="investment-card" style="margin-bottom:18px;">
+        <div class="investment-row"><span>${this.cabT('reviews_summary')}</span><span class="mono">0</span></div>
+        <div class="investment-row"><span>${this.cabT('reviews_positive')}</span><span class="mono" style="color:#1D9E75;">+0</span></div>
+        <div class="investment-row"><span>${this.cabT('reviews_negative')}</span><span class="mono" style="color:var(--oxblood);">−0</span></div>
+      </div>
+      <p class="cab-empty">${this.cabT('reviews_none')}</p>`;
+  },
+
+  /** «Особисті дані» — profile form backed by the auth-store registry (auth-store.ts). */
+  renderSettingsTab(this: App): string {
+    const stored = this.currentUser ? findUser(this.currentUser) : undefined;
+    const at = (k: string) => AUTH_T[k]?.[this.currentLang] ?? AUTH_T[k]?.uk ?? k;
+    const countryOpts = AUTH_COUNTRIES
+      .map(c => `<option value="${c.code}" ${stored?.country === c.code ? 'selected' : ''}>${c.label[this.currentLang]}</option>`).join('');
+    const codeOpts = AUTH_PHONE_CODES
+      .map(c => `<option value="${c}" ${(stored?.phoneCode ?? '+380') === c ? 'selected' : ''}>${c}</option>`).join('');
+    return `
+      ${!stored ? `<div class="cab-note">${this.cabT('legacy_note')}</div>` : ''}
+      <div class="field"><label>${this.cabT('field_login_ro')}</label><input value="${this.currentUser ?? ''}" disabled></div>
+      <div class="field"><label>${at('field_fullname')}</label><input id="setFullName" maxlength="80" value="${stored?.fullName ?? ''}"></div>
+      <div class="field"><label>${at('field_email')}</label><input id="setEmail" type="email" value="${stored?.email ?? ''}"></div>
+      <div class="field"><label>${at('field_phone')}</label>
+        <div style="display:flex; gap:8px;">
+          <select id="setPhoneCode" style="width:96px; flex-shrink:0;">${codeOpts}</select>
+          <input id="setPhone" type="tel" style="flex:1;" value="${stored?.phone ?? ''}">
+        </div>
+      </div>
+      <div class="field"><label>${at('field_country')}</label><select id="setCountry">${countryOpts}</select></div>
+      <div class="field"><label>${this.cabT('field_city')}</label><input id="setCity" value="${stored?.city ?? ''}"></div>
+      <div class="field"><label>${this.cabT('field_address')}</label><input id="setAddress" value="${stored?.address ?? ''}"></div>
+      <button class="btn btn-primary" style="margin-top:6px;" data-action="save-profile">${this.cabT('btn_save')}</button>`;
+  },
+
+  saveProfileSettings(this: App): void {
+    if (!this.currentUser) return;
+    const patch = {
+      fullName: $<HTMLInputElement>('setFullName').value.trim(),
+      email: $<HTMLInputElement>('setEmail').value.trim(),
+      phoneCode: $<HTMLSelectElement>('setPhoneCode').value,
+      phone: $<HTMLInputElement>('setPhone').value.trim(),
+      country: $<HTMLSelectElement>('setCountry').value,
+      city: $<HTMLInputElement>('setCity').value.trim(),
+      address: $<HTMLInputElement>('setAddress').value.trim(),
+    };
+    const updated = updateUser(this.currentUser, patch);
+    if (!updated) {
+      // Account from the old name-only login — give it a registry entry so settings persist.
+      addUser({ login: this.currentUser, password: '', regDate: new Date().toISOString(), ...patch });
+    }
+    this.showToast(this.cabT('saved_toast'));
+    this.renderCabinet('settings');
+  },
+
+  /** «Зміна пароля» — verifies the current password against the registry before changing. */
+  renderPasswordTab(this: App): string {
+    const stored = this.currentUser ? findUser(this.currentUser) : undefined;
+    const hasPassword = !!stored?.password;
+    return `
+      ${!stored ? `<div class="cab-note">${this.cabT('legacy_note')}</div>` : ''}
+      ${hasPassword ? `<div class="field"><label>${this.cabT('pw_current')}</label><input id="pwCurrent" type="password" maxlength="12"></div>` : ''}
+      <div class="field"><label>${this.cabT('pw_new')}</label><input id="pwNew" type="password" maxlength="12"></div>
+      <div class="field"><label>${this.cabT('pw_repeat')}</label><input id="pwRepeat" type="password" maxlength="12"></div>
+      <div class="af-err" id="pwErr" style="margin-bottom:12px;"></div>
+      <button class="btn btn-primary" data-action="change-password" ${!stored ? 'disabled' : ''}>${this.cabT('btn_save')}</button>`;
+  },
+
+  changePassword(this: App): void {
+    if (!this.currentUser) return;
+    const stored = findUser(this.currentUser);
+    if (!stored) return;
+    const errBox = document.getElementById('pwErr');
+    const put = (msg: string) => { if (errBox) errBox.textContent = msg; };
+    if (stored.password) {
+      if ($<HTMLInputElement>('pwCurrent').value !== stored.password) { put(this.cabT('pw_wrong')); return; }
+    }
+    const next = $<HTMLInputElement>('pwNew').value;
+    if (next.length < 6 || next.length > 12) { put(this.cabT('pw_len')); return; }
+    if (next !== $<HTMLInputElement>('pwRepeat').value) { put(this.cabT('pw_match')); return; }
+    updateUser(stored.login, { password: next });
+    this.showToast(this.cabT('pw_changed'));
+    this.renderCabinet('password');
+  },
+
+  /** Full-page cabinet (Violity's «Мій кабінет»): profile card + grouped sidebar menu on the
+      left, active section on the right. Renders into #cabinetRoot on /cabinet. */
+  renderCabinet(this: App, tab: string): void {
+    const root = document.getElementById('cabinetRoot');
+    if (!root || !this.currentUser) return;
+    const allTabs = ['messages', 'reviews', 'my_bids', 'won_lots', 'purchases', 'favorites', 'collection',
+      'sellers', 'saved_searches', 'my_lots', 'create', 'wallet', 'settings', 'password'];
+    if (!allTabs.includes(tab)) tab = 'my_bids';
+    try { history.replaceState(null, '', `/cabinet?tab=${tab}`); } catch { /* ignore */ }
+
+    const stored = findUser(this.currentUser);
+    const regDate = new Date(stored?.regDate ?? Date.now()).toLocaleDateString('uk-UA');
+    const item = (id: string, label: string) =>
+      `<button class="cab-menu-item ${tab === id ? 'active' : ''}" data-action="cabinet-tab" data-tab="${id}">${label}</button>`;
+    const group = (label: string, items: string) =>
+      `<div class="cab-menu-group"><div class="cab-menu-heading">${label}</div>${items}</div>`;
+
+    const titles: Record<string, string> = {
+      messages: this.cabT('menu_messages'), reviews: this.cabT('menu_reviews'),
+      my_bids: this.t('tab_my_bids'), won_lots: this.t('tab_won_lots'), purchases: this.t('tab_purchases'),
+      favorites: this.t('tab_my_favorites'), collection: this.t('tab_my_collection'), sellers: this.t('tab_my_sellers'),
+      saved_searches: this.t('tab_saved_searches'), my_lots: this.t('tab_my_lots'), create: this.t('tab_create'),
+      wallet: this.t('tab_wallet'), settings: this.cabT('menu_settings'), password: this.cabT('menu_password'),
+    };
+
+    root.innerHTML = `
+      <div class="cab-layout">
+        <aside class="cab-sidebar">
+          <div class="cab-profile">
+            <div class="cab-avatar">${this.currentUser.slice(0, 2).toUpperCase()}</div>
+            <div class="cab-profile-info">
+              <div class="cab-nick">${this.currentUser}</div>
+              ${stored?.fullName ? `<div class="cab-fullname">${stored.fullName}</div>` : ''}
+              <div class="cab-meta">${this.cabT('member_since')} ${regDate}</div>
+              <div class="cab-meta">${this.cabT('reviews_label')}: <span style="color:#1D9E75;">+0</span> · <span style="color:var(--oxblood);">−0</span></div>
+            </div>
+          </div>
+          <button class="cab-balance" data-action="cabinet-tab" data-tab="wallet">
+            <span>${this.t('wallet_balance')}</span>
+            <span class="mono">${this.walletBalance.toLocaleString('uk-UA')} ₴</span>
+          </button>
+          <nav class="cab-menu">
+            ${item('messages', this.cabT('menu_messages'))}
+            ${item('reviews', this.cabT('menu_reviews'))}
+            ${group(this.cabT('group_buy'),
+              item('my_bids', this.t('tab_my_bids')) +
+              item('won_lots', this.t('tab_won_lots')) +
+              item('purchases', this.t('tab_purchases')) +
+              item('favorites', this.t('tab_my_favorites')) +
+              item('collection', this.t('tab_my_collection')) +
+              item('sellers', this.t('tab_my_sellers')) +
+              item('saved_searches', this.t('tab_saved_searches')))}
+            ${group(this.cabT('group_sell'),
+              item('my_lots', this.t('tab_my_lots')) +
+              item('create', this.t('tab_create')))}
+            ${group(this.cabT('group_account'), item('wallet', this.t('tab_wallet')))}
+            ${group(this.cabT('group_settings'),
+              item('settings', this.cabT('menu_settings')) +
+              item('password', this.cabT('menu_password')))}
+            <button class="cab-menu-item cab-logout" data-action="logout">${this.cabT('btn_logout_menu')}</button>
+          </nav>
+        </aside>
+        <section class="cab-content">
+          <h1 class="cab-title">${titles[tab]}</h1>
+          <div id="cabinetContent">${this.cabinetBody(tab)}</div>
+        </section>
+      </div>`;
   },
   setRole(this: App, role: DashboardRole): void {
     this.dashboardRole = role;
