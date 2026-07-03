@@ -211,13 +211,18 @@ export const cabinetMethods = {
   },
   renderWallet(this: App): string {
     return `
-      <div style="background:var(--accent-tint); border-radius:var(--radius); padding:16px; margin-bottom:14px;">
+      <div style="background:var(--accent-tint); border:1px solid var(--line); border-radius:var(--radius); padding:18px; margin-bottom:12px;">
         <div style="font-size:0.75rem; color:var(--sage); text-transform:uppercase; letter-spacing:0.05em;">${this.t('wallet_balance')}</div>
-        <div class="mono" style="font-size:1.5rem; color:var(--brass-light); margin-top:4px;">${this.walletBalance.toLocaleString('uk-UA')} ₴</div>
+        <div class="mono" style="font-size:1.625rem; color:var(--brass-light); margin-top:4px;">${this.walletBalance.toLocaleString('uk-UA')} ₴</div>
       </div>
-      <p style="font-size:0.78125rem; color:var(--sage); margin-bottom:16px;">${this.t('wallet_note')}</p>
-      <div style="font-size:0.8125rem; color:var(--sage); margin-bottom:8px;">${this.t('wallet_commission_history')}</div>
-      <p style="font-size:0.8125rem; color:var(--sage);">${this.t('wallet_no_history')}</p>`;
+      <p style="font-size:0.78125rem; color:var(--sage); margin-bottom:20px;">${this.t('wallet_note')}</p>
+      <div class="cab-dash-card">
+        <div class="cab-dash-head">
+          <span class="cab-dash-icon">${CAB_ICONS.wallet}</span>
+          <span class="cab-dash-title">${this.t('wallet_commission_history')}</span>
+        </div>
+        <div class="cab-dash-body"><div class="cab-dash-empty">${this.t('wallet_no_history')}</div></div>
+      </div>`;
   },
   renderMyBids(this: App): string {
     const mine = this.products.filter(p => p.saleType === 'auction' && p.bidHistory?.some(h => h.user === this.currentUser));

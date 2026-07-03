@@ -23,6 +23,10 @@ import Overlays from '../components/Overlays.astro';
       <Sidebar />
     </div>
   </main>
+  <style is:global>
+    /* The page already has its own h1 above — hide the section's duplicate heading here. */
+    #catalogTitle { display: none; }
+  </style>
   <SiteFooter />
   <Overlays />
   <script src="../scripts/app.ts"></script>
