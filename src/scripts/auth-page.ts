@@ -18,6 +18,9 @@ let captchaCode = '';
 /** Register wizard state: the validated-but-unconfirmed user + the e-mail code we "sent". */
 let pendingUser: StoredUser | null = null;
 let confirmCode = '';
+/** Countdown for the "check your inbox" timer (Violity shows one) — epoch ms when it runs out. */
+let confirmDeadline = 0;
+let confirmTimerId: number | undefined;
 /** Field values survive re-renders (language switch, captcha refresh). */
 const vals: Record<string, string> = {};
 let consentChecked = false;
@@ -163,7 +166,7 @@ function stepsHtml(active: 1 | 2 | 3): string {
     <div class="af-steps" aria-hidden="true">
       ${[1, 2, 3].map(n => `
         <span class="af-step ${n === active ? 'active' : ''} ${n < active ? 'passed' : ''}">${n}</span>
-        ${n < 3 ? '<span class="af-step-line"></span>' : ''}
+        ${n < 3 ? `<span class="af-step-line ${n < active ? 'passed' : ''}"></span>` : ''}
       `).join('')}
     </div>
     <h1 class="af-title">${view === 'done' ? t('done_title') : t('reg_title')}</h1>
@@ -242,13 +245,61 @@ function renderRegisterForm(): string {
     <button class="btn btn-primary af-submit" data-action="submit-register">${t('btn_register')}</button>`;
 }
 
+/** Step 2, left panel — Violity shows a read-only summary card of everything entered in step 1;
+    the actual code entry lives in the aside (renderAsideConfirm). */
 function renderConfirm(): string {
+  const u = pendingUser;
+  const countryLabel = AUTH_COUNTRIES.find(c => c.code === u?.country)?.label[lang] ?? t('summary_not_set');
+  const row = (label: string, value: string) => `
+    <div class="af-summary-row"><span class="af-summary-label">${label}</span><span class="af-summary-value">${value || t('summary_not_set')}</span></div>`;
   return `
     ${stepsHtml(2)}
-    <p class="af-note">${t('confirm_text')} <strong>${pendingUser?.email ?? ''}</strong>.</p>
-    <p class="af-demo-note">${t('demo_code_note')} <strong class="mono">${confirmCode}</strong></p>
-    ${inputRow('code', { max: 6, placeholder: t('field_code') })}
-    <button class="btn btn-primary af-submit" data-action="submit-code">${t('btn_confirm')}</button>`;
+    <div class="af-summary">
+      ${row(t('field_site_lang'), AUTH_LANG_NAMES[lang])}
+      ${row(t('field_country'), countryLabel)}
+      ${row(t('field_nickname'), u?.login ?? '')}
+      ${row(t('field_fullname'), u?.fullName ?? '')}
+      ${row(t('field_email'), u?.email ?? '')}
+      ${row(t('field_phone'), u?.phone ? `${u.phoneCode} ${u.phone}` : '')}
+      ${row(t('field_password'), '•'.repeat(u?.password.length ?? 0))}
+    </div>`;
+}
+
+/** Step 2, right aside — «Підтвердження e-mail»: instruction, 4 code boxes, inbox countdown,
+    resend link once it runs out, confirm button disabled until all boxes are filled. */
+function renderAsideConfirm(): string {
+  const secondsLeft = Math.max(0, Math.round((confirmDeadline - Date.now()) / 1000));
+  const boxes = [0, 1, 2, 3].map(i =>
+    `<input class="af-code-box" data-idx="${i}" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="${t('field_code')} ${i + 1}">`
+  ).join('<span class="af-code-dash">-</span>');
+  return `
+    <h2>${t('confirm_title')}</h2>
+    <p>${t('confirm_aside_text').replace('{email}', `<strong>${pendingUser?.email ?? ''}</strong>`)}</p>
+    <p class="af-demo-note af-demo-note-aside">${t('demo_code_note')} <strong class="mono">${confirmCode}</strong></p>
+    <div class="af-code-row">${boxes}</div>
+    <div class="af-countdown" id="afCountdown">
+      ${secondsLeft > 0
+        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="13" height="13"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> ${t('check_spam')} <span id="afTimerSec">${secondsLeft}</span> c`
+        : `<button type="button" class="af-link" data-action="resend-code">${t('resend_code')}</button>`}
+    </div>
+    <div class="af-err af-form-err" id="afCodeErr"></div>
+    <button class="btn btn-primary af-submit af-confirm-btn" id="afConfirmBtn" data-action="submit-code" disabled>${t('btn_confirm')}</button>`;
+}
+
+function startConfirmTimer(): void {
+  if (confirmTimerId) window.clearInterval(confirmTimerId);
+  confirmTimerId = window.setInterval(() => {
+    const el = document.getElementById('afTimerSec');
+    const secondsLeft = Math.max(0, Math.round((confirmDeadline - Date.now()) / 1000));
+    if (!el || secondsLeft <= 0) {
+      window.clearInterval(confirmTimerId);
+      confirmTimerId = undefined;
+      const box = document.getElementById('afCountdown');
+      if (box) box.innerHTML = `<button type="button" class="af-link" data-action="resend-code">${t('resend_code')}</button>`;
+      return;
+    }
+    el.textContent = String(secondsLeft);
+  }, 1000);
 }
 
 function renderDone(): string {
@@ -299,6 +350,12 @@ function renderAside(): void {
   const aside = qs<HTMLElement>('#authAsideBody');
   if (!aside) return;
   const search = location.search;
+  if (mode === 'register' && view === 'confirm') {
+    aside.innerHTML = renderAsideConfirm();
+    startConfirmTimer();
+    qs<HTMLInputElement>('.af-code-box[data-idx="0"]')?.focus();
+    return;
+  }
   if (mode === 'register') {
     aside.innerHTML = `
       <h2>${t('aside_login_title')}</h2>
@@ -361,16 +418,22 @@ function submitRegister(): void {
     password: vals.password,
     regDate: new Date().toISOString(),
   };
-  confirmCode = String(Math.floor(100000 + Math.random() * 900000));
+  // 4-digit code, matching the four aside entry boxes (Violity's layout).
+  confirmCode = String(Math.floor(1000 + Math.random() * 9000));
+  confirmDeadline = Date.now() + 300_000;
   view = 'confirm';
   render();
 }
 
+function enteredCode(): string {
+  return Array.from(document.querySelectorAll<HTMLInputElement>('.af-code-box'))
+    .map(b => b.value.trim()).join('');
+}
+
 function submitCode(): void {
-  const wrap = qs<HTMLElement>('.af-field[data-field="code"]');
-  const entered = (vals.code ?? '').trim();
-  if (entered !== confirmCode) {
-    if (wrap) paintField(wrap, 'err_code', true);
+  const errBox = qs<HTMLElement>('#afCodeErr');
+  if (enteredCode() !== confirmCode) {
+    if (errBox) errBox.textContent = t('err_code');
     return;
   }
   if (!pendingUser) return;
@@ -412,6 +475,19 @@ function bind(): void {
 
   root.addEventListener('input', (e) => {
     const el = e.target as HTMLInputElement;
+    // Segmented confirmation-code boxes: digits only, auto-advance, enable the button when full.
+    if (el.classList?.contains('af-code-box')) {
+      el.value = el.value.replace(/\D/g, '').slice(0, 1);
+      if (el.value) {
+        const next = qs<HTMLInputElement>(`.af-code-box[data-idx="${Number(el.dataset.idx) + 1}"]`);
+        next?.focus();
+      }
+      const btn = qs<HTMLButtonElement>('#afConfirmBtn') as HTMLButtonElement | null;
+      if (btn) btn.disabled = enteredCode().length < 4;
+      const errBox = qs<HTMLElement>('#afCodeErr');
+      if (errBox) errBox.textContent = '';
+      return;
+    }
     if (!el.name) return;
     vals[el.name] = el.value;
     const wrap = el.closest<HTMLElement>('.af-field');
@@ -477,6 +553,12 @@ function bind(): void {
     }
 
     switch (target.dataset.action) {
+      case 'resend-code':
+        // Demo resend: a fresh code + a fresh inbox countdown.
+        confirmCode = String(Math.floor(1000 + Math.random() * 9000));
+        confirmDeadline = Date.now() + 300_000;
+        renderAside();
+        break;
       case 'refresh-captcha': newCaptcha(); vals.captcha = ''; {
         const input = qs<HTMLInputElement>('.af-field input[name="captcha"]');
         if (input) input.value = '';
@@ -493,8 +575,13 @@ function bind(): void {
     }
   });
 
-  // Enter key submits the visible form
+  // Enter key submits the visible form; Backspace in an empty code box steps back.
   root.addEventListener('keydown', (e) => {
+    const el = e.target as HTMLInputElement;
+    if (e.key === 'Backspace' && el instanceof HTMLInputElement && el.classList.contains('af-code-box') && !el.value) {
+      qs<HTMLInputElement>(`.af-code-box[data-idx="${Number(el.dataset.idx) - 1}"]`)?.focus();
+      return;
+    }
     if (e.key !== 'Enter' || !(e.target instanceof HTMLInputElement)) return;
     e.preventDefault();
     if (mode === 'register') {

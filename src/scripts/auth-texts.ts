@@ -53,8 +53,16 @@ export const AUTH_T: Record<string, Record<Lang, string>> = {
   btn_go_login: { uk: 'Увійти', en: 'Sign in', pl: 'Zaloguj się', ru: 'Войти' },
 
   // ---- register: confirm step ----
-  confirm_title: { uk: 'Підтвердіть e-mail', en: 'Confirm your e-mail', pl: 'Potwierdź e-mail', ru: 'Подтвердите e-mail' },
-  confirm_text: { uk: 'Ми надіслали код підтвердження на', en: 'We sent a confirmation code to', pl: 'Wysłaliśmy kod potwierdzający na', ru: 'Мы отправили код подтверждения на' },
+  confirm_title: { uk: 'Підтвердження e-mail', en: 'E-mail confirmation', pl: 'Potwierdzenie e-mail', ru: 'Подтверждение e-mail' },
+  confirm_aside_text: {
+    uk: 'Перейдіть до своєї поштової скриньки {email}, знайдіть надісланий Вам лист із кодом підтвердження та введіть його в поле. Також Ви можете перейти за посиланням у листі й одразу підтвердити свій e-mail.',
+    en: 'Go to your inbox {email}, find the e-mail with the confirmation code and enter it below. You can also follow the link in the e-mail to confirm your address right away.',
+    pl: 'Przejdź do swojej skrzynki {email}, znajdź wiadomość z kodem potwierdzającym i wpisz go w pole. Możesz też kliknąć link w wiadomości i od razu potwierdzić swój e-mail.',
+    ru: 'Перейдите в свой почтовый ящик {email}, найдите отправленное Вам письмо с кодом подтверждения и введите его в поле. Также Вы можете перейти по ссылке в письме и сразу подтвердить свой e-mail.',
+  },
+  check_spam: { uk: 'Перевірте Вхідні та Спам.', en: 'Check Inbox and Spam.', pl: 'Sprawdź Odebrane i Spam.', ru: 'Проверьте Входящие и Спам.' },
+  resend_code: { uk: 'Надіслати код ще раз', en: 'Send the code again', pl: 'Wyślij kod ponownie', ru: 'Отправить код ещё раз' },
+  summary_not_set: { uk: 'не вибрано', en: 'not set', pl: 'nie wybrano', ru: 'не выбрано' },
   demo_code_note: {
     uk: 'Демо-режим: поштовий сервіс не підключено, ваш код —',
     en: 'Demo mode: e-mail service is not connected, your code is',
