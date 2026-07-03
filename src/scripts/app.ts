@@ -480,7 +480,7 @@ export class VintageHallApp {
       if (!this.currentUser) {
         window.location.replace('/login');
       } else {
-        const tab = new URLSearchParams(window.location.search).get('tab') ?? 'my_bids';
+        const tab = new URLSearchParams(window.location.search).get('tab') ?? 'home';
         this.renderCabinet(tab);
       }
     }
@@ -575,7 +575,7 @@ export class VintageHallApp {
       this.renderCart();
       // Cabinet page content is fully client-rendered — re-translate the open section too.
       if (document.getElementById('cabinetRoot') && this.currentUser) {
-        this.renderCabinet(new URLSearchParams(window.location.search).get('tab') ?? 'my_bids');
+        this.renderCabinet(new URLSearchParams(window.location.search).get('tab') ?? 'home');
       }
       this.savePreference('vh_lang', this.currentLang);
       document.dispatchEvent(new CustomEvent('vh-lang-changed', { detail: this.currentLang }));
@@ -638,11 +638,11 @@ export class VintageHallApp {
     $('overlay').addEventListener('click', () => { this.closeDrawer(); this.closeCheckout(); });
 
     $('accountBtn').addEventListener('click', () => {
-      this.currentUser ? this.openCabinet('my_bids') : this.openLogin('my_bids');
+      this.currentUser ? this.openCabinet('home') : this.openLogin('my_bids');
     });
     document.getElementById('accountBtnMobile')?.addEventListener('click', () => {
       this.closeSitemap();
-      this.currentUser ? this.openCabinet('my_bids') : this.openLogin('my_bids');
+      this.currentUser ? this.openCabinet('home') : this.openLogin('my_bids');
     });
 
     // "Карта сайта" panel — opens only on explicit click, at every breakpoint, and is closed by
@@ -671,6 +671,16 @@ export class VintageHallApp {
     // cross-browser, so the visible filename text is kept in sync here instead.
     document.addEventListener('change', (e) => {
       const input = e.target as HTMLInputElement;
+      if (input?.type === 'file' && input.classList.contains('lc-upload-input')) {
+        // The Violity-style dashed upload area shows how many photos were picked (12 max).
+        const label = document.getElementById('newPhotosLabel');
+        if (label) {
+          label.textContent = input.files?.length
+            ? this.cabT('photos_chosen').replace('{n}', String(Math.min(input.files.length, 12)))
+            : this.cabT('click_to_choose');
+        }
+        return;
+      }
       if (input?.type !== 'file' || !input.classList.contains('file-input-native')) return;
       const nameEl = input.closest('.file-input-wrap')?.querySelector<HTMLElement>('.file-input-name');
       if (!nameEl) return;
@@ -714,6 +724,11 @@ export class VintageHallApp {
     document.body.addEventListener('input', (e) => {
       const target = e.target as HTMLElement;
       if (target.dataset.action === 'commission-input') this.updateCommissionBox();
+      // Live remaining-characters counter (lot title in the create form, Violity-style).
+      if (target.dataset.counter && target instanceof HTMLInputElement) {
+        const counterEl = document.getElementById(target.dataset.counter);
+        if (counterEl) counterEl.textContent = String(target.maxLength - target.value.length);
+      }
     });
 
     // Delegated handler for all dynamically rendered buttons (catalog cards, cart rows, modal content).
@@ -763,6 +778,8 @@ export class VintageHallApp {
         case 'remove-listing': this.removeListing(id!); break;
         case 'edit-listing': this.editListing(id!); break;
         case 'cancel-edit-listing': this.cancelEditListing(); break;
+        case 'choose-sale-type': this.chooseSaleType(target.dataset.sale as SaleType); break;
+        case 'clear-create-form': this.clearCreateForm(); break;
         case 'publish-listing': this.publishListing(); break;
         case 'send-lot-chat': this.sendLotChat(id!, target.dataset.seller ?? ''); break;
         case 'open-lightbox': e.stopPropagation(); this.openLightbox(id!, parseInt(target.dataset.idx ?? '0', 10)); break;
