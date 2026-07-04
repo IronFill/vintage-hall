@@ -34,49 +34,64 @@
 
 @layer base {
   :root, [data-theme="dark"]{
-    --bg: #182620;
-    --bg-card: #213328;
-    --bg-card-hover: #28402F;
-    --panel-bg: #1E3026;
-    --header-bg: rgba(24,38,32,0.92);
+    --bg: #16221C;
+    --bg-card: #23362A;
+    --bg-card-hover: #2C4335;
+    /* Second-level surface for cards nested on top of a card (dashboard tiles, summary
+       boxes, hint panels). Opaque + clearly lighter than --bg-card so nested blocks read
+       as raised, not as a faint tint that blends into the page. */
+    --surface-2: #2A4032;
+    --panel-bg: #223429;
+    --header-bg: rgba(20,32,26,0.92);
     --brass: #C2974D;
     --brass-light: #D9B877;
     --ivory: #EDE6D6;
-    --sage: #93A092;
+    --sage: #97A79A;
     --oxblood: #C0524F;
-    --line: rgba(194,151,77,0.28);
+    --line: rgba(194,151,77,0.30);
+    --line-strong: rgba(194,151,77,0.5);
     --on-accent: #182620;
-    --field-bg: rgba(255,255,255,0.04);
-    --accent-tint: rgba(194,151,77,0.08);
-    --accent-tint-strong: rgba(194,151,77,0.14);
+    --field-bg: rgba(0,0,0,0.22);
+    --accent-tint: rgba(194,151,77,0.10);
+    --accent-tint-strong: rgba(194,151,77,0.16);
     --oxblood-tint: rgba(140,59,59,0.45);
     --oxblood-tint-strong: rgba(140,59,59,0.14);
     --danger-bg: #2A2420;
     --texture1: rgba(194,151,77,0.05);
     --texture2: rgba(194,151,77,0.04);
     --radius: 2px;
+    /* Resting elevation: a soft drop shadow + a 1px lighter top edge so every card lifts
+       off the dark background even before hover. --elev-2 is the raised (hover) state. */
+    --elev-1: 0 1px 2px rgba(0,0,0,0.28), 0 10px 26px -14px rgba(0,0,0,0.62);
+    --elev-2: 0 4px 10px rgba(0,0,0,0.3), 0 18px 40px -16px rgba(0,0,0,0.7);
+    --edge-hi: inset 0 1px 0 rgba(255,255,255,0.05);
   }
   [data-theme="light"]{
-    --bg: #F7F5F1;
+    --bg: #F4F1EA;
     --bg-card: #FFFFFF;
-    --bg-card-hover: #F0EEE8;
+    --bg-card-hover: #F5F2EC;
+    --surface-2: #FBF9F4;
     --panel-bg: #FFFFFF;
-    --header-bg: rgba(247,245,241,0.92);
+    --header-bg: rgba(244,241,234,0.92);
     --brass: #5C7A72;
     --brass-light: #3F5950;
     --ivory: #2B2A28;
     --sage: #696861;
     --oxblood: #A13D2B;
-    --line: rgba(0,0,0,0.12);
+    --line: rgba(43,42,40,0.14);
+    --line-strong: rgba(43,42,40,0.26);
     --on-accent: #FFFFFF;
-    --field-bg: rgba(0,0,0,0.035);
-    --accent-tint: rgba(92,122,114,0.08);
-    --accent-tint-strong: rgba(92,122,114,0.14);
+    --field-bg: rgba(43,42,40,0.04);
+    --accent-tint: rgba(92,122,114,0.09);
+    --accent-tint-strong: rgba(92,122,114,0.15);
     --oxblood-tint: rgba(161,61,43,0.35);
     --oxblood-tint-strong: rgba(161,61,43,0.12);
     --danger-bg: #F3E6E1;
     --texture1: rgba(92,122,114,0.04);
     --texture2: rgba(92,122,114,0.03);
+    --elev-1: 0 1px 2px rgba(43,42,40,0.06), 0 8px 22px -16px rgba(43,42,40,0.28);
+    --elev-2: 0 4px 10px rgba(43,42,40,0.08), 0 16px 36px -18px rgba(43,42,40,0.32);
+    --edge-hi: inset 0 1px 0 rgba(255,255,255,0.7);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
@@ -1665,4 +1680,58 @@
     .lc-hint{order:2;}
     .lc-grid{grid-template-columns:1fr;}
     .lc-choose{grid-template-columns:1fr;}
+  }
+
+  /* ===================== CARD ELEVATION & CONTRAST (design pass) =====================
+     On the deep-green (non-white) background, flat cards blended in. Every card now gets a
+     resting drop shadow + a 1px lighter top edge so it visibly lifts off the page, and
+     cards nested on top of another card use the opaque second-level surface. */
+  .lot,
+  .hero-lot-card,
+  .cab-profile-card,
+  .cab-side-col .cab-sidebar,
+  .cab-content,
+  .rules-toc,
+  .why-buy-item,
+  .cab-dash-card,
+  .lc-card,
+  .af-summary,
+  .bg-bg-card.border-line{
+    box-shadow: var(--elev-1), var(--edge-hi);
+  }
+  /* stronger, brass-edged lift on hover for the interactive cards */
+  .lot:hover{
+    box-shadow: var(--elev-2), 0 0 0 1px var(--brass);
+  }
+  .why-buy-item{transition:border-color .2s, transform .2s, box-shadow .2s;}
+  .why-buy-item:hover{border-color:var(--brass); transform:translateY(-2px); box-shadow:var(--elev-2);}
+  .bg-bg-card.border-line:hover{box-shadow:var(--elev-2);}
+
+  /* Nested cards → opaque raised surface (not a faint tint that melts into the page) */
+  .cab-dash-card,
+  .lc-card,
+  .af-summary,
+  .cab-note,
+  .lc-choose-card{
+    background: var(--surface-2);
+  }
+  /* Hint boxes sit INSIDE .lc-card (now lighter) — keep them on the darker base surface
+     so they read as recessed, giving the row real depth. */
+  .lc-hint{background: var(--bg); border-color: var(--line-strong);}
+
+  /* Section headings inside cards get a slightly stronger divider so the card structure reads */
+  .cab-dash-head, .lc-card-title{border-color: var(--line-strong);}
+
+  /* BUTTONS — more presence: solid brass primary gains a lift shadow; ghost buttons get a
+     real surface fill so they read as buttons on the dark background, not bare outlines. */
+  .btn-primary{box-shadow:0 2px 8px rgba(0,0,0,0.28);}
+  .btn-primary:hover{box-shadow:0 5px 16px -2px rgba(0,0,0,0.36);}
+  .btn-ghost{background: var(--surface-2); box-shadow: var(--elev-1);}
+  .btn-ghost:hover{background: var(--bg-card-hover); border-color: var(--brass);}
+
+  /* Inputs/selects: a touch more definition so form fields don't disappear either */
+  .field input, .field select, .field textarea,
+  .lc-field input, .lc-field select,
+  .af-input-wrap input, .af-input-wrap select{
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.12);
   }
