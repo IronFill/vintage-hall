@@ -1,8 +1,11 @@
 name: CI
 
 on:
+  # Only run on pushes to master directly; feature branches are covered by the
+  # pull_request trigger below once a PR is open — having both fire for the same commit
+  # on a branch with an open PR just runs the whole suite twice for nothing.
   push:
-    branches: ['**']
+    branches: [master]
   pull_request:
 
 jobs:

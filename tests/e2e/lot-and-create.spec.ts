@@ -6,12 +6,11 @@ const SELLER = {
   regDate: new Date().toISOString(),
 };
 
-async function loginAs(page: import('@playwright/test').Page, login: string) {
+async function loginAsSeller(page: import('@playwright/test').Page) {
   await page.addInitScript((user) => {
     localStorage.setItem('vh_users', JSON.stringify([user]));
     localStorage.setItem('vh_user', user.login);
-  }, { login: SELLER.login, ...SELLER });
-  void login;
+  }, SELLER);
 }
 
 test('catalog cards render a plate placeholder and a lot detail opens', async ({ page }) => {
@@ -28,7 +27,7 @@ test('catalog cards render a plate placeholder and a lot detail opens', async ({
 });
 
 test('signed-in seller can publish a lot via the Violity-style create form', async ({ page }) => {
-  await loginAs(page, SELLER.login);
+  await loginAsSeller(page);
   await page.goto('/cabinet?tab=create');
   await expect(page.locator('#saleDetails')).toBeHidden();
 
