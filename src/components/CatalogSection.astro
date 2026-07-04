@@ -1,3 +1,17 @@
+---
+import { SEEDED_PRODUCTS, PRODUCT_I18N } from '../data/products';
+
+// Server-rendered fallback list — real crawlable links to every /lot/[id] page and real text
+// content in the catalog's initial HTML, before any client JS runs. renderCatalog() (catalog.ts)
+// unconditionally overwrites #catalogGrid's innerHTML on init, so this is purely a pre-hydration
+// improvement for crawlers, no-JS visitors, and first paint — it never fights with the client render.
+const seoLots = SEEDED_PRODUCTS.map(p => {
+  const tr = PRODUCT_I18N[p.id]?.uk;
+  const price = p.saleType === 'auction' ? (p.currentBid ?? p.startPrice ?? 0) : (p.price ?? 0);
+  return { id: p.id, name: tr?.name ?? `Лот LOT-0${p.id}`, price, saleType: p.saleType };
+});
+---
+
 <section class="relative z-[1] py-12 md:py-[70px]" id="catalog">
   <div class="mb-8 flex flex-col items-start gap-1.5 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-4 md:mb-[42px]">
     <h2 class="text-[1.875rem] text-ivory" id="catalogTitle">Каталог лотів</h2>
@@ -41,5 +55,15 @@
       <option value="unique">Унікальний</option>
     </select>
   </div>
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7" id="catalogGrid"></div>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7" id="catalogGrid">
+    {seoLots.map((lot) => (
+      <a href={`/lot/${lot.id}`} class="lot" style="padding:20px; text-decoration:none;">
+        <span class="lot-era mono">LOT-0{lot.id}</span>
+        <span class="lot-name">{lot.name}</span>
+        {lot.price > 0 && (
+          <span class="lot-price mono">{lot.price.toLocaleString('uk-UA')} ₴{lot.saleType === 'auction' ? ' (поточна ставка)' : ''}</span>
+        )}
+      </a>
+    ))}
+  </div>
 </section>
