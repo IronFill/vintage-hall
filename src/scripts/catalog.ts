@@ -258,11 +258,11 @@ export const catalogMethods = {
     const specsLine = specBits.length
       ? `<div class="lot-specs mono">${specBits.join(' · ')}</div>` : '';
 
-    const auctionEmotion = p.saleType === 'auction'
-      ? `<div class="lot-emotion mono">
-           ${p.watchingNow ? `<span class="emotion-watching">🔥 ${p.watchingNow} ${this.t('label_watching_now')}</span>` : ''}
-           ${p.bidsLastHour ? `<span>+${p.bidsLastHour} ${this.t('label_bids_last_hour')}</span>` : ''}
-         </div>` : '';
+    // Keep just the one "live" signal (people watching) — the extra "+N bids last hour" line
+    // over-stuffed the card; the bid count + countdown below already convey momentum.
+    const auctionEmotion = p.saleType === 'auction' && p.watchingNow
+      ? `<div class="lot-emotion mono"><span class="emotion-watching">🔥 ${p.watchingNow} ${this.t('label_watching_now')}</span></div>`
+      : '';
 
     const buyNowChip = (p.saleType === 'auction' && p.buyNowPrice && (!p.endTime || new Date(p.endTime).getTime() > Date.now()))
       ? `<button class="buy-now-chip" data-action="buy-now" data-id="${p.id}">⚡ ${this.t('btn_buy_now')} · ${p.buyNowPrice.toLocaleString('uk-UA')} ₴</button>` : '';
@@ -372,7 +372,7 @@ export const catalogMethods = {
     const bar = document.getElementById('compareBar');
     if (!bar) return;
     const items = this.products.filter(p => this.compareSet.has(p.id));
-    bar.classList.toggle('visible', items.length >= 1);
+    bar.classList.toggle('visible', items.length >= 2);
     const thumbs = document.getElementById('compareBarThumbs');
     if (thumbs) {
       thumbs.innerHTML = items.map(p => p.photo

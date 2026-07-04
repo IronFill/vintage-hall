@@ -292,7 +292,7 @@
   .hero-lot-num{font-family:'JetBrains Mono',monospace; font-size:0.625rem; letter-spacing:0.1em; color:var(--sage);}
   .hero-lot-photo{aspect-ratio:4/3; overflow:hidden; background:var(--field-bg);}
   .hero-lot-photo img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;}
-  .hero-lot-card:hover .hero-lot-photo img{transform:scale(1.03);}
+  /* photo zoom on hover removed — reads as template */
   .hero-lot-body{padding:14px 14px 12px;}
   .hero-lot-name{font-family:'Cormorant',serif; font-size:1.0625rem; line-height:1.3; color:var(--ivory); margin-bottom:5px; min-height:2.6em;}
   .hero-lot-meta{font-size:0.6875rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--sage); margin-bottom:10px;}
@@ -422,12 +422,14 @@
 
   /* COMPARE BAR + MODAL (purchaser feature: side-by-side comparison of 2-4 lots) */
   .compare-bar{
-    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(120%); z-index:250;
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(160%); z-index:250;
     display:flex; align-items:center; gap:14px; background:var(--bg-card); border:1px solid var(--brass);
     border-radius:30px; padding:10px 12px 10px 20px; box-shadow:0 14px 32px -10px rgba(0,0,0,0.55);
-    transition:transform .3s cubic-bezier(.22,1,.36,1);
+    transition:transform .3s cubic-bezier(.22,1,.36,1), opacity .2s;
+    /* Fully out of the flow when empty so it can never peek at the bottom edge. */
+    opacity:0; visibility:hidden; pointer-events:none;
   }
-  .compare-bar.visible{transform:translateX(-50%) translateY(0);}
+  .compare-bar.visible{transform:translateX(-50%) translateY(0); opacity:1; visibility:visible; pointer-events:auto;}
   .compare-bar-label{font-size:0.8125rem; color:var(--ivory); white-space:nowrap;}
   .compare-bar-thumbs{display:flex; gap:6px;}
   .compare-bar-thumbs img{width:32px; height:32px; border-radius:6px; object-fit:cover; border:1px solid var(--line);}
@@ -447,16 +449,21 @@
   /* CATALOG GRID */
   .catalog-grid{
     display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
+    /* Cards size to their own content (auction cards carry more meta than shop cards) — so a
+       shorter card isn't stretched with a dead gap in the middle. Top-aligned, no gaps. */
+    align-items:start;
   }
   .lot{
     background:var(--bg-card);
     border:1px solid var(--line);
     border-radius:var(--radius);
     overflow:hidden;
-    transition: border-color .2s, transform .2s, background .2s;
+    transition: border-color .2s, box-shadow .2s;
     display:flex; flex-direction:column;
   }
-  .lot:hover{border-color:var(--brass); background:var(--bg-card-hover); transform:translateY(-3px); box-shadow:0 14px 32px -12px rgba(0,0,0,0.45), 0 0 0 1px var(--brass);}
+  /* One restrained hover: brass border + a slightly deeper shadow. No lift-jump, no photo
+     zoom, no double ring — those read as "template". */
+  .lot:hover{border-color:var(--brass);}
   .lot-media{
     aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;
     background: linear-gradient(160deg, var(--accent-tint), transparent 60%);
@@ -481,9 +488,19 @@
   .rarity-dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px; box-shadow:0 0 0 2px rgba(255,255,255,0.08);}
   .sub .rarity-dot{margin-right:5px;}
   .lot-reviews{float:right; color:var(--brass-light);}
-  .lot-name{font-size:1.125rem; color:var(--ivory); font-family:'Cormorant', serif;}
-  .lot-desc{font-size:0.9375rem; color:var(--sage); flex:1; line-height:1.5;}
-  .lot-foot{display:flex; align-items:center; justify-content:space-between; margin-top:10px;}
+  .lot-name{
+    font-size:1.125rem; color:var(--ivory); font-family:'Cormorant', serif; line-height:1.2;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:2.4em;
+  }
+  /* Clamp the description to a fixed two lines so every card's top block is the same height —
+     no more one card empty while its neighbour is crammed. */
+  .lot-desc{
+    font-size:0.9375rem; color:var(--sage); line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:3em;
+  }
+  .lot-foot{display:flex; align-items:center; justify-content:space-between; margin-top:12px;}
   .lot-price{font-family:'JetBrains Mono', monospace; font-size:1rem; color:var(--brass-light);}
   .lot-add{
     border:1px solid var(--line); padding:8px 14px; font-size:0.875rem; border-radius:var(--radius);
@@ -981,7 +998,10 @@
   button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible{outline:2px solid var(--brass); outline-offset:2px;}
 
   /* ACCESSIBILITY TOOLBAR */
-  .a11y-toolbar{position:fixed; top:50%; right:0; transform:translateY(-50%); z-index:350; display:flex; flex-direction:column; gap:2px;}
+  /* Accessibility controls: present but quiet — faded until hovered/focused so they don't
+     compete with the content as a permanent floating cluster. */
+  .a11y-toolbar{position:fixed; top:50%; right:0; transform:translateY(-50%); z-index:350; display:flex; flex-direction:column; gap:2px; opacity:0.4; transition:opacity .2s;}
+  .a11y-toolbar:hover, .a11y-toolbar:focus-within{opacity:1;}
   .a11y-btn{width:38px; height:38px; background:var(--bg-card); border:1px solid var(--line); color:var(--ivory); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.96875rem; transition:background .2s, border-color .2s;}
   .a11y-btn:first-child{border-radius:var(--radius) 0 0 0;}
   .a11y-btn:last-child{border-radius:0 0 0 var(--radius);}
@@ -1046,14 +1066,7 @@
   [data-force-desktop="true"]{min-width:1140px; overflow-x:auto;}
 
   @media (max-width: 880px){
-    .view-toggle{display:flex;}
-    .a11y-toolbar{top:auto; bottom:100px; right:0; transform:none;}
-    body{padding-bottom:44px;}
-    /* The bottom view-toggle bar (~44px) would otherwise sit underneath/overlap these
-       fixed-position elements — push them up above it. */
-    .chat-fab{bottom:60px;}
-    .toast-container{bottom:60px;}
-    .compare-bar{bottom:60px;}
+    .a11y-toolbar{top:auto; bottom:24px; right:0; transform:none;}
   }
   @media (max-width: 560px){
     .a11y-toolbar{bottom:90px;}
@@ -1076,7 +1089,7 @@
   .news-card:hover{background:var(--accent-tint); transform:none;}
   .news-card-img{aspect-ratio:4/3; overflow:hidden; border-radius:var(--radius);}
   .news-card-img img{width:100%; height:100%; object-fit:cover; transition:transform .3s;}
-  .news-card:hover .news-card-img img{transform:scale(1.03);}
+  /* photo zoom on hover removed */
   .news-card-body{padding:2px 0;}
   .news-card-meta{display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.875rem; color:var(--sage);}
   .news-cat-badge{background:var(--accent-tint); color:var(--brass-light); padding:3px 10px; border-radius:var(--radius); font-size:0.8125rem; letter-spacing:0.03em;}
@@ -1699,13 +1712,13 @@
   .bg-bg-card.border-line{
     box-shadow: var(--elev-1), var(--edge-hi);
   }
-  /* stronger, brass-edged lift on hover for the interactive cards */
+  /* a touch more depth on hover — one effect, no jump */
   .lot:hover{
-    box-shadow: var(--elev-2), 0 0 0 1px var(--brass);
+    box-shadow: var(--elev-2);
   }
-  .why-buy-item{transition:border-color .2s, transform .2s, box-shadow .2s;}
-  .why-buy-item:hover{border-color:var(--brass); transform:translateY(-2px); box-shadow:var(--elev-2);}
-  .bg-bg-card.border-line:hover{box-shadow:var(--elev-2);}
+  .why-buy-item{transition:border-color .2s, box-shadow .2s;}
+  .why-buy-item:hover{border-color:var(--brass); box-shadow:var(--elev-2);}
+  .bg-bg-card.border-line:hover{box-shadow:var(--elev-2); border-color:var(--brass);}
 
   /* Nested cards → opaque raised surface (not a faint tint that melts into the page) */
   .cab-dash-card,
@@ -1735,3 +1748,12 @@
   .af-input-wrap input, .af-input-wrap select{
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.12);
   }
+
+  /* ===================== DECLUTTER (design pass 2) =====================
+     On desktop the full nav is already visible in the header, so the hamburger +
+     sitemap panel just duplicate it — hide the button at xl and up. */
+  @media (min-width: 1280px){
+    .hamburger-btn{display:none;}
+  }
+  /* The mobile/desktop "view toggle" was a gimmick — responsive layout handles this. */
+  .view-toggle{display:none !important;}
