@@ -1241,7 +1241,10 @@
   .safety-step p{font-size:0.84375rem; color:var(--sage); margin:0; line-height:1.5;}
 
   /* SELLER MINI-PROFILE (lot detail) */
-  .seller-card{display:flex; align-items:center; gap:12px; background:var(--accent-tint); border-radius:var(--radius); padding:12px 14px; margin:14px 0;}
+  .seller-card{display:flex; align-items:center; gap:12px; background:var(--accent-tint); border-radius:var(--radius); padding:12px 14px; margin:14px 0; flex-wrap:wrap;}
+  /* let the middle info column shrink instead of shoving the follow button off-screen
+     (exclude the avatar div — the expert card's avatar is a div and must keep its circle) */
+  .seller-card > div:not(.seller-card-avatar){flex:1 1 160px; min-width:0;}
   .seller-card-avatar{
     width:38px; height:38px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
     background:var(--brass); color:var(--on-accent); font-family:'JetBrains Mono', monospace; font-size:0.78125rem; font-weight:600; letter-spacing:0.02em;
@@ -1272,8 +1275,9 @@
   @media (max-width:540px){ .collections-grid{grid-template-columns:1fr 1fr;} .collection-tile{padding:20px 10px;} }
 
   /* AUTOBID */
-  .autobid-row{display:flex; gap:8px; align-items:center; margin-top:10px;}
-  .autobid-row input{flex:1; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); padding:9px 12px; border-radius:var(--radius); font-family:'JetBrains Mono',monospace; font-size:0.8125rem;}
+  .autobid-row{display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;}
+  .autobid-row input{flex:1 1 160px; min-width:0; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); padding:9px 12px; border-radius:var(--radius); font-family:'JetBrains Mono',monospace; font-size:0.8125rem;}
+  .autobid-row .btn{flex-shrink:0;}
 
   @media (max-width: 880px){
     .why-buy-grid{grid-template-columns:1fr;}
@@ -1282,6 +1286,10 @@
   }
   @media (max-width: 560px){
     .safety-steps{grid-template-columns:1fr;}
+    /* Detail-modal rows stack on narrow phones so the button never overflows to the right. */
+    .seller-card > .btn{flex:1 1 100%; width:100%; justify-content:center; margin-top:2px;}
+    .autobid-row{flex-direction:column; align-items:stretch;}
+    .autobid-row .btn{width:100%; justify-content:center;}
   }
 
   /* BACK BUTTON */
