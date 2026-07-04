@@ -449,9 +449,6 @@
   /* CATALOG GRID */
   .catalog-grid{
     display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
-    /* Cards size to their own content (auction cards carry more meta than shop cards) — so a
-       shorter card isn't stretched with a dead gap in the middle. Top-aligned, no gaps. */
-    align-items:start;
   }
   .lot{
     background:var(--bg-card);
@@ -477,13 +474,41 @@
   .lot:hover .lot-media::after{opacity:1;}
   .lot-media svg{width:34%; color:var(--brass-light); opacity:0.85;}
   .lot-media .real-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .12s ease-out;}
+
+  /* ---- Catalog "plate": framed engraving used when a lot has no real photo yet ---- */
+  .lot-plate{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px;
+    /* fine catalogue-paper texture layered over the brand tint */
+    background:
+      radial-gradient(120% 90% at 50% 15%, var(--accent-tint-strong), transparent 70%),
+      repeating-linear-gradient(45deg, var(--texture1) 0 1px, transparent 1px 7px);
+  }
+  .lot-plate-frame{
+    position:absolute; inset:14px; border:1px solid var(--line);
+    box-shadow: inset 0 0 0 3px var(--bg-card), inset 0 0 0 4px var(--line);
+    pointer-events:none;
+  }
+  .lot-plate-art{width:44%; height:auto; color:var(--brass-light); opacity:0.92;}
+  .lot-plate-label{
+    font-family:'JetBrains Mono', monospace; font-size:0.625rem; letter-spacing:0.18em;
+    text-transform:uppercase; color:var(--sage); z-index:1;
+  }
   .lot-tag{
     position:absolute; top:12px; left:12px;
     font-family:'JetBrains Mono', monospace; font-size:0.875rem; color:var(--brass-light);
     letter-spacing:0.05em; display:flex; align-items:center; gap:6px;
   }
   .lot-tag .hole{width:6px; height:6px; border-radius:50%; border:1px solid var(--brass-light);}
-  .lot-body{padding:18px 20px 20px; display:flex; flex-direction:column; gap:8px; flex:1;}
+  /* Strict card: a top block (badge/era/name/desc/specs at fixed heights) and a bottom block
+     (meta/seller/price) pinned to the base — so every CTA button lines up across the grid. */
+  .lot-body{padding:16px 18px 18px; display:flex; flex-direction:column; flex:1;}
+  .lot-body-top{display:flex; flex-direction:column; gap:7px;}
+  .lot-body-bottom{margin-top:auto; display:flex; flex-direction:column; gap:5px; padding-top:12px;}
+  .lot-badge-row:empty{display:none;}
+  .lot-meta, .lot-seller{
+    font-size:0.75rem; color:var(--sage); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
   .lot-era{font-size:0.8125rem; color:var(--sage); letter-spacing:0.06em; text-transform:uppercase;}
   .rarity-dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px; box-shadow:0 0 0 2px rgba(255,255,255,0.08);}
   .sub .rarity-dot{margin-right:5px;}
@@ -500,7 +525,7 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
     min-height:3em;
   }
-  .lot-foot{display:flex; align-items:center; justify-content:space-between; margin-top:12px;}
+  .lot-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:4px;}
   .lot-price{font-family:'JetBrains Mono', monospace; font-size:1rem; color:var(--brass-light);}
   .lot-add{
     border:1px solid var(--line); padding:8px 14px; font-size:0.875rem; border-radius:var(--radius);
@@ -1757,3 +1782,5 @@
   }
   /* The mobile/desktop "view toggle" was a gimmick — responsive layout handles this. */
   .view-toggle{display:none !important;}
+
+  .detail-gallery-plate{cursor:default;}

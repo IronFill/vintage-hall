@@ -1,8 +1,8 @@
 import type { VintageHallApp as App } from './app';
 import { $ } from './dom-utils';
-import { MATERIAL_BY_ICON, ICON_PATHS, SELLERS, RECENT_SALES } from '../data/products';
+import { MATERIAL_BY_ICON, ICON_PATHS, ICON_LABELS, SELLERS, RECENT_SALES } from '../data/products';
 import { UI } from '../data/i18n';
-import type { Product, CatalogFilter, Badge, Rarity, SortMode, Category } from '../types';
+import type { Product, CatalogFilter, Badge, Rarity, SortMode, Category, IconKey } from '../types';
 
 /** Formats milliseconds left until an auction's end as "Дд ГГ:ХХ:СС" (or just HH:MM:SS under a day). */
 function formatTimeLeft(ms: number): string {
@@ -28,6 +28,7 @@ declare module './app' {
   rarityLabel(rarity: Rarity): string;
   rarityDot(p: Product): { color: string; label: string } | null;
   sellerLine(seller: string): string;
+  lotIllustration(icon: IconKey): string;
   renderCard(p: Product): string;
   tickTimers(): void;
   toggleFavorite(id: number): void;
@@ -221,12 +222,24 @@ export const catalogMethods = {
     const ratingPart = info ? ` <span class="mono" style="color:var(--brass-light);">★ ${info.rating.toFixed(1)}</span>` : '';
     return `${seller} ${verifiedMark}${ratingPart}`;
   },
+  /** A composed "catalog plate" used wherever a lot has no real photograph yet — a framed,
+      lightly-textured engraving of the item type with its label. Reads as intentional
+      auction-catalogue art instead of a lonely icon, and keeps every card visually uniform. */
+  lotIllustration(this: App, icon: IconKey): string {
+    const label = ICON_LABELS[icon][this.currentLang];
+    return `
+      <div class="lot-plate" data-icon="${icon}">
+        <span class="lot-plate-frame" aria-hidden="true"></span>
+        <svg class="lot-plate-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[icon]}</svg>
+        <span class="lot-plate-label">${label}</span>
+      </div>`;
+  },
   renderCard(this: App, p: Product): string {
     const tr = this.getProductText(p);
     const isFav = this.favorites.has(p.id);
     const media = p.photo
       ? `<img class="real-photo" src="${p.photo}" alt="${tr.name}" loading="lazy" decoding="async">`
-      : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">${ICON_PATHS[p.icon]}</svg>`;
+      : this.lotIllustration(p.icon);
 
     let footer: string;
     if (p.saleType === 'auction') {
@@ -258,15 +271,6 @@ export const catalogMethods = {
     const specsLine = specBits.length
       ? `<div class="lot-specs mono">${specBits.join(' · ')}</div>` : '';
 
-    // Keep just the one "live" signal (people watching) — the extra "+N bids last hour" line
-    // over-stuffed the card; the bid count + countdown below already convey momentum.
-    const auctionEmotion = p.saleType === 'auction' && p.watchingNow
-      ? `<div class="lot-emotion mono"><span class="emotion-watching">🔥 ${p.watchingNow} ${this.t('label_watching_now')}</span></div>`
-      : '';
-
-    const buyNowChip = (p.saleType === 'auction' && p.buyNowPrice && (!p.endTime || new Date(p.endTime).getTime() > Date.now()))
-      ? `<button class="buy-now-chip" data-action="buy-now" data-id="${p.id}">⚡ ${this.t('btn_buy_now')} · ${p.buyNowPrice.toLocaleString('uk-UA')} ₴</button>` : '';
-
     const dot = this.rarityDot(p);
     const rarityDotHtml = dot ? `<span class="rarity-dot" style="background:${dot.color};" title="${dot.label}"></span>` : '';
 
@@ -274,6 +278,12 @@ export const catalogMethods = {
       const avg = p.reviews!.reduce((sum, r) => sum + r.rating, 0) / p.reviews!.length;
       return `<span class="lot-reviews mono" title="${this.t('label_reviews')}">★ ${avg.toFixed(1)} (${p.reviews!.length})</span>`;
     })() : '';
+
+    // One uniform meta line for every card: auctions show bids + countdown, everything else
+    // shows how many people are watching. Same single row, so cards stay the same height.
+    const metaLine = p.saleType === 'auction'
+      ? `${this.t('label_bids_count')}: ${p.bidsCount ?? 0} · <span class="timer" data-compact="1" data-timer-id="${p.id}" data-end="${p.endTime ?? ''}"></span>`
+      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="width:13px;height:13px;vertical-align:-2px;"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> ${this.watcherCount(p.id)} ${this.t('label_watchers')}`;
 
     return `
       <div class="lot ${p.saleType === 'request' ? 'vip' : ''} ${p.saleType === 'auction' ? 'auction-lot' : ''}" data-action="open-detail" data-id="${p.id}">
@@ -289,22 +299,17 @@ export const catalogMethods = {
           ${media}
         </div>
         <div class="lot-body">
-          ${prestigeBadge}
-          <div class="lot-era mono">${rarityDotHtml}${tr.era}${reviewsHtml}</div>
-          <div class="lot-name">${tr.name}</div>
-          <div class="lot-desc">${tr.desc}</div>
-          ${specsLine}
-          <div class="lot-foot">${footer}</div>
-          ${buyNowChip}
-          ${auctionEmotion}
-          ${p.saleType === 'auction' ? `<div class="lot-watch mono">${this.t('label_bids_count')}: ${p.bidsCount ?? 0} · <span class="timer" data-timer-id="${p.id}" data-end="${p.endTime ?? ''}"></span></div>` : `
-          <div class="lot-watch mono">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-            ${this.watcherCount(p.id)} ${this.t('label_watchers')}
-          </div>`}
-          <div class="lot-watch mono" style="margin-top:3px;">
-            ${this.t('label_seller')}: ${this.sellerLine(p.seller)}
-            ${SELLERS[p.seller] ? `<span style="color:var(--sage);" title="${this.t('seller_positive_pct')}"> · ${Math.round((SELLERS[p.seller].rating / 5) * 100)}%</span>` : ''}
+          <div class="lot-body-top">
+            <div class="lot-badge-row">${prestigeBadge}</div>
+            <div class="lot-era mono">${rarityDotHtml}${tr.era}${reviewsHtml}</div>
+            <div class="lot-name">${tr.name}</div>
+            <div class="lot-desc">${tr.desc}</div>
+            ${specsLine || '<div class="lot-specs mono">&nbsp;</div>'}
+          </div>
+          <div class="lot-body-bottom">
+            <div class="lot-meta mono">${metaLine}</div>
+            <div class="lot-seller mono">${this.t('label_seller')}: ${this.sellerLine(p.seller)}</div>
+            <div class="lot-foot">${footer}</div>
           </div>
         </div>
       </div>`;
@@ -322,7 +327,10 @@ export const catalogMethods = {
           node.textContent = this.t('auction_ended');
           node.closest('.lot')?.querySelector<HTMLButtonElement>('[data-action="place-bid"]')?.setAttribute('disabled', 'true');
         } else {
-          node.textContent = `${this.t('label_time_left')}: ${formatTimeLeft(ms)}`;
+          // Card timers stay compact (just the clock); detail/hero timers carry the full label.
+          node.textContent = node.dataset.compact
+            ? `⏳ ${formatTimeLeft(ms)}`
+            : `${this.t('label_time_left')}: ${formatTimeLeft(ms)}`;
         }
       });
     };
@@ -481,7 +489,7 @@ export const catalogMethods = {
       const urgent = ms < 3600000;
       const media = p.photo
         ? `<img class="real-photo" src="${p.photo}" alt="${tr.name}" loading="lazy" decoding="async">`
-        : `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">${ICON_PATHS[p.icon]}</svg>`;
+        : this.lotIllustration(p.icon);
       return `
         <div class="live-card" data-action="open-detail" data-id="${p.id}">
           <div class="live-card-media">${media}</div>

@@ -202,7 +202,10 @@ export const lotDetailMethods = {
         ${galleryPhotos.length > 1 ? `<div class="detail-gallery-thumbs">
           ${galleryPhotos.map((src, i) => `<button class="detail-thumb ${i === 0 ? 'active' : ''}" data-action="open-lightbox" data-id="${id}" data-idx="${i}" aria-label="${this.t('label_photo')} ${i + 1}"><img src="${src}" alt=""></button>`).join('')}
         </div>` : ''}
-      </div>` : '';
+      </div>`
+      // No real photo yet → the same framed catalogue plate as the cards, so the detail view is
+      // never a blank box.
+      : `<div class="detail-gallery"><div class="detail-gallery-main detail-gallery-plate">${this.lotIllustration(p.icon)}</div></div>`;
 
     const reviewsBlock = p.reviews?.length ? (() => {
       const avg = p.reviews!.reduce((s, r) => s + r.rating, 0) / p.reviews!.length;
