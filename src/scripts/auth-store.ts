@@ -1,8 +1,11 @@
 /** Local user registry backing the Violity-style registration/login flow.
-    This is a client-side demo store (localStorage) — passwords are kept as-is because there is
-    no backend to hash against; the Supabase anonymous-auth layer (live.ts) still provides the
-    real auth backing for shared bids. Swapping this for supabase.auth.signUp/signInWithPassword
-    is the intended production path. */
+    This is a client-side demo store (localStorage) used only when no Supabase project is
+    configured (see lib/supabase.ts) — the real production path is supabase.auth.signUp /
+    signInWithPassword, which never touches this file. `password` holds a salted SHA-256 digest
+    (hashPassword/verifyPassword below), not the plaintext — a client-side hash is not a
+    substitute for server-side auth (no salt-per-request-cost, no rate limiting), but it means a
+    stray localStorage dump or a careless browser extension doesn't hand over every password in
+    the clear, which plaintext storage did. */
 
 export interface StoredUser {
   login: string;          // «Ваше ім'я на сайті» — unique nickname, max 25 chars
@@ -11,10 +14,40 @@ export interface StoredUser {
   phoneCode: string;      // e.g. +380
   phone: string;
   country: string;
+  /** Salted SHA-256 hex digest, or '' for legacy accounts that never set a password. */
   password: string;
+  /** Per-user random salt the digest above was computed with. Absent only on rows written
+      before this field existed — verifyPassword treats those as plaintext once, for a graceful
+      one-time migration path. */
+  passwordSalt?: string;
   regDate: string;        // ISO date of registration
   city?: string;
   address?: string;       // Нова Пошта / delivery address
+}
+
+/** SHA-256 over `${salt}:${password}`, hex-encoded. Runs in the browser via Web Crypto — no
+    dependency, no server round-trip. */
+async function sha256Hex(input: string): Promise<string> {
+  const bytes = new TextEncoder().encode(input);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** Hashes a plaintext password for storage. Pass an existing salt when re-hashing to verify;
+    omit it to mint a fresh salt for a new/changed password. */
+export async function hashPassword(password: string, salt?: string): Promise<{ hash: string; salt: string }> {
+  const useSalt = salt ?? crypto.randomUUID();
+  const hash = await sha256Hex(`${useSalt}:${password}`);
+  return { hash, salt: useSalt };
+}
+
+/** Checks a plaintext password against a stored user row, salted-hash first with a one-time
+    plaintext fallback for rows written before salting existed. */
+export async function verifyPassword(password: string, user: StoredUser): Promise<boolean> {
+  if (!user.password) return false;
+  if (!user.passwordSalt) return user.password === password; // legacy plaintext row
+  const { hash } = await hashPassword(password, user.passwordSalt);
+  return hash === user.password;
 }
 
 const USERS_KEY = 'vh_users';

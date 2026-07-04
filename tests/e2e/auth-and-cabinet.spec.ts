@@ -52,6 +52,32 @@ test('register, confirm by e-mail code, and land in the cabinet', async ({ page 
   await expect(page.locator('.cab-nick')).toHaveText('E2E_Register');
 });
 
+test('login accepts a salted-hash password row (not just legacy plaintext)', async ({ page }) => {
+  // Every other test seeds plaintext `password` fields, which verifyPassword() accepts via its
+  // one-time legacy fallback — that alone wouldn't catch a broken hashPassword/verifyPassword
+  // round-trip. Here we seed a row hashed exactly like auth-store.ts does (salted SHA-256) to
+  // prove the real path works, without re-running the full registration UI just for that.
+  await page.addInitScript(({ salt, hash }) => {
+    localStorage.setItem('vh_users', JSON.stringify([{
+      login: 'E2E_HashedLogin', fullName: '', email: 'e2e-hashed@example.com', phoneCode: '+380',
+      phone: '', country: 'UA', password: hash, passwordSalt: salt, regDate: new Date().toISOString(),
+    }]));
+  }, await (async () => {
+    const salt = crypto.randomUUID();
+    const bytes = new TextEncoder().encode(`${salt}:secret99`);
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    const hash = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+    return { salt, hash };
+  })());
+
+  await page.goto('/login');
+  await page.fill('input[name="loginOrEmail"]', 'e2e-hashed@example.com');
+  await page.fill('input[name="loginPassword"]', 'secret99');
+  await page.click('[data-action="submit-login"]');
+  await page.waitForURL('**/cabinet**');
+  await expect(page.locator('#accountBtnLabel')).toHaveText('E2E_HashedLogin');
+});
+
 test('cabinet: save profile settings and change password', async ({ page }) => {
   // Seeding the account directly is a legitimate arrange-step here — the previous test already
   // covers the registration UI itself; this test's subject is the settings/password forms.

@@ -4,7 +4,7 @@ import { ICON_LABELS, SELLERS } from '../data/products';
 import { UI } from '../data/i18n';
 import type { IconKey, Category, DashboardRole, SaleType, Product, Lang } from '../types';
 import { AUTH_T, AUTH_COUNTRIES, AUTH_PHONE_CODES } from './auth-texts';
-import { findUser, updateUser, addUser } from './auth-store';
+import { findUser, updateUser, addUser, hashPassword, verifyPassword } from './auth-store';
 
 /** Cabinet copy that isn't in the main UI dict — Violity-style menu groups and the
     settings/password/messages/reviews sections added with the account rework. */
@@ -160,7 +160,7 @@ declare module './app' {
   cabinetBody(tab: string): string;
   renderCabinet(tab: string): void;
   saveProfileSettings(): void;
-  changePassword(): void;
+  changePassword(): Promise<void>;
   setRole(role: DashboardRole): void;
   commissionBoxHtml(price: number): string;
   updateCommissionBox(): void;
@@ -670,19 +670,23 @@ export const cabinetMethods = {
       <button class="btn btn-primary" data-action="change-password" ${!stored ? 'disabled' : ''}>${this.cabT('btn_save')}</button>`;
   },
 
-  changePassword(this: App): void {
+  async changePassword(this: App): Promise<void> {
     if (!this.currentUser) return;
     const stored = findUser(this.currentUser);
     if (!stored) return;
     const errBox = document.getElementById('pwErr');
     const put = (msg: string) => { if (errBox) errBox.textContent = msg; };
     if (stored.password) {
-      if ($<HTMLInputElement>('pwCurrent').value !== stored.password) { put(this.cabT('pw_wrong')); return; }
+      if (!(await verifyPassword($<HTMLInputElement>('pwCurrent').value, stored))) {
+        put(this.cabT('pw_wrong'));
+        return;
+      }
     }
     const next = $<HTMLInputElement>('pwNew').value;
     if (next.length < 6 || next.length > 12) { put(this.cabT('pw_len')); return; }
     if (next !== $<HTMLInputElement>('pwRepeat').value) { put(this.cabT('pw_match')); return; }
-    updateUser(stored.login, { password: next });
+    const { hash, salt } = await hashPassword(next);
+    updateUser(stored.login, { password: hash, passwordSalt: salt });
     this.showToast(this.cabT('pw_changed'));
     this.renderCabinet('password');
   },

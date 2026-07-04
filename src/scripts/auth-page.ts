@@ -1,7 +1,8 @@
 import type { Lang } from '../types';
 import { AUTH_T, AUTH_COUNTRIES, AUTH_PHONE_CODES, AUTH_LANG_NAMES } from './auth-texts';
 import {
-  addUser, findUser, loginTaken, emailTaken, setSession, updateUser, type StoredUser,
+  addUser, findUser, loginTaken, emailTaken, setSession, updateUser, hashPassword, verifyPassword,
+  type StoredUser,
 } from './auth-store';
 import { supabase } from '../lib/supabase';
 
@@ -408,6 +409,9 @@ function submitRegister(): void {
   }
   if (firstBad) { firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
 
+  // pendingUser holds the plaintext password only transiently, in memory, for the confirm-step
+  // summary card (masked as dots) — it's hashed in submitCode() right before it ever touches
+  // localStorage, so the plaintext never gets persisted.
   pendingUser = {
     login: vals.nickname.trim(),
     fullName: vals.fullname.trim(),
@@ -430,39 +434,45 @@ function enteredCode(): string {
     .map(b => b.value.trim()).join('');
 }
 
-function submitCode(): void {
+async function submitCode(): Promise<void> {
   const errBox = qs<HTMLElement>('#afCodeErr');
   if (enteredCode() !== confirmCode) {
     if (errBox) errBox.textContent = t('err_code');
     return;
   }
   if (!pendingUser) return;
-  addUser(pendingUser);
+  const { hash, salt } = await hashPassword(pendingUser.password);
+  addUser({ ...pendingUser, password: hash, passwordSalt: salt });
   setSession(pendingUser.login, true);
   void backAuthProfile(pendingUser.login);
   view = 'done';
   render();
 }
 
-function submitLogin(): void {
+async function submitLogin(): Promise<void> {
   const errBox = qs<HTMLElement>('#afLoginErr');
   const user = findUser(vals.loginOrEmail ?? '');
   if (!user) { if (errBox) errBox.textContent = t('err_login_notfound'); return; }
-  if (user.password !== (vals.loginPassword ?? '')) { if (errBox) errBox.textContent = t('err_password_wrong'); return; }
+  if (!(await verifyPassword(vals.loginPassword ?? '', user))) {
+    if (errBox) errBox.textContent = t('err_password_wrong');
+    return;
+  }
   setSession(user.login, rememberChecked);
   void backAuthProfile(user.login);
   location.href = redirectTarget();
 }
 
-function submitReset(): void {
+async function submitReset(): Promise<void> {
   const errBox = qs<HTMLElement>('#afResetErr');
   const email = (vals.resetEmail ?? '').trim();
   if (!EMAIL_RE.test(email)) { if (errBox) errBox.textContent = t('err_email_invalid'); return; }
   const user = findUser(email);
   if (!user) { if (errBox) errBox.textContent = t('err_login_notfound'); return; }
-  // Demo "reset e-mail": no mail service, so a temporary password is generated and shown.
+  // Demo "reset e-mail": no mail service, so a temporary password is generated and shown —
+  // only its hash is persisted, matching every other password write in this store.
   resetPassword = Math.random().toString(36).slice(2, 10);
-  updateUser(user.login, { password: resetPassword });
+  const { hash, salt } = await hashPassword(resetPassword);
+  updateUser(user.login, { password: hash, passwordSalt: salt });
   view = 'forgot-done';
   render();
 }
