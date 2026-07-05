@@ -189,13 +189,13 @@ function renderRegisterForm(): string {
     <div class="af-section">${t('sec_lang_country')}</div>
     <div class="af-field" data-field="sitelang">
       <div class="af-input-wrap">
-        <select name="sitelang">${langOpts}</select>
+        <select name="sitelang" aria-label="${t('field_site_lang')}">${langOpts}</select>
         <span class="af-check" aria-hidden="true">✓</span>
       </div>
     </div>
     <div class="af-field" data-field="country">
       <div class="af-input-wrap">
-        <select name="country">${countryOpts}</select>
+        <select name="country" aria-label="${t('field_country')}">${countryOpts}</select>
         <span class="af-check" aria-hidden="true">✓</span>
       </div>
       <div class="af-err"></div>
@@ -480,7 +480,7 @@ async function submitReset(): Promise<void> {
 // ---------- events ----------
 
 function bind(): void {
-  const root = qs<HTMLElement>('#authShell');
+  const root = qs<HTMLElement>('.auth-shell');
   if (!root) return;
 
   root.addEventListener('input', (e) => {

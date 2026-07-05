@@ -375,7 +375,7 @@ export const cabinetMethods = {
 
         ${card(this.cabT('sec_place_name'),
           row(`<label class="lc-label">* ${this.t('label_category')}</label>
-               <select id="newCategory">
+               <select id="newCategory" aria-label="${this.t('label_category')}">
                  ${catOpts.map(([val, key]) => `<option value="${val}" ${editing?.category === val ? 'selected' : ''}>${this.t(key)}</option>`).join('')}
                </select>`, this.cabT('hint_category')) +
           row(`<label class="lc-label">* ${this.t('field_lot_name')}</label>
@@ -400,7 +400,7 @@ export const cabinetMethods = {
         ${card(this.cabT('sec_details'), `
           <div class="lc-grid">
             <div class="field"><label>${this.t('field_lot_era')}</label><input id="newEra" placeholder="1900-1910" value="${etr?.era ?? ''}"></div>
-            <div class="field"><label>${this.t('field_lot_icon')}</label><select id="newIcon">${iconOptions}</select></div>
+            <div class="field"><label>${this.t('field_lot_icon')}</label><select id="newIcon" aria-label="${this.t('field_lot_icon')}">${iconOptions}</select></div>
             <div class="field"><label>${this.t('label_material')}</label><input id="newMaterial" value="${editing?.custom?.material ?? ''}"></div>
             <div class="field"><label>${this.t('label_condition')}</label><input id="newCondition" value="${editing?.custom?.condition ?? ''}"></div>
             <div class="field lc-span"><label>${this.t('field_lot_desc')}</label><input id="newDesc" value="${(etr?.desc ?? '').replace(/"/g, '&quot;')}"></div>
@@ -433,7 +433,7 @@ export const cabinetMethods = {
               <div class="field" id="priceField" style="display:${chosen === 'shop' ? '' : 'none'};"><label>* ${this.t('field_lot_price')}</label><input id="newPrice" type="number" min="0" value="${editing?.price ?? ''}" data-action="commission-input"></div>
               <div class="field" id="startPriceField" style="display:${chosen === 'auction' ? '' : 'none'};"><label>* ${this.t('field_start_price')}</label><input id="newStartPrice" type="number" min="0" value="${editing?.startPrice ?? ''}" data-action="commission-input"></div>
               <div class="field" id="durationField" style="display:${chosen === 'auction' ? '' : 'none'};"><label>${this.t('field_duration')}</label>
-                <select id="newDuration">
+                <select id="newDuration" aria-label="${this.t('field_duration')}">
                   <option value="1">${dayLabel(1)}</option>
                   <option value="3">${dayLabel(3)}</option>
                   <option value="7" selected>${dayLabel(7)}</option>
@@ -627,11 +627,11 @@ export const cabinetMethods = {
       <div class="field"><label>${at('field_email')}</label><input id="setEmail" type="email" value="${stored?.email ?? ''}"></div>
       <div class="field"><label>${at('field_phone')}</label>
         <div style="display:flex; gap:8px;">
-          <select id="setPhoneCode" style="width:96px; flex-shrink:0;">${codeOpts}</select>
+          <select id="setPhoneCode" style="width:96px; flex-shrink:0;" aria-label="${at('field_phone_code')}">${codeOpts}</select>
           <input id="setPhone" type="tel" style="flex:1;" value="${stored?.phone ?? ''}">
         </div>
       </div>
-      <div class="field"><label>${at('field_country')}</label><select id="setCountry">${countryOpts}</select></div>
+      <div class="field"><label>${at('field_country')}</label><select id="setCountry" aria-label="${at('field_country')}">${countryOpts}</select></div>
       <div class="field"><label>${this.cabT('field_city')}</label><input id="setCity" value="${stored?.city ?? ''}"></div>
       <div class="field"><label>${this.cabT('field_address')}</label><input id="setAddress" value="${stored?.address ?? ''}"></div>
       <button class="btn btn-primary" style="margin-top:6px;" data-action="save-profile">${this.cabT('btn_save')}</button>`;

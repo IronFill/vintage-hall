@@ -55,7 +55,7 @@ const productSchema = JSON.stringify({
 <Layout title={title} description={description} image={p.photo ?? undefined} ogType="product">
   <script slot="head" type="application/ld+json" set:html={productSchema} />
   <LiteHeader />
-  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]" id="main-content" tabindex="-1">
     <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> LOT-0{p.id}</div>
     <div class="grid grid-cols-1 gap-7 md:grid-cols-[1fr_1.2fr] md:gap-10">
       <div>

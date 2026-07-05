@@ -10,7 +10,7 @@ import Overlays from '../components/Overlays.astro';
   description="Історія Vintage Hall — від однієї монети на блошиному ринку до аукціонного дому з командою експертів-нумізматів та реставраторів."
 >
   <Header />
-  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]">
+  <main class="mx-auto max-w-[1320px] px-4 py-12 sm:px-6 md:px-8 md:py-[60px]" id="main-content" tabindex="-1">
     <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> <span data-i18n="about.eyebrow">Про нас</span></div>
     <h1 class="mb-6 font-display text-[1.75rem] sm:text-[2.375rem]" data-i18n="about.h1">Усе почалося з однієї монети</h1>
     <div class="mb-14 grid grid-cols-1 items-start gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-[60px]">
@@ -128,9 +128,9 @@ import Overlays from '../components/Overlays.astro';
     </div>
 
     <!-- Value detail modal — self-contained, doesn't touch the shared checkout/cabinet modal -->
-    <div class="modal" id="valueModal" role="dialog" aria-modal="true">
+    <div class="modal" id="valueModal" role="dialog" aria-modal="true" aria-labelledby="valueModalTitle">
       <div class="modal-card" id="valueModalCard" style="max-width:560px;">
-        <h3 id="valueModalTitle"></h3>
+        <h3 id="valueModalTitle">Детальніше</h3>
         <div id="valueModalBody" style="margin-top:14px; font-size:0.9375rem; line-height:1.7; color:var(--sage);"></div>
         <button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:20px;" id="valueModalClose" data-i18n="common.close">Закрити</button>
       </div>
