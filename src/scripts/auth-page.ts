@@ -161,6 +161,26 @@ function inputRow(name: string, opts: { type?: string; max?: number; placeholder
     </div>`;
 }
 
+/** Facebook/Google buttons, shared by the login and register forms — same spot Violity puts
+    them (above the e-mail/password fields, with an "or" divider under them). There's no real
+    OAuth app registered yet (that needs a Supabase project with the providers configured, plus
+    Meta/Google developer apps), so this is an honest demo stand-in: it signs into a fixed local
+    account instantly, same spirit as the e-mail-confirmation code shown right in the UI. */
+function socialRowHtml(): string {
+  return `
+    <div class="af-social-label">${t('social_label')}</div>
+    <div class="af-social-row">
+      <button type="button" class="af-social-btn" data-action="social-login" data-provider="facebook" aria-label="${t('social_facebook')}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.86c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34v7.03C18.34 21.2 22 17.06 22 12.06Z"/></svg>
+      </button>
+      <button type="button" class="af-social-btn" data-action="social-login" data-provider="google" aria-label="${t('social_google')}">
+        <span class="af-social-g" aria-hidden="true">G</span>
+      </button>
+    </div>
+    <div class="af-divider"><span>${t('or_divider')}</span></div>
+    <p class="af-demo-note af-social-note">${t('social_demo_note')}</p>`;
+}
+
 function stepsHtml(active: 1 | 2 | 3): string {
   const sub = active === 1 ? t('reg_step1') : active === 2 ? t('reg_step2') : t('reg_step3');
   return `
@@ -186,6 +206,7 @@ function renderRegisterForm(): string {
 
   return `
     ${stepsHtml(1)}
+    ${socialRowHtml()}
     <div class="af-section">${t('sec_lang_country')}</div>
     <div class="af-field" data-field="sitelang">
       <div class="af-input-wrap">
@@ -315,6 +336,7 @@ function renderLoginForm(): string {
   return `
     <h1 class="af-title">${t('login_title')}</h1>
     <div class="af-subtitle">Vintage Hall</div>
+    ${socialRowHtml()}
     ${inputRow('loginOrEmail', { placeholder: t('field_login_or_email'), value: vals.loginOrEmail })}
     ${inputRow('loginPassword', { type: 'password', placeholder: t('field_password'), value: vals.loginPassword, toggleEye: true })}
     <div class="af-login-row">
@@ -462,6 +484,27 @@ async function submitLogin(): Promise<void> {
   location.href = redirectTarget();
 }
 
+/** Fixed demo profiles for the social buttons — created on first use, then just signed back in.
+    See the comment on socialRowHtml for why this doesn't hit a real Facebook/Google app. */
+const SOCIAL_DEMO_PROFILES: Record<'facebook' | 'google', Pick<StoredUser, 'login' | 'fullName' | 'email'>> = {
+  facebook: { login: 'Facebook_User', fullName: 'Facebook User', email: 'demo.facebook@vintagehall.local' },
+  google: { login: 'Google_User', fullName: 'Google User', email: 'demo.google@vintagehall.local' },
+};
+
+async function socialLogin(provider: 'facebook' | 'google'): Promise<void> {
+  const preset = SOCIAL_DEMO_PROFILES[provider];
+  if (!findUser(preset.login)) {
+    const { hash, salt } = await hashPassword(crypto.randomUUID());
+    addUser({
+      ...preset, phoneCode: '+380', phone: '', country: 'UA',
+      password: hash, passwordSalt: salt, regDate: new Date().toISOString(),
+    });
+  }
+  setSession(preset.login, rememberChecked);
+  void backAuthProfile(preset.login);
+  location.href = redirectTarget();
+}
+
 async function submitReset(): Promise<void> {
   const errBox = qs<HTMLElement>('#afResetErr');
   const email = (vals.resetEmail ?? '').trim();
@@ -542,6 +585,11 @@ function bind(): void {
   root.addEventListener('click', (e) => {
     const target = (e.target as HTMLElement).closest<HTMLElement>('[data-action], [data-eye], [data-lang]');
     if (!target) return;
+
+    if (target.dataset.action === 'social-login' && target.dataset.provider) {
+      void socialLogin(target.dataset.provider as 'facebook' | 'google');
+      return;
+    }
 
     if (target.dataset.eye) {
       const input = qs<HTMLInputElement>(`.af-field input[name="${target.dataset.eye}"]`);

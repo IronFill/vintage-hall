@@ -7,6 +7,18 @@ export const AUTH_T: Record<string, Record<Lang, string>> = {
   // ---- shared chrome ----
   back_home: { uk: '← На головну', en: '← Back to home', pl: '← Strona główna', ru: '← На главную' },
 
+  // ---- social sign-in (shared by /login and /register) ----
+  social_label: { uk: 'через соціальні мережі', en: 'via social networks', pl: 'przez sieci społecznościowe', ru: 'через социальные сети' },
+  social_facebook: { uk: 'Увійти через Facebook', en: 'Sign in with Facebook', pl: 'Zaloguj się przez Facebook', ru: 'Войти через Facebook' },
+  social_google: { uk: 'Увійти через Google', en: 'Sign in with Google', pl: 'Zaloguj się przez Google', ru: 'Войти через Google' },
+  or_divider: { uk: 'або', en: 'or', pl: 'lub', ru: 'или' },
+  social_demo_note: {
+    uk: 'Демо-режим: вхід миттєвий, тестовим обліковим записом — без реальної інтеграції з Facebook/Google.',
+    en: 'Demo mode: instant sign-in with a test account — no real Facebook/Google integration yet.',
+    pl: 'Tryb demo: natychmiastowe logowanie na konto testowe — bez rzeczywistej integracji z Facebook/Google.',
+    ru: 'Демо-режим: вход мгновенный, тестовым аккаунтом — без реальной интеграции с Facebook/Google.',
+  },
+
   // ---- register: wizard ----
   reg_title: { uk: 'Створити акаунт', en: 'Create account', pl: 'Utwórz konto', ru: 'Создать аккаунт' },
   reg_step1: { uk: 'Реєстраційні дані', en: 'Registration details', pl: 'Dane rejestracyjne', ru: 'Регистрационные данные' },

@@ -260,7 +260,7 @@
 
   /* HERO */
   .hero{
-    padding:80px 32px 64px;
+    padding:58px 32px 48px;
     max-width:1320px; margin:0 auto;
     display:grid; grid-template-columns:1.15fr 0.85fr; gap:60px; align-items:start;
     position:relative; z-index:1;
@@ -1381,6 +1381,25 @@
   .af-step-line{flex:1; height:1px; background:var(--line);}
   .af-title{font-family:'Cormorant',serif; font-size:2rem; margin-bottom:4px; text-align:center;}
   .af-subtitle{font-size:0.875rem; color:var(--sage); text-align:center; margin-bottom:28px;}
+
+  /* Facebook/Google demo sign-in — see the comment on socialRowHtml() for why it's a local
+     stand-in rather than a real OAuth redirect. */
+  .af-social-label{font-size:0.8125rem; color:var(--sage); text-align:center; margin-bottom:14px;}
+  .af-social-row{display:flex; justify-content:center; gap:14px; margin-bottom:22px;}
+  .af-social-btn{
+    width:46px; height:46px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--field-bg); border:1px solid var(--line); color:var(--brass-light);
+    cursor:pointer; transition:border-color .2s, color .2s;
+  }
+  .af-social-btn:hover{border-color:var(--brass); color:var(--brass);}
+  .af-social-g{font-family:'Karla',sans-serif; font-size:1.0625rem; font-weight:700;}
+  .af-divider{
+    display:flex; align-items:center; gap:12px; color:var(--sage);
+    font-size:0.8125rem; margin-bottom:18px;
+  }
+  .af-divider::before, .af-divider::after{content:''; flex:1; height:1px; background:var(--line);}
+  .af-social-note{margin-bottom:24px;}
   .af-section{
     font-size:0.9375rem; font-weight:500; color:var(--ivory);
     margin:22px 0 12px; padding-top:14px; border-top:1px solid var(--line);
