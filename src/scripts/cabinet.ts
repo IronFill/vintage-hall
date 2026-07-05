@@ -5,6 +5,7 @@ import { UI } from '../data/i18n';
 import type { IconKey, Category, DashboardRole, SaleType, Product, Lang } from '../types';
 import { AUTH_T, AUTH_COUNTRIES, AUTH_PHONE_CODES } from './auth-texts';
 import { findUser, updateUser, addUser, hashPassword, verifyPassword } from './auth-store';
+import { supabase } from '../lib/supabase';
 
 /** Cabinet copy that isn't in the main UI dict — Violity-style menu groups and the
     settings/password/messages/reviews sections added with the account rework. */
@@ -186,6 +187,7 @@ export const cabinetMethods = {
   logout(this: App): void {
     this.currentUser = null;
     this.clearSavedUser();
+    if (supabase) void supabase.auth.signOut();
     window.location.href = '/';
   },
   /** The cabinet is a full page now (Violity-style, /cabinet) — from any other page this
@@ -676,15 +678,31 @@ export const cabinetMethods = {
     if (!stored) return;
     const errBox = document.getElementById('pwErr');
     const put = (msg: string) => { if (errBox) errBox.textContent = msg; };
+    const next = $<HTMLInputElement>('pwNew').value;
+    if (next.length < 6 || next.length > 12) { put(this.cabT('pw_len')); return; }
+    if (next !== $<HTMLInputElement>('pwRepeat').value) { put(this.cabT('pw_match')); return; }
+
+    if (supabase && stored.email) {
+      // Supabase owns the real password now — re-authenticate with the current one (updateUser
+      // itself doesn't check it) before accepting the new one.
+      const current = $<HTMLInputElement>('pwCurrent')?.value ?? '';
+      const { error: reauthError } = await supabase.auth.signInWithPassword({ email: stored.email, password: current });
+      if (reauthError) { put(this.cabT('pw_wrong')); return; }
+      const { error } = await supabase.auth.updateUser({ password: next });
+      if (error) { put(error.message); return; }
+      const { hash, salt } = await hashPassword(next);
+      updateUser(stored.login, { password: hash, passwordSalt: salt });
+      this.showToast(this.cabT('pw_changed'));
+      this.renderCabinet('password');
+      return;
+    }
+
     if (stored.password) {
       if (!(await verifyPassword($<HTMLInputElement>('pwCurrent').value, stored))) {
         put(this.cabT('pw_wrong'));
         return;
       }
     }
-    const next = $<HTMLInputElement>('pwNew').value;
-    if (next.length < 6 || next.length > 12) { put(this.cabT('pw_len')); return; }
-    if (next !== $<HTMLInputElement>('pwRepeat').value) { put(this.cabT('pw_match')); return; }
     const { hash, salt } = await hashPassword(next);
     updateUser(stored.login, { password: hash, passwordSalt: salt });
     this.showToast(this.cabT('pw_changed'));

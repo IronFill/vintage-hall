@@ -125,6 +125,27 @@ export const AUTH_T: Record<string, Record<Lang, string>> = {
     pl: 'Jeśli taki e-mail jest zarejestrowany, instrukcje są w drodze. Tryb demo: poczta nie jest podłączona — nowe hasło:',
     ru: 'Если такой e-mail зарегистрирован, письмо с инструкциями уже в пути. Демо-режим: почта не подключена — новый пароль:',
   },
+  reset_new_title: { uk: 'Новий пароль', en: 'New password', pl: 'Nowe hasło', ru: 'Новый пароль' },
+  reset_new_submit: { uk: 'Зберегти пароль', en: 'Save password', pl: 'Zapisz hasło', ru: 'Сохранить пароль' },
+  reset_invalid_link: {
+    uk: 'Посилання недійсне або застаріло. Запросіть нове на сторінці входу.',
+    en: 'This link is invalid or has expired. Request a new one from the sign-in page.',
+    pl: 'Ten link jest nieprawidłowy lub wygasł. Poproś o nowy na stronie logowania.',
+    ru: 'Ссылка недействительна или устарела. Запросите новую на странице входа.',
+  },
+  reset_new_done: { uk: 'Пароль оновлено.', en: 'Password updated.', pl: 'Hasło zaktualizowane.', ru: 'Пароль обновлён.' },
+  reset_unavailable: {
+    uk: 'Функція недоступна — Supabase не налаштовано.',
+    en: 'This feature is unavailable — Supabase is not configured.',
+    pl: 'Ta funkcja jest niedostępna — Supabase nie jest skonfigurowany.',
+    ru: 'Функция недоступна — Supabase не настроен.',
+  },
+  reset_sent: {
+    uk: 'Перевірте пошту — ми надіслали посилання для встановлення нового пароля. Перейдіть за ним, щоб задати новий пароль.',
+    en: 'Check your inbox — we sent a link to set a new password. Follow it to finish resetting your password.',
+    pl: 'Sprawdź skrzynkę — wysłaliśmy link do ustawienia nowego hasła. Kliknij go, aby dokończyć zmianę hasła.',
+    ru: 'Проверьте почту — мы отправили ссылку для установки нового пароля. Перейдите по ней, чтобы задать новый пароль.',
+  },
   back_to_login: { uk: '← Повернутися до входу', en: '← Back to sign in', pl: '← Wróć do logowania', ru: '← Вернуться ко входу' },
 
   // ---- validation errors ----

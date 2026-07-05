@@ -10,7 +10,7 @@ import { supabase } from '../lib/supabase';
     Renders everything client-side so the aside language switcher re-translates instantly. */
 
 type Mode = 'login' | 'register';
-type View = 'form' | 'confirm' | 'done' | 'forgot' | 'forgot-done';
+type View = 'form' | 'confirm' | 'done' | 'forgot' | 'forgot-done' | 'forgot-sent';
 
 let lang: Lang = 'uk';
 let mode: Mode = 'login';
@@ -56,6 +56,24 @@ async function backAuthProfile(name: string): Promise<void> {
     }
     await supabase.from('profiles').upsert({ id: userId, display_name: name }, { onConflict: 'id' });
   } catch { /* offline / anon auth disabled — local demo mode stands */ }
+}
+
+/** Mirrors a real Supabase-authenticated account into the local StoredUser cache (auth-store.ts)
+    so the rest of the app — cabinet.ts, app.ts — which still reads that cache synchronously,
+    keeps working unchanged. Supabase is the source of truth for the password; the cached hash
+    is a random placeholder that's never checked once a Supabase project is configured (see
+    submitLogin/changePassword, which re-authenticate against Supabase instead). */
+async function mirrorLocalUser(fields: {
+  login: string; fullName: string; email: string; phoneCode: string; phone: string; country: string;
+}): Promise<void> {
+  const { hash, salt } = await hashPassword(crypto.randomUUID());
+  const existing = findUser(fields.login);
+  const full: StoredUser = {
+    ...fields, password: hash, passwordSalt: salt,
+    regDate: existing?.regDate ?? new Date().toISOString(),
+  };
+  if (existing) updateUser(fields.login, full);
+  else addUser(full);
 }
 
 // ---------- captcha ----------
@@ -297,7 +315,7 @@ function renderAsideConfirm(): string {
   return `
     <h2>${t('confirm_title')}</h2>
     <p>${t('confirm_aside_text').replace('{email}', `<strong>${pendingUser?.email ?? ''}</strong>`)}</p>
-    <p class="af-demo-note af-demo-note-aside">${t('demo_code_note')} <strong class="mono">${confirmCode}</strong></p>
+    ${supabase ? '' : `<p class="af-demo-note af-demo-note-aside">${t('demo_code_note')} <strong class="mono">${confirmCode}</strong></p>`}
     <div class="af-code-row">${boxes}</div>
     <div class="af-countdown" id="afCountdown">
       ${secondsLeft > 0
@@ -369,6 +387,16 @@ function renderForgotDone(): string {
     <button type="button" class="btn btn-primary af-submit" data-action="show-login">${t('back_to_login')}</button>`;
 }
 
+/** Real-Supabase counterpart of renderForgotDone — an actual e-mail goes out, so there's no
+    temp password to show, just a "check your inbox" message. */
+function renderForgotSent(): string {
+  return `
+    <h1 class="af-title">${t('reset_title')}</h1>
+    <div class="af-subtitle">Vintage Hall</div>
+    <p class="af-note">${t('reset_sent')}</p>
+    <button type="button" class="btn btn-primary af-submit" data-action="show-login">${t('back_to_login')}</button>`;
+}
+
 function renderAside(): void {
   const aside = qs<HTMLElement>('#authAsideBody');
   if (!aside) return;
@@ -399,7 +427,10 @@ function render(): void {
   if (mode === 'register') {
     html = view === 'confirm' ? renderConfirm() : view === 'done' ? renderDone() : renderRegisterForm();
   } else {
-    html = view === 'forgot' ? renderForgot() : view === 'forgot-done' ? renderForgotDone() : renderLoginForm();
+    html = view === 'forgot' ? renderForgot()
+      : view === 'forgot-done' ? renderForgotDone()
+      : view === 'forgot-sent' ? renderForgotSent()
+      : renderLoginForm();
   }
   form.innerHTML = html;
   const back = qs<HTMLAnchorElement>('#authBackLink');
@@ -414,7 +445,7 @@ function render(): void {
 
 const REGISTER_FIELDS = ['country', 'nickname', 'fullname', 'email', 'phone', 'password', 'password2', 'captcha'];
 
-function submitRegister(): void {
+async function submitRegister(): Promise<void> {
   let firstBad: HTMLElement | null = null;
   for (const name of REGISTER_FIELDS) {
     const wrap = qs<HTMLElement>(`.af-field[data-field="${name === 'country' ? 'country' : name}"]`);
@@ -444,7 +475,39 @@ function submitRegister(): void {
     password: vals.password,
     regDate: new Date().toISOString(),
   };
-  // 4-digit code, matching the four aside entry boxes (Violity's layout).
+
+  if (supabase) {
+    const { error } = await supabase.auth.signUp({
+      email: pendingUser.email,
+      password: pendingUser.password,
+      options: {
+        data: {
+          login: pendingUser.login,
+          full_name: pendingUser.fullName,
+          phone_code: pendingUser.phoneCode,
+          phone: pendingUser.phone,
+          country: pendingUser.country,
+        },
+      },
+    });
+    if (error) {
+      // The nickname-uniqueness trigger and Supabase's own email-uniqueness check both surface
+      // here as one generic error — route it to whichever field it actually names.
+      const nicknameTaken = error.message.includes('profiles_display_name_key');
+      const wrap = qs<HTMLElement>(`.af-field[data-field="${nicknameTaken ? 'nickname' : 'email'}"]`);
+      const errEl = wrap?.querySelector<HTMLElement>('.af-err');
+      if (errEl) errEl.textContent = nicknameTaken ? t('err_nickname_taken') : error.message;
+      wrap?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      pendingUser = null;
+      return;
+    }
+    confirmDeadline = Date.now() + 300_000;
+    view = 'confirm';
+    render();
+    return;
+  }
+
+  // Local-only fallback: a 4-digit code we "email" by just showing it in the UI (no mail server).
   confirmCode = String(Math.floor(1000 + Math.random() * 9000));
   confirmDeadline = Date.now() + 300_000;
   view = 'confirm';
@@ -458,11 +521,27 @@ function enteredCode(): string {
 
 async function submitCode(): Promise<void> {
   const errBox = qs<HTMLElement>('#afCodeErr');
+  if (!pendingUser) return;
+
+  if (supabase) {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email: pendingUser.email, token: enteredCode(), type: 'signup',
+    });
+    if (error || !data.user) { if (errBox) errBox.textContent = t('err_code'); return; }
+    await mirrorLocalUser({
+      login: pendingUser.login, fullName: pendingUser.fullName, email: pendingUser.email,
+      phoneCode: pendingUser.phoneCode, phone: pendingUser.phone, country: pendingUser.country,
+    });
+    setSession(pendingUser.login, true);
+    view = 'done';
+    render();
+    return;
+  }
+
   if (enteredCode() !== confirmCode) {
     if (errBox) errBox.textContent = t('err_code');
     return;
   }
-  if (!pendingUser) return;
   const { hash, salt } = await hashPassword(pendingUser.password);
   addUser({ ...pendingUser, password: hash, passwordSalt: salt });
   setSession(pendingUser.login, true);
@@ -473,7 +552,40 @@ async function submitCode(): Promise<void> {
 
 async function submitLogin(): Promise<void> {
   const errBox = qs<HTMLElement>('#afLoginErr');
-  const user = findUser(vals.loginOrEmail ?? '');
+  const raw = (vals.loginOrEmail ?? '').trim();
+
+  if (supabase) {
+    let email = raw;
+    if (!EMAIL_RE.test(raw)) {
+      // Nickname, not an e-mail — resolve it through the narrow RPC (see schema.sql) rather
+      // than querying auth.users directly, which the anon key can't read.
+      const { data, error } = await supabase.rpc('email_for_login', { p_login: raw });
+      if (error || !data) { if (errBox) errBox.textContent = t('err_login_notfound'); return; }
+      email = data as string;
+    }
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email, password: vals.loginPassword ?? '',
+    });
+    if (signInError || !signInData.user) {
+      if (errBox) errBox.textContent = t('err_password_wrong');
+      return;
+    }
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('display_name, full_name, phone_code, phone, country')
+      .eq('id', signInData.user.id)
+      .maybeSingle();
+    const login = profile?.display_name ?? raw;
+    await mirrorLocalUser({
+      login, fullName: profile?.full_name ?? '', email,
+      phoneCode: profile?.phone_code ?? '+380', phone: profile?.phone ?? '', country: profile?.country ?? '',
+    });
+    setSession(login, rememberChecked);
+    location.href = redirectTarget();
+    return;
+  }
+
+  const user = findUser(raw);
   if (!user) { if (errBox) errBox.textContent = t('err_login_notfound'); return; }
   if (!(await verifyPassword(vals.loginPassword ?? '', user))) {
     if (errBox) errBox.textContent = t('err_password_wrong');
@@ -509,6 +621,17 @@ async function submitReset(): Promise<void> {
   const errBox = qs<HTMLElement>('#afResetErr');
   const email = (vals.resetEmail ?? '').trim();
   if (!EMAIL_RE.test(email)) { if (errBox) errBox.textContent = t('err_email_invalid'); return; }
+
+  if (supabase) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${location.origin}/reset-password`,
+    });
+    if (error) { if (errBox) errBox.textContent = error.message; return; }
+    view = 'forgot-sent';
+    render();
+    return;
+  }
+
   const user = findUser(email);
   if (!user) { if (errBox) errBox.textContent = t('err_login_notfound'); return; }
   // Demo "reset e-mail": no mail service, so a temporary password is generated and shown —
@@ -612,8 +735,12 @@ function bind(): void {
 
     switch (target.dataset.action) {
       case 'resend-code':
-        // Demo resend: a fresh code + a fresh inbox countdown.
-        confirmCode = String(Math.floor(1000 + Math.random() * 9000));
+        if (supabase && pendingUser) {
+          void supabase.auth.resend({ type: 'signup', email: pendingUser.email });
+        } else {
+          // Local-only demo resend: a fresh code + a fresh inbox countdown.
+          confirmCode = String(Math.floor(1000 + Math.random() * 9000));
+        }
         confirmDeadline = Date.now() + 300_000;
         renderAside();
         break;
@@ -624,7 +751,7 @@ function bind(): void {
         if (wrap) { wrap.classList.remove('valid', 'invalid'); const errEl = wrap.querySelector<HTMLElement>('.af-err'); if (errEl) errEl.textContent = ''; }
         drawCaptcha();
       } break;
-      case 'submit-register': submitRegister(); break;
+      case 'submit-register': void submitRegister(); break;
       case 'submit-code': submitCode(); break;
       case 'submit-login': submitLogin(); break;
       case 'show-forgot': view = 'forgot'; render(); break;
@@ -643,11 +770,11 @@ function bind(): void {
     if (e.key !== 'Enter' || !(e.target instanceof HTMLInputElement)) return;
     e.preventDefault();
     if (mode === 'register') {
-      if (view === 'form') submitRegister();
-      else if (view === 'confirm') submitCode();
+      if (view === 'form') void submitRegister();
+      else if (view === 'confirm') void submitCode();
     } else {
-      if (view === 'form') submitLogin();
-      else if (view === 'forgot') submitReset();
+      if (view === 'form') void submitLogin();
+      else if (view === 'forgot') void submitReset();
     }
   });
 }
