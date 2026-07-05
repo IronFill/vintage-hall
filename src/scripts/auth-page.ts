@@ -501,7 +501,7 @@ async function submitRegister(): Promise<void> {
       pendingUser = null;
       return;
     }
-    confirmDeadline = Date.now() + 300_000;
+    confirmDeadline = Date.now() + 120_000;
     view = 'confirm';
     render();
     return;
@@ -509,7 +509,7 @@ async function submitRegister(): Promise<void> {
 
   // Local-only fallback: a 4-digit code we "email" by just showing it in the UI (no mail server).
   confirmCode = String(Math.floor(1000 + Math.random() * 9000));
-  confirmDeadline = Date.now() + 300_000;
+  confirmDeadline = Date.now() + 120_000;
   view = 'confirm';
   render();
 }
@@ -741,7 +741,7 @@ function bind(): void {
           // Local-only demo resend: a fresh code + a fresh inbox countdown.
           confirmCode = String(Math.floor(1000 + Math.random() * 9000));
         }
-        confirmDeadline = Date.now() + 300_000;
+        confirmDeadline = Date.now() + 120_000;
         renderAside();
         break;
       case 'refresh-captcha': newCaptcha(); vals.captcha = ''; {
