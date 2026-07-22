@@ -34,49 +34,72 @@
 
 @layer base {
   :root, [data-theme="dark"]{
-    --bg: #182620;
-    --bg-card: #213328;
-    --bg-card-hover: #28402F;
-    --panel-bg: #1E3026;
-    --header-bg: rgba(24,38,32,0.92);
+    --bg: #16221C;
+    --bg-card: #23362A;
+    --bg-card-hover: #2C4335;
+    /* Second-level surface for cards nested on top of a card (dashboard tiles, summary
+       boxes, hint panels). Opaque + clearly lighter than --bg-card so nested blocks read
+       as raised, not as a faint tint that blends into the page. */
+    --surface-2: #2A4032;
+    --panel-bg: #223429;
+    --header-bg: rgba(20,32,26,0.92);
     --brass: #C2974D;
     --brass-light: #D9B877;
     --ivory: #EDE6D6;
-    --sage: #93A092;
+    --sage: #97A79A;
     --oxblood: #C0524F;
-    --line: rgba(194,151,77,0.28);
+    /* Lighter red for TEXT on dark surfaces (error messages, timers, remove-links) — plain
+       --oxblood reads fine as a border/background accent but fails contrast as small text on
+       --bg-card (axe flagged .af-err, .cab-logout, .live-card-timer and others). Same relationship
+       as brass → brass-light. */
+    --oxblood-light: #E38884;
+    --line: rgba(194,151,77,0.30);
+    --line-strong: rgba(194,151,77,0.5);
     --on-accent: #182620;
-    --field-bg: rgba(255,255,255,0.04);
-    --accent-tint: rgba(194,151,77,0.08);
-    --accent-tint-strong: rgba(194,151,77,0.14);
+    --field-bg: rgba(0,0,0,0.22);
+    --accent-tint: rgba(194,151,77,0.10);
+    --accent-tint-strong: rgba(194,151,77,0.16);
     --oxblood-tint: rgba(140,59,59,0.45);
     --oxblood-tint-strong: rgba(140,59,59,0.14);
     --danger-bg: #2A2420;
     --texture1: rgba(194,151,77,0.05);
     --texture2: rgba(194,151,77,0.04);
     --radius: 2px;
+    /* Resting elevation: a soft drop shadow + a 1px lighter top edge so every card lifts
+       off the dark background even before hover. --elev-2 is the raised (hover) state. */
+    --elev-1: 0 1px 2px rgba(0,0,0,0.28), 0 10px 26px -14px rgba(0,0,0,0.62);
+    --elev-2: 0 4px 10px rgba(0,0,0,0.3), 0 18px 40px -16px rgba(0,0,0,0.7);
+    --edge-hi: inset 0 1px 0 rgba(255,255,255,0.05);
   }
   [data-theme="light"]{
-    --bg: #F7F5F1;
+    --bg: #F4F1EA;
     --bg-card: #FFFFFF;
-    --bg-card-hover: #F0EEE8;
+    --bg-card-hover: #F5F2EC;
+    --surface-2: #FBF9F4;
     --panel-bg: #FFFFFF;
-    --header-bg: rgba(247,245,241,0.92);
+    --header-bg: rgba(244,241,234,0.92);
     --brass: #5C7A72;
     --brass-light: #3F5950;
     --ivory: #2B2A28;
     --sage: #696861;
     --oxblood: #A13D2B;
-    --line: rgba(0,0,0,0.12);
+    /* Dark red on this theme's light background already has plenty of contrast — no separate
+       lightened variant needed, unlike the dark theme. */
+    --oxblood-light: #A13D2B;
+    --line: rgba(43,42,40,0.14);
+    --line-strong: rgba(43,42,40,0.26);
     --on-accent: #FFFFFF;
-    --field-bg: rgba(0,0,0,0.035);
-    --accent-tint: rgba(92,122,114,0.08);
-    --accent-tint-strong: rgba(92,122,114,0.14);
+    --field-bg: rgba(43,42,40,0.04);
+    --accent-tint: rgba(92,122,114,0.09);
+    --accent-tint-strong: rgba(92,122,114,0.15);
     --oxblood-tint: rgba(161,61,43,0.35);
     --oxblood-tint-strong: rgba(161,61,43,0.12);
     --danger-bg: #F3E6E1;
     --texture1: rgba(92,122,114,0.04);
     --texture2: rgba(92,122,114,0.03);
+    --elev-1: 0 1px 2px rgba(43,42,40,0.06), 0 8px 22px -16px rgba(43,42,40,0.28);
+    --elev-2: 0 4px 10px rgba(43,42,40,0.08), 0 16px 36px -18px rgba(43,42,40,0.32);
+    --edge-hi: inset 0 1px 0 rgba(255,255,255,0.7);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
@@ -237,7 +260,7 @@
 
   /* HERO */
   .hero{
-    padding:80px 32px 64px;
+    padding:58px 32px 48px;
     max-width:1320px; margin:0 auto;
     display:grid; grid-template-columns:1.15fr 0.85fr; gap:60px; align-items:start;
     position:relative; z-index:1;
@@ -277,13 +300,13 @@
   .hero-lot-num{font-family:'JetBrains Mono',monospace; font-size:0.625rem; letter-spacing:0.1em; color:var(--sage);}
   .hero-lot-photo{aspect-ratio:4/3; overflow:hidden; background:var(--field-bg);}
   .hero-lot-photo img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease;}
-  .hero-lot-card:hover .hero-lot-photo img{transform:scale(1.03);}
+  /* photo zoom on hover removed — reads as template */
   .hero-lot-body{padding:14px 14px 12px;}
   .hero-lot-name{font-family:'Cormorant',serif; font-size:1.0625rem; line-height:1.3; color:var(--ivory); margin-bottom:5px; min-height:2.6em;}
   .hero-lot-meta{font-size:0.6875rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--sage); margin-bottom:10px;}
   .hero-lot-price-row{display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding-top:10px; border-top:1px solid var(--line);}
   .hero-lot-price{font-size:0.9375rem; color:var(--brass-light);}
-  .hero-lot-timer{font-size:0.6875rem; color:var(--oxblood); opacity:0.9;}
+  .hero-lot-timer{font-size:0.6875rem; color:var(--oxblood-light); opacity:0.9;}
   .hero-lot-footer{
     display:flex; align-items:center; justify-content:space-between;
     padding:9px 14px; border-top:1px solid var(--line); background:var(--accent-tint);
@@ -407,12 +430,14 @@
 
   /* COMPARE BAR + MODAL (purchaser feature: side-by-side comparison of 2-4 lots) */
   .compare-bar{
-    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(120%); z-index:250;
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(160%); z-index:250;
     display:flex; align-items:center; gap:14px; background:var(--bg-card); border:1px solid var(--brass);
     border-radius:30px; padding:10px 12px 10px 20px; box-shadow:0 14px 32px -10px rgba(0,0,0,0.55);
-    transition:transform .3s cubic-bezier(.22,1,.36,1);
+    transition:transform .3s cubic-bezier(.22,1,.36,1), opacity .2s;
+    /* Fully out of the flow when empty so it can never peek at the bottom edge. */
+    opacity:0; visibility:hidden; pointer-events:none;
   }
-  .compare-bar.visible{transform:translateX(-50%) translateY(0);}
+  .compare-bar.visible{transform:translateX(-50%) translateY(0); opacity:1; visibility:visible; pointer-events:auto;}
   .compare-bar-label{font-size:0.8125rem; color:var(--ivory); white-space:nowrap;}
   .compare-bar-thumbs{display:flex; gap:6px;}
   .compare-bar-thumbs img{width:32px; height:32px; border-radius:6px; object-fit:cover; border:1px solid var(--line);}
@@ -421,7 +446,7 @@
   .compare-table th{color:var(--sage); font-weight:400; white-space:nowrap;}
   .compare-table td{color:var(--ivory);}
   .compare-col-photo{width:64px; height:64px; border-radius:var(--radius); object-fit:cover; display:block; margin-bottom:8px;}
-  .compare-remove{font-size:0.6875rem; color:var(--oxblood); cursor:pointer; background:none; border:none; padding:0; margin-top:6px;}
+  .compare-remove{font-size:0.6875rem; color:var(--oxblood-light); cursor:pointer; background:none; border:none; padding:0; margin-top:6px;}
   @media (max-width:640px){
     .compare-table{display:block; overflow-x:auto; white-space:nowrap;}
     .compare-bar{left:12px; right:12px; transform:translateY(120%); bottom:16px; width:auto;}
@@ -438,10 +463,12 @@
     border:1px solid var(--line);
     border-radius:var(--radius);
     overflow:hidden;
-    transition: border-color .2s, transform .2s, background .2s;
+    transition: border-color .2s, box-shadow .2s;
     display:flex; flex-direction:column;
   }
-  .lot:hover{border-color:var(--brass); background:var(--bg-card-hover); transform:translateY(-3px); box-shadow:0 14px 32px -12px rgba(0,0,0,0.45), 0 0 0 1px var(--brass);}
+  /* One restrained hover: brass border + a slightly deeper shadow. No lift-jump, no photo
+     zoom, no double ring — those read as "template". */
+  .lot:hover{border-color:var(--brass);}
   .lot-media{
     aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;
     background: linear-gradient(160deg, var(--accent-tint), transparent 60%);
@@ -455,20 +482,58 @@
   .lot:hover .lot-media::after{opacity:1;}
   .lot-media svg{width:34%; color:var(--brass-light); opacity:0.85;}
   .lot-media .real-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .12s ease-out;}
+
+  /* ---- Catalog "plate": framed engraving used when a lot has no real photo yet ---- */
+  .lot-plate{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px;
+    /* fine catalogue-paper texture layered over the brand tint */
+    background:
+      radial-gradient(120% 90% at 50% 15%, var(--accent-tint-strong), transparent 70%),
+      repeating-linear-gradient(45deg, var(--texture1) 0 1px, transparent 1px 7px);
+  }
+  .lot-plate-frame{
+    position:absolute; inset:14px; border:1px solid var(--line);
+    box-shadow: inset 0 0 0 3px var(--bg-card), inset 0 0 0 4px var(--line);
+    pointer-events:none;
+  }
+  .lot-plate-art{width:44%; height:auto; color:var(--brass-light); opacity:0.92;}
+  .lot-plate-label{
+    font-family:'JetBrains Mono', monospace; font-size:0.625rem; letter-spacing:0.18em;
+    text-transform:uppercase; color:var(--sage); z-index:1;
+  }
   .lot-tag{
     position:absolute; top:12px; left:12px;
     font-family:'JetBrains Mono', monospace; font-size:0.875rem; color:var(--brass-light);
     letter-spacing:0.05em; display:flex; align-items:center; gap:6px;
   }
   .lot-tag .hole{width:6px; height:6px; border-radius:50%; border:1px solid var(--brass-light);}
-  .lot-body{padding:18px 20px 20px; display:flex; flex-direction:column; gap:8px; flex:1;}
+  /* Strict card: a top block (badge/era/name/desc/specs at fixed heights) and a bottom block
+     (meta/seller/price) pinned to the base — so every CTA button lines up across the grid. */
+  .lot-body{padding:16px 18px 18px; display:flex; flex-direction:column; flex:1;}
+  .lot-body-top{display:flex; flex-direction:column; gap:7px;}
+  .lot-body-bottom{margin-top:auto; display:flex; flex-direction:column; gap:5px; padding-top:12px;}
+  .lot-badge-row:empty{display:none;}
+  .lot-meta, .lot-seller{
+    font-size:0.75rem; color:var(--sage); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
   .lot-era{font-size:0.8125rem; color:var(--sage); letter-spacing:0.06em; text-transform:uppercase;}
   .rarity-dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px; box-shadow:0 0 0 2px rgba(255,255,255,0.08);}
   .sub .rarity-dot{margin-right:5px;}
   .lot-reviews{float:right; color:var(--brass-light);}
-  .lot-name{font-size:1.125rem; color:var(--ivory); font-family:'Cormorant', serif;}
-  .lot-desc{font-size:0.9375rem; color:var(--sage); flex:1; line-height:1.5;}
-  .lot-foot{display:flex; align-items:center; justify-content:space-between; margin-top:10px;}
+  .lot-name{
+    font-size:1.125rem; color:var(--ivory); font-family:'Cormorant', serif; line-height:1.2;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:2.4em;
+  }
+  /* Clamp the description to a fixed two lines so every card's top block is the same height —
+     no more one card empty while its neighbour is crammed. */
+  .lot-desc{
+    font-size:0.9375rem; color:var(--sage); line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:3em;
+  }
+  .lot-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:4px;}
   .lot-price{font-family:'JetBrains Mono', monospace; font-size:1rem; color:var(--brass-light);}
   .lot-add{
     border:1px solid var(--line); padding:8px 14px; font-size:0.875rem; border-radius:var(--radius);
@@ -502,7 +567,10 @@
   .footer-inner .word{font-family:'Cormorant', serif; font-style:italic; color:var(--brass-light); font-size:1.125rem;}
   .footer-links{display:flex; gap:24px; font-size:0.9375rem; color:var(--sage);}
   .footer-links a:hover{color:var(--brass-light);}
-  .footer-bottom{margin-top:30px; font-size:0.875rem; color:var(--sage); opacity:0.7; text-align:center;}
+  /* --sage is already the site's muted/secondary color — the extra opacity:0.7 on top of it was
+     what pushed this under the contrast threshold (axe flagged #footerCopyright), not the color
+     itself. Dropping the redundant multiplier fixes it without changing the visual hierarchy. */
+  .footer-bottom{margin-top:30px; font-size:0.875rem; color:var(--sage); text-align:center;}
 
   /* CART DRAWER */
   .overlay{
@@ -534,7 +602,7 @@
   .qty-control{display:flex; align-items:center; gap:10px; margin-top:8px;}
   .qty-control button{border:1px solid var(--line); width:22px; height:22px; font-size:0.9375rem; border-radius:2px;}
   .qty-control span{font-family:'JetBrains Mono', monospace; font-size:0.9375rem;}
-  .cart-remove{font-size:0.875rem; color:var(--oxblood); margin-top:6px; opacity:0.8;}
+  .cart-remove{font-size:0.875rem; color:var(--oxblood-light); margin-top:6px;}
   .cart-remove:hover{opacity:1;}
   .drawer-empty{color:var(--sage); font-size:0.96875rem; text-align:center; padding:60px 0;}
   .drawer-foot{padding:20px 24px 26px; border-top:1px solid var(--line);}
@@ -773,7 +841,7 @@
   .recent-sale-prices{font-size:0.71875rem; display:flex; align-items:center; gap:4px;}
   .recent-sale-start{color:var(--sage); text-decoration:line-through;}
   .recent-sale-arrow{color:var(--sage);}
-  .recent-sale-final{color:#4FA876;}
+  .recent-sale-final{color:#6FCB9A;} /* lighter than the original #4FA876 — axe flagged that as failing contrast on --bg-card at this small size */
   .recent-sale-meta{font-size:0.6875rem; color:var(--sage); margin-top:2px;}
   @media (max-width:560px){ .recent-sale-card{min-width:210px;} }
   @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.4;}}
@@ -790,7 +858,7 @@
   .live-card-name{font-family:'Cormorant',serif; font-size:1rem; color:var(--ivory); margin-bottom:6px;}
   .live-card-row{display:flex; justify-content:space-between; font-size:0.875rem; color:var(--sage); margin-top:6px;}
   .live-card-price{font-size:1rem; color:var(--brass-light);}
-  .live-card-timer{font-size:0.875rem; color:var(--oxblood); font-weight:500;}
+  .live-card-timer{font-size:0.875rem; color:var(--oxblood-light); font-weight:500;}
   .live-card-timer.urgent{animation:pulse 1s infinite;}
 
   /* AUCTION CARD DIFFERENTIATION */
@@ -952,13 +1020,16 @@
     position:fixed; top:108px; right:24px; z-index:3; pointer-events:none;
     font-family:'Cormorant',serif; font-style:italic; font-weight:500;
     font-size:0.9375rem; letter-spacing:0.14em; color:var(--brass-light);
-    opacity:0.38; white-space:nowrap; user-select:none;
+    /* Raised from 0.38 — axe flagged this as failing color-contrast. It's aria-hidden (a
+       decorative signature, not informational), but WCAG contrast applies to anything visually
+       rendered regardless of AT-hidden status, since low-vision sighted users still see it. */
+    opacity:0.85; white-space:nowrap; user-select:none;
   }
   /* On mobile the header drops to a single short row (no topbar), so the watermark just needs a
      smaller top offset to clear it — keeping it pinned near the header avoids the bottom-of-screen
      cluster (view-toggle bar, compare bar) where it would otherwise get covered or collide. */
   @media (max-width: 760px){
-    .brand-watermark{top:84px; right:14px; font-size:0.75rem; opacity:0.32;}
+    .brand-watermark{top:84px; right:14px; font-size:0.75rem; opacity:0.85;}
   }
 
   /* FOCUS VISIBLE (keyboard navigation) */
@@ -966,6 +1037,10 @@
   button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible{outline:2px solid var(--brass); outline-offset:2px;}
 
   /* ACCESSIBILITY TOOLBAR */
+  /* An earlier "declutter" pass faded this to opacity:0.4 at rest — which fails color-contrast
+     (axe flagged #a11yZoomIn) and is a bad pattern regardless: dimming the exact controls a
+     low-vision user needs to find is self-defeating. Full contrast at all times; unobtrusiveness
+     comes from its small size and fixed edge position, not from being hard to see. */
   .a11y-toolbar{position:fixed; top:50%; right:0; transform:translateY(-50%); z-index:350; display:flex; flex-direction:column; gap:2px;}
   .a11y-btn{width:38px; height:38px; background:var(--bg-card); border:1px solid var(--line); color:var(--ivory); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.96875rem; transition:background .2s, border-color .2s;}
   .a11y-btn:first-child{border-radius:var(--radius) 0 0 0;}
@@ -1031,14 +1106,7 @@
   [data-force-desktop="true"]{min-width:1140px; overflow-x:auto;}
 
   @media (max-width: 880px){
-    .view-toggle{display:flex;}
-    .a11y-toolbar{top:auto; bottom:100px; right:0; transform:none;}
-    body{padding-bottom:44px;}
-    /* The bottom view-toggle bar (~44px) would otherwise sit underneath/overlap these
-       fixed-position elements — push them up above it. */
-    .chat-fab{bottom:60px;}
-    .toast-container{bottom:60px;}
-    .compare-bar{bottom:60px;}
+    .a11y-toolbar{top:auto; bottom:24px; right:0; transform:none;}
   }
   @media (max-width: 560px){
     .a11y-toolbar{bottom:90px;}
@@ -1061,7 +1129,7 @@
   .news-card:hover{background:var(--accent-tint); transform:none;}
   .news-card-img{aspect-ratio:4/3; overflow:hidden; border-radius:var(--radius);}
   .news-card-img img{width:100%; height:100%; object-fit:cover; transition:transform .3s;}
-  .news-card:hover .news-card-img img{transform:scale(1.03);}
+  /* photo zoom on hover removed */
   .news-card-body{padding:2px 0;}
   .news-card-meta{display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.875rem; color:var(--sage);}
   .news-cat-badge{background:var(--accent-tint); color:var(--brass-light); padding:3px 10px; border-radius:var(--radius); font-size:0.8125rem; letter-spacing:0.03em;}
@@ -1167,7 +1235,7 @@
 
   /* LIVE AUCTION EMOTION */
   .lot-emotion{display:flex; flex-direction:column; gap:2px; font-size:0.71875rem; color:var(--sage); margin-top:6px;}
-  .emotion-watching{color:var(--oxblood);}
+  .emotion-watching{color:var(--oxblood-light);}
 
   /* SELLER TRUST BAR (homepage) */
   .trust-bar{display:flex; justify-content:center; gap:48px; flex-wrap:wrap; padding:36px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:50px 0;}
@@ -1188,7 +1256,10 @@
   .safety-step p{font-size:0.84375rem; color:var(--sage); margin:0; line-height:1.5;}
 
   /* SELLER MINI-PROFILE (lot detail) */
-  .seller-card{display:flex; align-items:center; gap:12px; background:var(--accent-tint); border-radius:var(--radius); padding:12px 14px; margin:14px 0;}
+  .seller-card{display:flex; align-items:center; gap:12px; background:var(--accent-tint); border-radius:var(--radius); padding:12px 14px; margin:14px 0; flex-wrap:wrap;}
+  /* let the middle info column shrink instead of shoving the follow button off-screen
+     (exclude the avatar div — the expert card's avatar is a div and must keep its circle) */
+  .seller-card > div:not(.seller-card-avatar){flex:1 1 160px; min-width:0;}
   .seller-card-avatar{
     width:38px; height:38px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
     background:var(--brass); color:var(--on-accent); font-family:'JetBrains Mono', monospace; font-size:0.78125rem; font-weight:600; letter-spacing:0.02em;
@@ -1219,8 +1290,9 @@
   @media (max-width:540px){ .collections-grid{grid-template-columns:1fr 1fr;} .collection-tile{padding:20px 10px;} }
 
   /* AUTOBID */
-  .autobid-row{display:flex; gap:8px; align-items:center; margin-top:10px;}
-  .autobid-row input{flex:1; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); padding:9px 12px; border-radius:var(--radius); font-family:'JetBrains Mono',monospace; font-size:0.8125rem;}
+  .autobid-row{display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;}
+  .autobid-row input{flex:1 1 160px; min-width:0; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory); padding:9px 12px; border-radius:var(--radius); font-family:'JetBrains Mono',monospace; font-size:0.8125rem;}
+  .autobid-row .btn{flex-shrink:0;}
 
   @media (max-width: 880px){
     .why-buy-grid{grid-template-columns:1fr;}
@@ -1229,6 +1301,10 @@
   }
   @media (max-width: 560px){
     .safety-steps{grid-template-columns:1fr;}
+    /* Detail-modal rows stack on narrow phones so the button never overflows to the right. */
+    .seller-card > .btn{flex:1 1 100%; width:100%; justify-content:center; margin-top:2px;}
+    .autobid-row{flex-direction:column; align-items:stretch;}
+    .autobid-row .btn{width:100%; justify-content:center;}
   }
 
   /* BACK BUTTON */
@@ -1269,3 +1345,487 @@
   }
   .hero-quick-link:hover{border-color:var(--brass); color:var(--brass);}
   .hero-ql-icon{width:14px; height:14px; flex-shrink:0;}
+
+  /* ======================= AUTH PAGES (/login, /register) ======================= */
+  /* Violity-style split screen: light form panel left, deep-green welcome aside right. */
+  .auth-shell{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(320px,44%); min-height:100vh;
+    /* Sits above the body texture/watermark so the panels stay clean in both themes. */
+    position:relative; z-index:5;
+  }
+  /* The auth pages have their own «← На головну» link — the floating global back
+     button would overlap the aside, so it's hidden here. */
+  body:has(.auth-shell) .back-btn{display:none !important;}
+  body:has(.auth-shell) .brand-watermark{display:none;}
+  .auth-form-panel{
+    background:var(--bg-card); padding:36px clamp(20px,6vw,84px) 60px;
+    display:flex; flex-direction:column;
+  }
+  .auth-back{
+    align-self:flex-start; font-size:0.8125rem; color:var(--sage); text-decoration:none;
+    margin-bottom:26px; letter-spacing:0.04em;
+  }
+  .auth-back:hover{color:var(--brass);}
+  .auth-form{width:100%; max-width:420px; margin:0 auto;}
+
+  .af-steps{display:flex; align-items:center; gap:0; margin-bottom:26px;}
+  .af-step{
+    width:38px; height:38px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); color:var(--sage);
+    font-family:'JetBrains Mono',monospace; font-size:0.875rem;
+    transition:background .2s, color .2s;
+  }
+  .af-step.active{background:var(--brass); border-color:var(--brass); color:var(--on-accent);}
+  .af-step.passed{border-color:var(--brass); color:var(--brass);}
+  .af-step-line{flex:1; height:1px; background:var(--line);}
+  .af-title{font-family:'Cormorant',serif; font-size:2rem; margin-bottom:4px; text-align:center;}
+  .af-subtitle{font-size:0.875rem; color:var(--sage); text-align:center; margin-bottom:28px;}
+
+  /* Facebook/Google demo sign-in — see the comment on socialRowHtml() for why it's a local
+     stand-in rather than a real OAuth redirect. */
+  .af-social-label{font-size:0.8125rem; color:var(--sage); text-align:center; margin-bottom:14px;}
+  .af-social-row{display:flex; justify-content:center; gap:14px; margin-bottom:22px;}
+  .af-social-btn{
+    width:46px; height:46px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--field-bg); border:1px solid var(--line); color:var(--brass-light);
+    cursor:pointer; transition:border-color .2s, color .2s;
+  }
+  .af-social-btn:hover{border-color:var(--brass); color:var(--brass);}
+  .af-social-g{font-family:'Karla',sans-serif; font-size:1.0625rem; font-weight:700;}
+  .af-divider{
+    display:flex; align-items:center; gap:12px; color:var(--sage);
+    font-size:0.8125rem; margin-bottom:18px;
+  }
+  .af-divider::before, .af-divider::after{content:''; flex:1; height:1px; background:var(--line);}
+  .af-social-note{margin-bottom:24px;}
+  .af-section{
+    font-size:0.9375rem; font-weight:500; color:var(--ivory);
+    margin:22px 0 12px; padding-top:14px; border-top:1px solid var(--line);
+  }
+  .af-field{margin-bottom:14px;}
+  .af-input-wrap{position:relative; flex:1;}
+  .af-input-wrap input, .af-input-wrap select{
+    width:100%; background:var(--field-bg); border:1px solid var(--line);
+    color:var(--ivory); border-radius:var(--radius); padding:12px 40px 12px 13px;
+    font-family:'Karla',sans-serif; font-size:0.9375rem;
+  }
+  .af-input-wrap select{appearance:auto; padding-right:13px;}
+  .af-input-wrap input:focus, .af-input-wrap select:focus{outline:none; border-color:var(--brass);}
+  .af-max{
+    position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:0.6875rem; color:var(--sage); pointer-events:none;
+  }
+  .af-check{
+    position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    color:#1D9E75; font-weight:700; opacity:0; transition:opacity .15s; pointer-events:none;
+  }
+  .af-field.valid .af-check{opacity:1;}
+  .af-field.valid .af-max{opacity:0;}
+  .af-field.invalid input, .af-field.invalid select{border-color:var(--oxblood);}
+  .af-err{font-size:0.75rem; color:var(--oxblood-light); margin-top:5px; min-height:0;}
+  .af-form-err{margin-bottom:12px;}
+  .af-eye{
+    display:inline-flex; align-items:center; gap:5px; margin-top:6px;
+    background:none; border:none; color:var(--sage); font-size:0.75rem; cursor:pointer; padding:0;
+  }
+  .af-eye:hover{color:var(--brass);}
+  .af-phone-row{display:flex; gap:8px;}
+  .af-phone-row > select{
+    width:92px; flex-shrink:0; background:var(--field-bg); border:1px solid var(--line);
+    color:var(--ivory); border-radius:var(--radius); padding:12px 8px;
+    font-family:'JetBrains Mono',monospace; font-size:0.8125rem;
+  }
+  .af-captcha-row{display:flex; gap:10px; align-items:stretch;}
+  #afCaptcha{
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--field-bg);
+    flex-shrink:0; height:46px;
+  }
+  .af-refresh{
+    display:inline-flex; align-items:center; gap:5px; margin-top:6px;
+    background:none; border:none; color:var(--sage); font-size:0.75rem; cursor:pointer; padding:0;
+  }
+  .af-refresh:hover{color:var(--brass);}
+  .af-consent{
+    background:var(--accent-tint); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px; margin:18px 0 20px;
+  }
+  .af-consent.checked{border-color:var(--brass);}
+  .af-consent label{display:flex; gap:10px; cursor:pointer;}
+  .af-consent input[type="checkbox"]{margin-top:3px; flex-shrink:0; accent-color:var(--brass); width:16px; height:16px;}
+  .af-consent-text{font-size:0.75rem; line-height:1.55; color:var(--ivory);}
+  /* brass-light (not brass) — axe flagged the plain brass tone as failing contrast against this
+     panel's background at this small font size; brass-light is the token already used elsewhere
+     for text/links on dark surfaces for exactly this reason. */
+  .af-consent-text a{color:var(--brass-light); text-decoration:underline;}
+  .af-submit{width:100%; justify-content:center; padding:13px; font-size:0.9375rem; margin-top:4px;}
+  .af-note{font-size:0.875rem; color:var(--sage); line-height:1.6; margin-bottom:14px;}
+  .af-note strong{color:var(--ivory);}
+  .af-demo-note{
+    font-size:0.8125rem; color:var(--brass-light); background:var(--accent-tint);
+    border-radius:var(--radius); padding:10px 13px; margin-bottom:18px;
+  }
+  .af-done-mark{
+    width:64px; height:64px; border-radius:50%; margin:6px auto 18px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--accent-tint-strong); color:#1D9E75; font-size:1.75rem; font-weight:700;
+  }
+  .af-login-row{display:flex; justify-content:space-between; align-items:center; margin:4px 0 12px;}
+  .af-remember{display:flex; align-items:center; gap:7px; font-size:0.8125rem; color:var(--sage); cursor:pointer;}
+  .af-remember input{accent-color:var(--brass);}
+  .af-link{background:none; border:none; color:var(--brass); font-size:0.8125rem; cursor:pointer; padding:0;}
+  .af-link:hover{text-decoration:underline;}
+  .af-back-link{display:block; margin:16px auto 0;}
+
+  .auth-aside{
+    /* Fixed deep-green like Violity's welcome panel — deliberately theme-independent. */
+    background:#14211B url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="90" height="90"%3E%3Ccircle cx="45" cy="45" r="1" fill="%23C2974D" opacity="0.25"/%3E%3C/svg%3E');
+    color:#EDE6D6; display:flex; flex-direction:column; padding:22px 28px 48px;
+  }
+  .auth-aside-top{display:flex; justify-content:flex-end;}
+  .auth-lang button{color:#93A092;}
+  .auth-lang button.active, .auth-lang button:hover{color:#D9B877;}
+  .auth-aside-body-wrap{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; gap:6px; max-width:340px; margin:0 auto;
+  }
+  .auth-aside-logo{
+    display:flex; align-items:center; gap:10px; color:#D9B877; text-decoration:none;
+    letter-spacing:0.28em; font-size:0.875rem; margin-bottom:26px;
+  }
+  .auth-aside-body h2{font-family:'Cormorant',serif; font-size:1.875rem; color:#EDE6D6; margin-bottom:12px;}
+  .auth-aside-body p{font-size:0.9375rem; color:#93A092; line-height:1.6; margin-bottom:24px;}
+  .auth-aside-btn{
+    display:inline-block; padding:11px 34px; border:1px solid #D9B877; border-radius:var(--radius);
+    color:#D9B877; text-decoration:none; font-size:0.9375rem; letter-spacing:0.04em;
+    transition:background .2s, color .2s;
+  }
+  .auth-aside-btn:hover{background:#D9B877; color:#14211B;}
+
+  @media (max-width: 800px){
+    .auth-shell{grid-template-columns:1fr;}
+    .auth-aside{order:-1; padding-bottom:26px;}
+    .auth-aside-body-wrap{max-width:none;}
+    .auth-aside-logo{margin-bottom:12px;}
+    .auth-aside-body h2{font-size:1.375rem; margin-bottom:6px;}
+    .auth-aside-body p{margin-bottom:14px;}
+    .auth-form-panel{padding-top:24px;}
+  }
+
+  /* ======================= CABINET PAGE (/cabinet) ======================= */
+  .cab-layout{display:grid; grid-template-columns:280px minmax(0,1fr); gap:26px; align-items:start;}
+  .cab-sidebar{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 0 10px; position:sticky; top:90px;
+  }
+  .cab-profile{display:flex; gap:12px; padding:0 18px 16px; border-bottom:1px solid var(--line);}
+  .cab-avatar{
+    width:52px; height:52px; border-radius:50%; flex-shrink:0;
+    background:var(--accent-tint-strong); color:var(--brass-light);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant',serif; font-size:1.25rem; font-weight:600;
+  }
+  .cab-nick{font-size:1.0625rem; font-weight:500; color:var(--ivory); word-break:break-all;}
+  .cab-fullname{font-size:0.8125rem; color:var(--sage);}
+  .cab-meta{font-size:0.71875rem; color:var(--sage); margin-top:3px;}
+  .cab-balance{
+    display:flex; justify-content:space-between; align-items:center; width:100%;
+    background:var(--accent-tint); border:none; border-bottom:1px solid var(--line);
+    padding:12px 18px; cursor:pointer; color:var(--ivory); font-size:0.8125rem;
+  }
+  .cab-balance .mono{color:var(--brass-light); font-size:0.9375rem;}
+  .cab-balance:hover span:first-child{color:var(--brass);}
+  .cab-menu{display:flex; flex-direction:column; padding:8px 0 0;}
+  .cab-menu-group{margin-top:8px;}
+  .cab-menu-heading{
+    font-size:0.65625rem; text-transform:uppercase; letter-spacing:0.14em;
+    color:var(--brass); padding:8px 18px 4px;
+  }
+  .cab-menu-item{
+    display:block; width:100%; text-align:left; background:none; border:none;
+    padding:8px 18px; color:var(--sage); font-size:0.84375rem; cursor:pointer;
+    border-left:2px solid transparent; transition:color .15s, background .15s;
+    font-family:'Karla',sans-serif;
+  }
+  .cab-menu-item:hover{color:var(--ivory); background:var(--accent-tint);}
+  .cab-menu-item.active{color:var(--brass-light); background:var(--accent-tint); border-left-color:var(--brass);}
+  .cab-logout{margin-top:12px; border-top:1px solid var(--line); padding-top:12px; padding-bottom:12px; color:var(--oxblood-light);}
+  .cab-logout:hover{color:var(--oxblood-light); background:var(--oxblood-tint-strong);}
+  .cab-content{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px 26px 30px; min-height:420px;
+  }
+  .cab-title{font-family:'Cormorant',serif; font-size:1.625rem; margin-bottom:18px;}
+  .cab-empty{font-size:0.8125rem; color:var(--sage); padding:14px 0;}
+  .cab-note{
+    background:var(--accent-tint); border:1px solid var(--line); border-radius:var(--radius);
+    padding:11px 14px; font-size:0.8125rem; color:var(--brass-light); margin-bottom:16px;
+  }
+  @media (max-width: 900px){
+    .cab-layout{grid-template-columns:1fr;}
+    .cab-sidebar{position:static;}
+  }
+
+  /* ======================= RULES PAGE (Violity-style ToC) ======================= */
+  .rules-layout{display:grid; grid-template-columns:250px minmax(0,1fr); gap:34px; align-items:start;}
+  .rules-toc{
+    position:sticky; top:90px; display:flex; flex-direction:column; gap:2px;
+    /* align-items/justify-content undo the global `nav` flex centering */
+    align-items:stretch; justify-content:flex-start;
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-card); padding:10px 0;
+  }
+  .rules-toc a{
+    /* Global `nav a` uppercases + nowraps links — undo that here so long section
+       titles wrap inside the card instead of overflowing it. */
+    padding:7px 16px; font-size:0.8125rem; color:var(--sage); text-decoration:none;
+    border-left:2px solid transparent;
+    text-transform:none; letter-spacing:0.02em; white-space:normal;
+    text-align:left; line-height:1.45; opacity:1;
+  }
+  .rules-toc a:hover{color:var(--brass-light); border-left-color:var(--brass);}
+  .rules-section{margin-bottom:34px; scroll-margin-top:90px;}
+  .rules-section h2{font-family:'Cormorant',serif; font-size:1.5rem; color:var(--ivory); margin-bottom:12px;}
+  .rules-section p, .rules-section li{font-size:0.9375rem; line-height:1.65; color:var(--sage); margin-bottom:10px;}
+  .rules-section ol{padding-left:20px; list-style:decimal;}
+  .rules-section ul{padding-left:20px; list-style:disc;}
+  .rules-section strong{color:var(--ivory); font-weight:500;}
+  @media (max-width: 860px){
+    .rules-layout{grid-template-columns:1fr;}
+    .rules-toc{position:static; margin-bottom:22px;}
+  }
+
+  /* Register step 2 — Violity-style summary card + aside code confirmation */
+  .af-step{border-radius:9px;}
+  .af-step.passed{background:var(--brass); border-color:var(--brass); color:var(--on-accent);}
+  .af-step-line.passed{background:var(--brass);}
+  .af-summary{
+    background:var(--accent-tint); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 22px; margin-top:6px;
+  }
+  .af-summary-row{
+    display:grid; grid-template-columns:140px 1fr; gap:14px;
+    padding:8px 0; font-size:0.875rem;
+  }
+  .af-summary-label{color:var(--sage);}
+  .af-summary-value{color:var(--ivory); word-break:break-word;}
+  .af-code-row{display:flex; align-items:center; gap:8px; justify-content:center; margin:6px 0 10px;}
+  .af-code-box{
+    width:52px; height:52px; text-align:center; font-size:1.25rem;
+    font-family:'JetBrains Mono',monospace;
+    background:#EDE6D6; color:#14211B; border:2px solid transparent; border-radius:6px;
+  }
+  .af-code-box:focus{outline:none; border-color:#D9B877;}
+  .af-code-dash{color:#93A092;}
+  .af-countdown{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    font-size:0.8125rem; color:#93A092; margin-bottom:14px;
+  }
+  .af-demo-note-aside{color:#D9B877; background:rgba(217,184,119,0.08); text-align:left;}
+  .af-confirm-btn{max-width:240px; margin:0 auto;}
+  .af-confirm-btn:disabled{opacity:0.45; cursor:not-allowed; transform:none;}
+  .auth-aside-body .af-form-err{text-align:center; margin-bottom:10px;}
+
+  /* Cabinet v2 — Violity profile-style: avatar card, icon menu with counts, «Головна» dashboard */
+  .cab-side-col{display:flex; flex-direction:column; gap:18px; position:sticky; top:90px;}
+  .cab-side-col .cab-sidebar{position:static; padding:10px 0;}
+  .cab-profile-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px 18px 0; text-align:center;
+  }
+  .cab-avatar-stamp{
+    width:96px; height:96px; margin:0 auto 12px; border-radius:50%;
+    border:1px dashed var(--brass); padding:5px;
+  }
+  .cab-avatar-stamp .cab-avatar{width:84px; height:84px; font-size:1.75rem; margin:0;}
+  .cab-profile-card .cab-nick{font-size:1.1875rem;}
+  .cab-country{font-size:0.8125rem; color:var(--ivory); margin-top:6px;}
+  .cab-rating{
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    font-size:0.8125rem; color:var(--sage); margin-top:7px; cursor:help;
+  }
+  .cab-rating .mono{color:var(--brass-light);}
+  .cab-rating-sep{color:var(--line);}
+  .cab-profile-card .cab-meta{margin:8px 0 14px;}
+  .cab-profile-card .cab-balance{
+    border-top:1px solid var(--line); border-bottom:none;
+    margin:0 -18px; width:calc(100% + 36px); border-radius:0 0 var(--radius) var(--radius);
+  }
+  .cab-menu-item{display:flex; align-items:center; gap:10px;}
+  .cab-menu-ic{display:inline-flex; flex-shrink:0; color:var(--brass); opacity:0.85;}
+  .cab-menu-label{flex:1; min-width:0;}
+  .cab-menu-count{font-size:0.71875rem; color:var(--sage); flex-shrink:0;}
+  .cab-menu-item.active .cab-menu-count{color:var(--brass-light);}
+
+  .cab-dash-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .cab-dash-card{
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--accent-tint);
+    display:flex; flex-direction:column; min-height:120px;
+  }
+  .cab-dash-card.full{grid-column:1 / -1;}
+  .cab-dash-head{
+    display:flex; align-items:center; gap:9px; padding:12px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  .cab-dash-icon{display:inline-flex; color:var(--brass);}
+  .cab-dash-title{font-size:0.875rem; font-weight:500; color:var(--ivory);}
+  .cab-dash-count{font-size:0.78125rem; color:var(--ivory);}
+  .cab-dash-all{
+    margin-left:auto; background:none; border:none; cursor:pointer;
+    font-size:0.71875rem; color:var(--ivory); padding:0;
+  }
+  .cab-dash-all:hover{color:var(--brass);}
+  .cab-dash-body{flex:1; padding:6px 16px 10px;}
+  .cab-dash-empty{
+    display:flex; align-items:center; justify-content:center; height:100%;
+    min-height:56px; font-size:0.8125rem; color:var(--ivory);
+  }
+  .cab-dash-row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:9px 0; border-bottom:1px solid var(--line); font-size:0.8125rem; cursor:pointer;
+  }
+  .cab-dash-row:last-child{border-bottom:none;}
+  .cab-dash-row:hover span:first-child{color:var(--brass-light);}
+  @media (max-width: 900px){
+    .cab-side-col{position:static;}
+    .cab-dash-grid{grid-template-columns:1fr;}
+  }
+
+  /* Create-lot form v2 — Violity's «Додавання лоту»: sectioned cards, side hints, choose-path buttons */
+  .lc-topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;}
+  .lc-required-note{font-size:0.8125rem; color:var(--sage);}
+  .lc-clear{
+    display:inline-flex; align-items:center; gap:6px; background:none; border:none;
+    color:var(--sage); font-size:0.78125rem; cursor:pointer; padding:0;
+  }
+  .lc-clear:hover{color:var(--oxblood-light);}
+  .lc-card{
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--accent-tint);
+    padding:18px 20px 8px; margin-bottom:16px;
+  }
+  .lc-card-title{
+    text-align:center; font-size:0.9375rem; font-weight:500; color:var(--ivory);
+    margin-bottom:16px; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .lc-row{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px;
+    align-items:start; margin-bottom:14px;
+  }
+  .lc-field input, .lc-field select{
+    width:100%; background:var(--field-bg); border:1px solid var(--line); color:var(--ivory);
+    border-radius:var(--radius); padding:11px 12px; font-family:'Karla',sans-serif; font-size:0.9375rem;
+  }
+  .lc-field input:focus, .lc-field select:focus{outline:none; border-color:var(--brass);}
+  .lc-label{display:block; font-size:0.8125rem; color:var(--sage); margin-bottom:6px;}
+  .lc-hint{
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--bg-card);
+    padding:10px 13px; font-size:0.78125rem; line-height:1.55; color:var(--sage);
+  }
+  .lc-count-wrap{position:relative;}
+  .lc-count-wrap input{padding-right:44px;}
+  .lc-count{
+    position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    font-size:0.6875rem; color:var(--sage); pointer-events:none;
+  }
+  .lc-upload{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    border:1px dashed var(--brass); border-radius:var(--radius); background:var(--field-bg);
+    min-height:150px; padding:20px; cursor:pointer; text-align:center; color:var(--sage);
+    transition:background .2s, border-color .2s;
+  }
+  .lc-upload:hover{background:var(--accent-tint-strong); border-color:var(--brass-light);}
+  .lc-upload svg{color:var(--brass);}
+  .lc-upload-input{position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;}
+  .lc-upload-title{font-size:0.875rem; color:var(--ivory); font-weight:500;}
+  .lc-upload-sub{font-size:0.75rem; color:var(--sage);}
+  .lc-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 16px;}
+  .lc-span{grid-column:1 / -1;}
+  .lc-choose-card{padding-bottom:18px;}
+  .lc-choose{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .lc-choice{
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    padding:18px 14px; border-radius:var(--radius); font-size:0.875rem; font-weight:500;
+    cursor:pointer; border:1px solid transparent; transition:filter .15s, box-shadow .15s;
+    font-family:'Karla',sans-serif;
+  }
+  .lc-choice:hover{filter:brightness(1.08);}
+  .lc-choice-auction{background:var(--brass); color:var(--on-accent);}
+  .lc-choice-shop{background:#1D9E75; color:#fff;}
+  .lc-choice.active{box-shadow:0 0 0 2px var(--bg-card), 0 0 0 4px var(--brass-light);}
+  .lc-choice-vip{
+    display:block; margin:12px auto 0; background:none; border:1px solid var(--line);
+    border-radius:var(--radius); color:var(--sage); font-size:0.78125rem; padding:9px 18px; cursor:pointer;
+  }
+  .lc-choice-vip:hover{border-color:var(--brass); color:var(--brass-light);}
+  .lc-choice-vip.active{border-color:var(--brass); color:var(--brass-light);}
+  @media (max-width: 760px){
+    .lc-row{grid-template-columns:1fr;}
+    .lc-hint{order:2;}
+    .lc-grid{grid-template-columns:1fr;}
+    .lc-choose{grid-template-columns:1fr;}
+  }
+
+  /* ===================== CARD ELEVATION & CONTRAST (design pass) =====================
+     On the deep-green (non-white) background, flat cards blended in. Every card now gets a
+     resting drop shadow + a 1px lighter top edge so it visibly lifts off the page, and
+     cards nested on top of another card use the opaque second-level surface. */
+  .lot,
+  .hero-lot-card,
+  .cab-profile-card,
+  .cab-side-col .cab-sidebar,
+  .cab-content,
+  .rules-toc,
+  .why-buy-item,
+  .cab-dash-card,
+  .lc-card,
+  .af-summary,
+  .bg-bg-card.border-line{
+    box-shadow: var(--elev-1), var(--edge-hi);
+  }
+  /* a touch more depth on hover — one effect, no jump */
+  .lot:hover{
+    box-shadow: var(--elev-2);
+  }
+  .why-buy-item{transition:border-color .2s, box-shadow .2s;}
+  .why-buy-item:hover{border-color:var(--brass); box-shadow:var(--elev-2);}
+  .bg-bg-card.border-line:hover{box-shadow:var(--elev-2); border-color:var(--brass);}
+
+  /* Nested cards → opaque raised surface (not a faint tint that melts into the page) */
+  .cab-dash-card,
+  .lc-card,
+  .af-summary,
+  .cab-note,
+  .lc-choose-card{
+    background: var(--surface-2);
+  }
+  /* Hint boxes sit INSIDE .lc-card (now lighter) — keep them on the darker base surface
+     so they read as recessed, giving the row real depth. */
+  .lc-hint{background: var(--bg); border-color: var(--line-strong);}
+
+  /* Section headings inside cards get a slightly stronger divider so the card structure reads */
+  .cab-dash-head, .lc-card-title{border-color: var(--line-strong);}
+
+  /* BUTTONS — more presence: solid brass primary gains a lift shadow; ghost buttons get a
+     real surface fill so they read as buttons on the dark background, not bare outlines. */
+  .btn-primary{box-shadow:0 2px 8px rgba(0,0,0,0.28);}
+  .btn-primary:hover{box-shadow:0 5px 16px -2px rgba(0,0,0,0.36);}
+  .btn-ghost{background: var(--surface-2); box-shadow: var(--elev-1);}
+  .btn-ghost:hover{background: var(--bg-card-hover); border-color: var(--brass);}
+
+  /* Inputs/selects: a touch more definition so form fields don't disappear either */
+  .field input, .field select, .field textarea,
+  .lc-field input, .lc-field select,
+  .af-input-wrap input, .af-input-wrap select{
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.12);
+  }
+
+  /* ===================== DECLUTTER (design pass 2) =====================
+     On desktop the full nav is already visible in the header, so the hamburger +
+     sitemap panel just duplicate it — hide the button at xl and up. */
+  @media (min-width: 1280px){
+    .hamburger-btn{display:none;}
+  }
+  /* The mobile/desktop "view toggle" was a gimmick — responsive layout handles this. */
+  .view-toggle{display:none !important;}
+
+  .detail-gallery-plate{cursor:default;}

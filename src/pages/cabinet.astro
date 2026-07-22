@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Overlays from '../components/Overlays.astro';
+---
+
+<Layout title="Мій кабінет — Vintage Hall" description="Особистий кабінет користувача Vintage Hall: ставки, лоти, рахунок, налаштування." noindex={true}>
+  <Header />
+  <main class="mx-auto max-w-[1320px] px-4 py-8 sm:px-6 md:px-8 md:py-10" id="main-content" tabindex="-1">
+    <!-- Rendered client-side by cabinet.ts (renderCabinet) — requires login, redirects to /login otherwise -->
+    <div id="cabinetRoot"></div>
+  </main>
+  <SiteFooter />
+  <Overlays />
+  <script src="../scripts/app.ts"></script>
+</Layout>

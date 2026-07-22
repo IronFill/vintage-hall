@@ -10,6 +10,10 @@ type L10n = Record<Lang, string>;
 
 /** Client-side <title> swap per pathname (static pages are built in Ukrainian). */
 export const PAGE_TITLES: Record<string, L10n> = {
+  '/cabinet': {
+    uk: 'Мій кабінет — Vintage Hall', en: 'My account — Vintage Hall',
+    pl: 'Moje konto — Vintage Hall', ru: 'Мой кабинет — Vintage Hall',
+  },
   '/about': {
     uk: 'Про нас — Vintage Hall', en: 'About us — Vintage Hall',
     pl: 'O nas — Vintage Hall', ru: 'О нас — Vintage Hall',

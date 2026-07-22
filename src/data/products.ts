@@ -26,13 +26,13 @@ export const RECENT_SALES: RecentSale[] = [
 const hoursFromNow = (h: number): string => new Date(Date.now() + h * 3_600_000).toISOString();
 
 export const SEEDED_PRODUCTS: Product[] = [
-  { id: 1, photo: 'https://picsum.photos/seed/antique-samovar/600/450', price: 4200, icon: 'samovar', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
+  { id: 1, price: 4200, icon: 'samovar', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'Дуже добрий', dimensions: '32 × 22 см', weight: '2.4 кг', origin: 'Росія', rarity: 'common', certified: false,
     reviews: [
       { author: 'Олена К.', rating: 5, text: 'Самовар прийшов у чудовому стані, точно як на фото. Продавець оперативно відповідав на питання.', date: '2026-05-12' },
       { author: 'Ihor M.', rating: 4, text: 'Гарна річ, трохи довше їхала доставка, але все ціле і відповідає опису.', date: '2026-04-02' },
     ] },
-  { id: 2, photo: 'https://picsum.photos/seed/pocket-watch-antique/600/450', icon: 'watch', category: 'decor', seller: 'Vintage Hall', saleType: 'auction',
+  { id: 2, icon: 'watch', category: 'decor', seller: 'Vintage Hall', saleType: 'auction',
     startPrice: 5000, currentBid: 5600, bidStep: 200, bidsCount: 3, endTime: hoursFromNow(8), watchingNow: 23, bidsLastHour: 2, buyNowPrice: 8500,
     conditionGrade: 'Добрий, механізм робочий', dimensions: '5 × 4 см', weight: '85 г', origin: 'Швейцарія', rarity: 'rare', badge: 'expert', certified: true,
     investmentRating: 4, priceGrowthPct: 28, priceGrowthYears: 5, expertId: 'bondar',
@@ -45,15 +45,15 @@ export const SEEDED_PRODUCTS: Product[] = [
       { user: 'Ivan_K', bid: 5400, time: '2026-06-27T17:05:00Z' },
       { user: 'Petro_M', bid: 5200, time: '2026-06-27T12:20:00Z' }
     ] },
-  { id: 3, photo: 'https://picsum.photos/seed/porcelain-vase/600/450', price: 3100, icon: 'vase', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
+  { id: 3, price: 3100, icon: 'vase', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'Добрий, невеликий скол', dimensions: '28 × 14 см', weight: '900 г', origin: 'Україна', rarity: 'common', certified: false },
-  { id: 4, photo: 'https://picsum.photos/seed/bronze-candle/600/450', price: 2400, icon: 'candle', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
+  { id: 4, price: 2400, icon: 'candle', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'Дуже добрий', dimensions: '24 × 9 см (пара)', weight: '1.1 кг', origin: 'Франція', rarity: 'common', certified: false },
-  { id: 5, photo: 'https://picsum.photos/seed/framed-mirror/600/450', price: 5600, icon: 'mirror', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
+  { id: 5, price: 5600, icon: 'mirror', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'Добрий, часткова втрата позолоти', dimensions: '70 × 50 см', weight: '4.2 кг', origin: 'Україна', rarity: 'rare', badge: 'premium', certified: false },
-  { id: 6, photo: 'https://picsum.photos/seed/jewelry-box/600/450', price: 1900, icon: 'box', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
+  { id: 6, price: 1900, icon: 'box', category: 'decor', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'Дуже добрий', dimensions: '18 × 12 × 8 см', weight: '650 г', origin: 'Україна', rarity: 'common', certified: false },
-  { id: 7, photo: 'https://picsum.photos/seed/ruble-nicholas/600/450', icon: 'coin', category: 'numismatics', seller: 'Numizmat_99', saleType: 'auction',
+  { id: 7, icon: 'coin', category: 'numismatics', seller: 'Numizmat_99', saleType: 'auction',
     startPrice: 3000, currentBid: 3750, bidStep: 150, bidsCount: 5, endTime: hoursFromNow(30), watchingNow: 41, bidsLastHour: 3, buyNowPrice: 5500,
     conditionGrade: 'XF', dimensions: 'Ø 33.6 мм', weight: '20 г', origin: 'Російська імперія', rarity: 'rare', badge: 'expert', certified: true,
     investmentRating: 5, priceGrowthPct: 42, priceGrowthYears: 5, expertId: 'kovalenko',
@@ -69,19 +69,19 @@ export const SEEDED_PRODUCTS: Product[] = [
       { user: 'Marta', bid: 3300, time: '2026-06-27T10:15:00Z' },
       { user: 'Sergiy', bid: 3150, time: '2026-06-26T21:00:00Z' }
     ] },
-  { id: 8, photo: 'https://picsum.photos/seed/ussr-ruble/600/450', price: 850, icon: 'coin', category: 'numismatics', seller: 'Vintage Hall', saleType: 'shop',
+  { id: 8, price: 850, icon: 'coin', category: 'numismatics', seller: 'Vintage Hall', saleType: 'shop',
     conditionGrade: 'UNC', dimensions: 'Ø 31 мм', weight: '12.8 г', origin: 'СРСР', rarity: 'common', certified: false },
-  { id: 9, photo: 'https://picsum.photos/seed/poltina-coin/600/450', icon: 'coin', category: 'numismatics', seller: 'Numizmat_99', saleType: 'auction',
+  { id: 9, icon: 'coin', category: 'numismatics', seller: 'Numizmat_99', saleType: 'auction',
     startPrice: 1200, currentBid: 1400, bidStep: 100, bidsCount: 2, endTime: hoursFromNow(76), watchingNow: 14, bidsLastHour: 1, buyNowPrice: 2200,
     conditionGrade: 'VF', dimensions: 'Ø 26.7 мм', weight: '10 г', origin: 'СРСР', rarity: 'rare', certified: true,
     bidHistory: [
       { user: 'Marta', bid: 1400, time: '2026-06-27T15:00:00Z' },
       { user: 'Oleh', bid: 1300, time: '2026-06-27T09:30:00Z' }
     ] },
-  { id: 10, photo: 'https://picsum.photos/seed/mantel-clock/600/450', icon: 'watch', category: 'special', seller: 'Vintage Hall', saleType: 'request',
+  { id: 10, icon: 'watch', category: 'special', seller: 'Vintage Hall', saleType: 'request',
     conditionGrade: 'Експертний стан', dimensions: '38 × 24 × 16 см', weight: '6.5 кг', origin: 'Франція', rarity: 'unique', badge: 'museum', certified: true,
     investmentRating: 5, priceGrowthPct: 35, priceGrowthYears: 5 },
-  { id: 11, photo: 'https://picsum.photos/seed/walnut-suite/600/450', icon: 'mirror', category: 'special', seller: 'Vintage Hall', saleType: 'request',
+  { id: 11, icon: 'mirror', category: 'special', seller: 'Vintage Hall', saleType: 'request',
     conditionGrade: 'Реставровано фахово', dimensions: 'Стіл 120×80 см + 4 стільці', weight: '—', origin: 'Україна', rarity: 'unique', badge: 'museum', certified: true,
     investmentRating: 4, priceGrowthPct: 25, priceGrowthYears: 5 },
   { id: 12, photo: '/images/products/little-hostess-pair.jpg', extraPhotos: ['/images/products/little-hostess-mark.jpg'],
@@ -103,7 +103,7 @@ export const SEEDED_PRODUCTS: Product[] = [
       { author: 'Дмитро В.', rating: 5, text: 'Точно автентика, перевіряв клеймо окремо у фахівця. Все підтвердилось.', date: '2026-02-04' },
       { author: 'Tetiana_L', rating: 4, text: 'Гарні статуетки, упаковка надійна. Один незначний потертий край, про що продавець попередив завчасно.', date: '2025-12-20' },
     ] },
-  { id: 13, photo: 'https://picsum.photos/seed/steppe-painting/600/450', icon: 'painting', category: 'painting', seller: 'ArtAntique_Kharkiv', saleType: 'shop', price: 8500,
+  { id: 13, icon: 'painting', category: 'painting', seller: 'ArtAntique_Kharkiv', saleType: 'shop', price: 8500,
     conditionGrade: 'Добра, кракелюр лаку', dimensions: '54 × 38 см (у рамі)', weight: '1.8 кг', origin: 'Україна', rarity: 'rare', badge: 'expert', certified: true,
     investmentRating: 4, priceGrowthPct: 38, priceGrowthYears: 5, expertId: 'tkachuk',
     priceHistory: [{ year: 2022, price: 6100 }, { year: 2023, price: 6900 }, { year: 2024, price: 7600 }, { year: 2026, price: 8500 }],
@@ -114,13 +114,13 @@ export const SEEDED_PRODUCTS: Product[] = [
       { author: 'Andrii_K', rating: 5, text: 'Картина перевершила очікування — колір живий, кракелюр саме такий, який характерний для віку полотна. Експертний висновок додано.', date: '2026-01-15' },
       { author: 'Olha P.', rating: 4, text: 'Чудова робота, але доставка велогабаритного полотна коштувала дорожче, ніж очікувала. Сама картина — без претензій.', date: '2025-11-30' },
     ] },
-  { id: 14, photo: 'https://picsum.photos/seed/militaria-badge/600/450', icon: 'medal', category: 'militaria', seller: 'OldWorld_Kyiv', saleType: 'auction',
+  { id: 14, icon: 'medal', category: 'militaria', seller: 'OldWorld_Kyiv', saleType: 'auction',
     startPrice: 1800, currentBid: 1950, bidStep: 100, bidsCount: 1, endTime: hoursFromNow(130), watchingNow: 9, bidsLastHour: 1, buyNowPrice: 2900,
     conditionGrade: 'Добрий, потертості емалі', dimensions: '4.5 × 3 см', weight: '18 г', origin: 'Австро-Угорщина', rarity: 'rare', certified: false,
     bidHistory: [
       { user: 'Roman_T', bid: 1950, time: '2026-06-27T20:00:00Z' }
     ] },
-  { id: 15, photo: 'https://picsum.photos/seed/silver-brooch/600/450', icon: 'ring', category: 'jewelry', seller: 'Vintage Hall', saleType: 'shop', price: 3200,
+  { id: 15, icon: 'ring', category: 'jewelry', seller: 'Vintage Hall', saleType: 'shop', price: 3200,
     conditionGrade: 'Дуже добрий', dimensions: '5 × 3 см', weight: '14 г', origin: 'Україна', rarity: 'unique', badge: 'certified', certified: true,
     investmentRating: 3, priceGrowthPct: 18, priceGrowthYears: 5 }
 ];

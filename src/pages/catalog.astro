@@ -12,7 +12,7 @@ import Overlays from '../components/Overlays.astro';
   description="Повний каталог антикваріату Vintage Hall: монети, фарфор, бронза, меблі, годинники та прикраси. Пошук, фільтри та всі категорії в одному місці."
 >
   <Header />
-  <main class="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 md:px-8 md:py-[50px]">
+  <main class="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 md:px-8 md:py-[50px]" id="main-content" tabindex="-1">
     <div class="mb-[22px] flex items-center gap-2.5 text-[0.875rem] uppercase tracking-[0.2em] text-brass"><span class="h-px w-8 bg-brass"></span> Каталог</div>
     <h1 id="catalogPageTitle" class="mb-3 font-display text-[1.75rem] sm:text-[2.375rem]">Каталог лотів</h1>
     <p id="catalogPageSub" class="mb-8 max-w-[640px] text-[0.9375rem] text-sage">Шукайте за назвою лоту або обирайте категорію праворуч — фільтри та сортування працюють одночасно.</p>
@@ -23,6 +23,10 @@ import Overlays from '../components/Overlays.astro';
       <Sidebar />
     </div>
   </main>
+  <style is:global>
+    /* The page already has its own h1 above — hide the section's duplicate heading here. */
+    #catalogTitle { display: none; }
+  </style>
   <SiteFooter />
   <Overlays />
   <script src="../scripts/app.ts"></script>

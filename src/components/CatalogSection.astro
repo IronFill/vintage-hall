@@ -1,4 +1,18 @@
-<section class="relative z-[1] py-12 md:py-[70px]" id="catalog">
+---
+import { SEEDED_PRODUCTS, PRODUCT_I18N } from '../data/products';
+
+// Server-rendered fallback list — real crawlable links to every /lot/[id] page and real text
+// content in the catalog's initial HTML, before any client JS runs. renderCatalog() (catalog.ts)
+// unconditionally overwrites #catalogGrid's innerHTML on init, so this is purely a pre-hydration
+// improvement for crawlers, no-JS visitors, and first paint — it never fights with the client render.
+const seoLots = SEEDED_PRODUCTS.map(p => {
+  const tr = PRODUCT_I18N[p.id]?.uk;
+  const price = p.saleType === 'auction' ? (p.currentBid ?? p.startPrice ?? 0) : (p.price ?? 0);
+  return { id: p.id, name: tr?.name ?? `Лот LOT-0${p.id}`, price, saleType: p.saleType };
+});
+---
+
+<section class="relative z-[1] py-9 md:py-12" id="catalog">
   <div class="mb-8 flex flex-col items-start gap-1.5 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-4 md:mb-[42px]">
     <h2 class="text-[1.875rem] text-ivory" id="catalogTitle">Каталог лотів</h2>
     <div class="flex items-center gap-4">
@@ -19,7 +33,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       </button>
     </div>
-    <select class="sort-select" id="sortSelect">
+    <select class="sort-select" id="sortSelect" aria-label="Сортування лотів">
       <option value="default">За замовчуванням</option>
       <option value="price-asc">Ціна: спочатку дешевші</option>
       <option value="price-desc">Ціна: спочатку дорожчі</option>
@@ -28,18 +42,28 @@
     </select>
   </div>
   <div class="filter-chips-row">
-    <select class="filter-chip" id="filterOrigin">
+    <select class="filter-chip" id="filterOrigin" aria-label="Фільтр за походженням">
       <option value="">— Походження —</option>
     </select>
-    <select class="filter-chip" id="filterMaterial">
+    <select class="filter-chip" id="filterMaterial" aria-label="Фільтр за матеріалом">
       <option value="">— Матеріал —</option>
     </select>
-    <select class="filter-chip" id="filterRarity">
+    <select class="filter-chip" id="filterRarity" aria-label="Фільтр за рідкістю">
       <option value="">— Рідкість —</option>
       <option value="common">Поширений</option>
       <option value="rare">Рідкісний</option>
       <option value="unique">Унікальний</option>
     </select>
   </div>
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7" id="catalogGrid"></div>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7" id="catalogGrid">
+    {seoLots.map((lot) => (
+      <a href={`/lot/${lot.id}`} class="lot" style="padding:20px; text-decoration:none;">
+        <span class="lot-era mono">LOT-0{lot.id}</span>
+        <span class="lot-name">{lot.name}</span>
+        {lot.price > 0 && (
+          <span class="lot-price mono">{lot.price.toLocaleString('uk-UA')} ₴{lot.saleType === 'auction' ? ' (поточна ставка)' : ''}</span>
+        )}
+      </a>
+    ))}
+  </div>
 </section>

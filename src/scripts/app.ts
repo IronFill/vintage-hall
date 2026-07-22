@@ -12,6 +12,7 @@ import { cartMethods } from './cart';
 import { lotDetailMethods } from './lot-detail';
 import { cabinetMethods } from './cabinet';
 import { liveMethods } from './live';
+import { getSession, clearSession } from './auth-store';
 
 type CatalogMode = 'all' | 'shop' | 'auction';
 
@@ -91,7 +92,8 @@ export class VintageHallApp {
     set('navAbout', this.t('nav_about'));
     set('navContacts', this.t('nav_contacts'));
     set('cartBtnLabel', this.t('cart_btn'));
-    set('accountBtnLabel', this.t('nav_account'));
+    // Like Violity: once signed in, the header account button shows the user's nickname.
+    set('accountBtnLabel', this.currentUser ?? this.t('nav_account'));
     set('addLotBtnLabel', this.t('add_lot_btn'));
     set('heroEyebrow', this.t('hero_eyebrow'));
     setHTML('heroH1', this.t('hero_h1_new'));
@@ -472,6 +474,16 @@ export class VintageHallApp {
         setTimeout(() => this.openLotDetail(lotId), 100);
       }
     }
+
+    // /cabinet page bootstrap: requires a signed-in user (Violity-style), otherwise → /login.
+    if (document.getElementById('cabinetRoot')) {
+      if (!this.currentUser) {
+        window.location.replace('/login');
+      } else {
+        const tab = new URLSearchParams(window.location.search).get('tab') ?? 'home';
+        this.renderCabinet(tab);
+      }
+    }
   }
 
   /** Reads theme/language/login/cart saved on a previous page so it carries over across navigation. */
@@ -479,7 +491,8 @@ export class VintageHallApp {
     try {
       const savedTheme = localStorage.getItem('vh_theme');
       const savedLang = localStorage.getItem('vh_lang');
-      const savedUser = localStorage.getItem('vh_user');
+      // Session comes from the auth store: localStorage («Запам'ятати мене») or sessionStorage.
+      const savedUser = getSession();
       const savedRole = localStorage.getItem('vh_role');
       const savedCart = localStorage.getItem('vh_cart');
       const savedFollowed = localStorage.getItem('vh_followed_sellers');
@@ -513,7 +526,7 @@ export class VintageHallApp {
   }
 
   clearSavedUser(): void {
-    try { localStorage.removeItem('vh_user'); } catch { /* ignore */ }
+    clearSession();
   }
 
   /** Highlights the correct active language button on load, since the saved language may differ from the markup default. */
@@ -560,6 +573,10 @@ export class VintageHallApp {
       this.renderLiveAuctions();
       this.renderCatalog();
       this.renderCart();
+      // Cabinet page content is fully client-rendered — re-translate the open section too.
+      if (document.getElementById('cabinetRoot') && this.currentUser) {
+        this.renderCabinet(new URLSearchParams(window.location.search).get('tab') ?? 'home');
+      }
       this.savePreference('vh_lang', this.currentLang);
       document.dispatchEvent(new CustomEvent('vh-lang-changed', { detail: this.currentLang }));
     });
@@ -621,11 +638,11 @@ export class VintageHallApp {
     $('overlay').addEventListener('click', () => { this.closeDrawer(); this.closeCheckout(); });
 
     $('accountBtn').addEventListener('click', () => {
-      this.currentUser ? this.openCabinet(this.dashboardRole === 'seller' ? 'my_lots' : 'my_bids') : this.openLogin('my_bids');
+      this.currentUser ? this.openCabinet('home') : this.openLogin('my_bids');
     });
     document.getElementById('accountBtnMobile')?.addEventListener('click', () => {
       this.closeSitemap();
-      this.currentUser ? this.openCabinet(this.dashboardRole === 'seller' ? 'my_lots' : 'my_bids') : this.openLogin('my_bids');
+      this.currentUser ? this.openCabinet('home') : this.openLogin('my_bids');
     });
 
     // "Карта сайта" panel — opens only on explicit click, at every breakpoint, and is closed by
@@ -654,6 +671,16 @@ export class VintageHallApp {
     // cross-browser, so the visible filename text is kept in sync here instead.
     document.addEventListener('change', (e) => {
       const input = e.target as HTMLInputElement;
+      if (input?.type === 'file' && input.classList.contains('lc-upload-input')) {
+        // The Violity-style dashed upload area shows how many photos were picked (12 max).
+        const label = document.getElementById('newPhotosLabel');
+        if (label) {
+          label.textContent = input.files?.length
+            ? this.cabT('photos_chosen').replace('{n}', String(Math.min(input.files.length, 12)))
+            : this.cabT('click_to_choose');
+        }
+        return;
+      }
       if (input?.type !== 'file' || !input.classList.contains('file-input-native')) return;
       const nameEl = input.closest('.file-input-wrap')?.querySelector<HTMLElement>('.file-input-name');
       if (!nameEl) return;
@@ -697,6 +724,11 @@ export class VintageHallApp {
     document.body.addEventListener('input', (e) => {
       const target = e.target as HTMLElement;
       if (target.dataset.action === 'commission-input') this.updateCommissionBox();
+      // Live remaining-characters counter (lot title in the create form, Violity-style).
+      if (target.dataset.counter && target instanceof HTMLInputElement) {
+        const counterEl = document.getElementById(target.dataset.counter);
+        if (counterEl) counterEl.textContent = String(target.maxLength - target.value.length);
+      }
     });
 
     // Delegated handler for all dynamically rendered buttons (catalog cards, cart rows, modal content).
@@ -733,8 +765,9 @@ export class VintageHallApp {
         case 'submit-order': this.submitOrder(); break;
         case 'finish-order': this.finishOrder(); break;
         case 'submit-vip-request': this.submitVipRequest(id!); break;
-        case 'submit-login': this.submitLogin(target.dataset.tab ?? 'my_bids'); break;
         case 'logout': e.preventDefault(); this.logout(); break;
+        case 'save-profile': this.saveProfileSettings(); break;
+        case 'change-password': this.changePassword(); break;
         case 'cabinet-tab': {
           const newTab = target.dataset.tab ?? 'my_lots';
           if (newTab !== 'create') this.editingLotId = null;
@@ -745,6 +778,8 @@ export class VintageHallApp {
         case 'remove-listing': this.removeListing(id!); break;
         case 'edit-listing': this.editListing(id!); break;
         case 'cancel-edit-listing': this.cancelEditListing(); break;
+        case 'choose-sale-type': this.chooseSaleType(target.dataset.sale as SaleType); break;
+        case 'clear-create-form': this.clearCreateForm(); break;
         case 'publish-listing': this.publishListing(); break;
         case 'send-lot-chat': this.sendLotChat(id!, target.dataset.seller ?? ''); break;
         case 'open-lightbox': e.stopPropagation(); this.openLightbox(id!, parseInt(target.dataset.idx ?? '0', 10)); break;

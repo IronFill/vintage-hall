@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Вхід — Vintage Hall" description="Вхід до акаунту Vintage Hall." noindex={true}>
+  <div class="auth-shell" id="main-content" role="main" tabindex="-1">
+    <div class="auth-form-panel">
+      <a href="/" class="auth-back" id="authBackLink">← На головну</a>
+      <div class="auth-form" id="authForm"><!-- rendered by auth-page.ts --></div>
+    </div>
+    <aside class="auth-aside">
+      <div class="auth-aside-top">
+        <div class="lang-dots auth-lang" id="authLangSwitch">
+          <button data-lang="uk" class="active">UA</button>
+          <span>·</span>
+          <button data-lang="en">EN</button>
+          <span>·</span>
+          <button data-lang="pl">PL</button>
+          <span>·</span>
+          <button data-lang="ru">RU</button>
+        </div>
+      </div>
+      <div class="auth-aside-body-wrap">
+        <a href="/" class="auth-aside-logo" aria-label="Vintage Hall">
+          <svg class="seal" width="34" height="34" viewBox="0 0 120 120" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M60 18 L98 36 L98 70 L60 100 L22 70 L22 36 Z" stroke-width="3.4"/>
+            <path d="M60 26 L91 41 L91 67 L60 91 L29 67 L29 41 Z" stroke-width="1.4"/>
+            <text x="60" y="66" font-family="Cormorant" font-size="30" fill="currentColor" stroke="none" text-anchor="middle">VH</text>
+            <line x1="40" y1="78" x2="80" y2="78" stroke-width="1.6"/>
+          </svg>
+          <span>VINTAGE HALL</span>
+        </a>
+        <div class="auth-aside-body" id="authAsideBody"><!-- rendered by auth-page.ts --></div>
+      </div>
+    </aside>
+  </div>
+  <script>
+    import { initAuthPage } from '../scripts/auth-page';
+    initAuthPage('login');
+  </script>
+</Layout>
