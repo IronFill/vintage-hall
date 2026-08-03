@@ -12,7 +12,8 @@
       "mcp__Claude_Code_Remote__register_repo_root",
       "mcp__Claude_Code_Remote__send_later",
       "mcp__Claude_Code_Remote__list_triggers",
-      "mcp__Claude_Code_Remote__update_trigger"
+      "mcp__Claude_Code_Remote__update_trigger",
+      "mcp__Claude_Code_Remote__delete_trigger"
     ]
   }
 }
