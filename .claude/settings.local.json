@@ -18,7 +18,8 @@
       "Bash(cp /root/.claude/uploads/b02a99df-4d12-592d-839c-981ed9e93cb8/01a62e41-Dodatok-1-Forma-zvitu-pro-tsilove-vykorystannia-biudzhetnoho-hrantu.xlsx /tmp/varto_docs/dodatok1.xlsx)",
       "Read(//tmp/varto_docs/**)",
       "Bash(export LANG=C.utf8 LC_ALL=C.utf8)",
-      "Bash(timeout 90 soffice --headless --convert-to pdf --outdir /tmp/varto_docs /tmp/varto_docs/koshtorys.xlsx)"
+      "Bash(timeout 90 soffice --headless --convert-to pdf --outdir /tmp/varto_docs /tmp/varto_docs/koshtorys.xlsx)",
+      "Bash(pdftoppm -jpeg -r 70 l.pdf l)"
     ]
   }
 }
