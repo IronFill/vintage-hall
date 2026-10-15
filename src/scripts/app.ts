@@ -12,6 +12,7 @@ import { cartMethods } from './cart';
 import { lotDetailMethods } from './lot-detail';
 import { cabinetMethods } from './cabinet';
 import { liveMethods } from './live';
+import { searchMethods } from './search';
 
 type CatalogMode = 'all' | 'shop' | 'auction';
 
@@ -455,6 +456,7 @@ export class VintageHallApp {
     this.renderCompareBar();
     this.bindEvents();
     this.initScrollTop();
+    this.initSiteSearch();
     this.initChat();
     this.initA11y();
     this.initViewToggle();
@@ -758,7 +760,7 @@ export class VintageHallApp {
 
 // Methods are split across catalog.ts / cart.ts / lot-detail.ts / cabinet.ts for maintainability
 // (see dev-review feedback re: app.ts size) and merged onto the prototype here.
-Object.assign(VintageHallApp.prototype, catalogMethods, cartMethods, lotDetailMethods, cabinetMethods, liveMethods);
+Object.assign(VintageHallApp.prototype, catalogMethods, cartMethods, lotDetailMethods, cabinetMethods, liveMethods, searchMethods);
 
 document.addEventListener('DOMContentLoaded', () => {
   new VintageHallApp().init();

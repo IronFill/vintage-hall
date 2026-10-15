@@ -52,6 +52,15 @@
         <input type="text" id="headerSearchInput" placeholder="Пошук лотів..." aria-label="Пошук лотів">
       </form>
 
+      <!-- Пошук по всьому сайту (Ctrl/Cmd+K) — окремо від #headerSearchForm вище, який шукає
+           лише лоти каталогу й прихований на вузьких екранах. Розмітку оверлею й індекс
+           дивись в Overlays.astro / src/data/search-index.ts, логіку — в scripts/search.ts.
+           Прихована нижче md — на телефоні той самий пошук відкривається пунктом
+           "Пошук по сайту" у висувному меню (нижче), щоб не переповнити header-right. -->
+      <button class="search-toggle-btn hidden md:flex" id="siteSearchBtn" aria-label="Пошук по сайту (Ctrl+K)" title="Пошук по сайту (Ctrl+K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+
       <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему">
         <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.4A9 9 0 1 1 11.6 3a7 7 0 0 0 9.4 9.4Z"/></svg>
       </button>
@@ -83,6 +92,10 @@
     <button class="drawer-close" id="sitemapCloseBtn" aria-label="Закрити меню">&times;</button>
   </div>
   <nav class="sitemap-links">
+    <button type="button" id="siteSearchBtnMobile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Пошук по сайту
+    </button>
     <a href="/catalog">Каталог</a>
     <a href="/#live-auctions">Активні аукціони</a>
     <a href="/news">Новини</a>
