@@ -19,7 +19,12 @@
       "Read(//tmp/varto_docs/**)",
       "Bash(export LANG=C.utf8 LC_ALL=C.utf8)",
       "Bash(timeout 90 soffice --headless --convert-to pdf --outdir /tmp/varto_docs /tmp/varto_docs/koshtorys.xlsx)",
-      "Bash(pdftoppm -jpeg -r 70 l.pdf l)"
+      "Bash(pdftoppm -jpeg -r 70 l.pdf l)",
+      "Bash(umask 077)",
+      "Bash(cp ~/.claude.json /tmp/claude-0/-home-user-vintage-hall/b02a99df-4d12-592d-839c-981ed9e93cb8/scratchpad/claude.json.bak)",
+      "Bash(python3 -I -)",
+      "Bash(claude mcp *)",
+      "mcp__Claude_Code_Remote__read_documentation"
     ]
   }
 }
