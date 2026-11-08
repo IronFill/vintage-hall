@@ -2,3 +2,16 @@ node_modules
 dist
 .astro
 .env
+
+# LegalMCP runtime
+tools/legalmcp/.venv/
+tools/legalmcp/.env
+tools/legalmcp/downloads/
+tools/legalmcp/screenshots/
+tools/legalmcp/legal_records/
+tools/legalmcp/legal_documents/
+tools/legalmcp/site_reports/
+tools/legalmcp/.setup.lock
+tools/legalmcp/.setup-ready
+tools/legalmcp/.browser-status
+**/__pycache__/
